@@ -14,6 +14,12 @@ import { Main } from '../components/Main'
 import { DarkModeSwitch } from '../components/DarkModeSwitch'
 import { CTA } from '../components/CTA'
 import { Footer } from '../components/Footer'
+import { TextInput, TextInputProps } from "../components/atoms/TextInput/TextInput.component"
+
+const opt: TextInputProps["otherInputProps"] = {
+  height: 200,
+  value: "dejate de joder"
+}
 
 const Index = () => (
   <Container height="100vh">
@@ -24,6 +30,7 @@ const Index = () => (
         <Code>typescript</Code>.
       </Text>
 
+      <TextInput title="tit" otherInputProps={opt} />
       <List spacing={3} my={0}>
         <ListItem>
           <ListIcon as={CheckCircleIcon} color="green.500" />
