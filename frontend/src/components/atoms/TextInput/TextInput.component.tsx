@@ -1,7 +1,8 @@
 // import React from 'react';
 // import { SButton } from './Button.styled';
-import { Input, InputProps } from "@chakra-ui/react"
 import {
+  Input, InputProps,
+  FormControlOptions,
   FormControl,
   FormLabel,
   FormErrorMessage,
@@ -9,20 +10,51 @@ import {
 } from "@chakra-ui/react"
 
 export type TextInputProps = {
+  error?: { message?: string };
+  hint?: string;
+  isDisabled?: FormControlOptions["isDisabled"]
+  isRequired?: FormControlOptions["isRequired"]
+  onChange?: InputProps["onChange"];
+  otherTextInputProps?: InputProps;
+  placeholder?: InputProps["placeholder"];
   title?: string;
+  type?: "text" | "password" | "tel" | "email" & string;
   value?: InputProps["value"];
-  size?: InputProps["size"];
-  variant?: InputProps["variant"];
-  otherInputProps?: InputProps;
+  name: string;
 }
 
-export function TextInput({ otherInputProps, title, size }: TextInputProps) {
-
+export const TextInput: React.FC<TextInputProps> = ({
+  error,
+  hint,
+  isDisabled,
+  isRequired,
+  onChange,
+  otherTextInputProps,
+  placeholder,
+  title,
+  type = "text",
+  value,
+  name,
+}) => {
   return (
-    <FormControl id="asd">
+    <FormControl
+      isInvalid={!!error}
+      isRequired={isRequired}
+      isDisabled={isDisabled}
+    >
       <FormLabel>{title}</FormLabel>
-      <Input {...otherInputProps} size={size} />
-      <FormHelperText>We'll never share your email.</FormHelperText>
+      <Input
+        name={name}
+        placeholder={placeholder}
+        type={type}
+        value={value}
+        onChange={onChange}
+        errorBorderColor="crimson"
+        {...otherTextInputProps}
+      />
+
+      {hint && <FormHelperText>{hint}</FormHelperText>}
+      <FormErrorMessage color="crimson">{error?.message}</FormErrorMessage>
     </FormControl>
   );
 }

@@ -5,15 +5,6 @@ export default {
   title: 'Atoms/Input',
   component: TextInput,
   argTypes: {
-    title: {
-      control: 'text',
-    },
-    size: {
-      control: {
-        type: 'inline-radio',
-        options: ["xs", "sm", "md", "lg"],
-      },
-    }
   },
 } as Meta;
 
@@ -21,5 +12,17 @@ const Template: Story<TextInputProps> = args => <TextInput {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
-  inputProps: { placeholder: "askjldhaskldjlk" }
+  hint: "This is a hint",
+  placeholder: "Insert text",
+  title: "Text",
+};
+
+export const Password = Template.bind({});
+Password.args = {
+  title: "Password",
+  placeholder: "Min lenght 8 chars",
+  type: "password",
+  otherTextInputProps: {
+    defaultValue: "teresito"
+  }
 };

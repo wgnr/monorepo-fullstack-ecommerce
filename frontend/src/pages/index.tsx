@@ -4,6 +4,7 @@ import {
   Code,
   List,
   ListIcon,
+  Field,
   ListItem,
 } from '@chakra-ui/react'
 import { CheckCircleIcon, LinkIcon } from '@chakra-ui/icons'
@@ -14,23 +15,37 @@ import { Main } from '../components/Main'
 import { DarkModeSwitch } from '../components/DarkModeSwitch'
 import { CTA } from '../components/CTA'
 import { Footer } from '../components/Footer'
-import { TextInput, TextInputProps } from "../components/atoms/TextInput/TextInput.component"
-
-const opt: TextInputProps["otherInputProps"] = {
-  height: 200,
-  value: "dejate de joder"
-}
+import Form from "../components/molecules/Form/Form.component"
 
 const Index = () => (
   <Container height="100vh">
     <Hero />
     <Main>
-      <Text>
-        Example repository of <Code>Next.js</Code> + <Code>chakra-ui</Code> +{' '}
-        <Code>typescript</Code>.
-      </Text>
+      <Form
+        formInputs={[
+          {
+            name: "username",
+            title: "Username",
+            otherTextInputProps: {
+              autoComplete: "username"
+            },
+          },
+          {
+            name: "password",
+            title: "Password",
+            placeholder: "Min lenght 8 chars",
+            type: "password",
+            otherTextInputProps: {
+              autoComplete: "current-password"
+            },
+            registerOptions: {
+              required: "Required",
+              minLength: { value: 4, message: "Minimum length should be 4" }
+            }
+          }
+        ]}
+      />
 
-      <TextInput title="tit" otherInputProps={opt} />
       <List spacing={3} my={0}>
         <ListItem>
           <ListIcon as={CheckCircleIcon} color="green.500" />
