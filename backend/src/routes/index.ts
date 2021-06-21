@@ -1,7 +1,7 @@
-import { GlobalVars } from "../config"
+import { GlobalVars } from "@config/index"
 import express from "express"
-import { router as errorRouter } from "./error"
-import { router as productsRouter } from "./products"
+import { router as errorRouter } from "@routes/error"
+import { router as productsRouter } from "@routes/products"
 
 export const router = express.Router()
 
