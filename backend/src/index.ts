@@ -2,6 +2,7 @@ import { GlobalVars } from "./config"
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
+import { router } from "./routes"
 
 // App variables
 const PORT = GlobalVars.PORT;
@@ -11,6 +12,7 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.use("/api", router)
 
 // Serve application
 app.listen(PORT, () => {
