@@ -1,12 +1,10 @@
-import { config } from "dotenv";
-config();
-
+import { GlobalVars } from "./config"
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 
 // App variables
-const PORT: number = parseInt(process.env.PORT as string) || 3000;
+const PORT = GlobalVars.PORT;
 const app = express();
 
 // App configuration

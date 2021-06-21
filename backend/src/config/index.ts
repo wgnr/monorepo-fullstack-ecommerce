@@ -1,0 +1,1 @@
+export { GlobalVars } from "./GlobalVars"
