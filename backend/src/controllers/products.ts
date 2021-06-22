@@ -1,20 +1,22 @@
 import { Request, Response, NextFunction } from "express";
 import Ajv, { JTDSchemaType } from "ajv/dist/jtd"
-import { IProduct } from "@models/products"
+import { INewProduct } from "@models/products"
+import { createProduct, getAllProducts } from "@services/products"
 
 
-export const getAll = (req: Request, res: Response) => {
-  res.json({});
+export const getAll = async (req: Request, res: Response) => {
+  const products = await getAllProducts()
+  res.json(products);
 };
 
-export const createOne = (req: Request, res: Response) => {
-  res.json({});
+export const createOne = async (req: Request, res: Response) => {
+  const newProduct = await createProduct(req.body);
+  res.json(newProduct);
 };
 
 export const createOneMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  const schema: JTDSchemaType<IProduct> = {
+  const schema: JTDSchemaType<INewProduct> = {
     properties: {
-      id: { type: "string" },
       name: { type: "string" },
     },
     optionalProperties: {

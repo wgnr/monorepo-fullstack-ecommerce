@@ -21,7 +21,7 @@ const ProductsSchema = new Schema<IProduct>(
     timestamps: true
   });
 
-export const Product: Model<IProduct> = model<IProduct>(
+export const ProductsModel: Model<IProduct> = model<IProduct>(
   ProductsCollectionName,
   ProductsSchema
 );
