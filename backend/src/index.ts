@@ -12,7 +12,11 @@ import { connectToMongo } from "@models/index"
     connectToMongo
   ])
     .then(console.log)
-    .catch(console.log)
+    .catch(e => {
+      console.error(e)
+      console.log("Exiting...")
+      process.exit(1)
+    })
 
   // App variables
   const PORT = GlobalVars.PORT;
