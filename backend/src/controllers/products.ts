@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import Ajv, { JTDSchemaType } from "ajv/dist/jtd"
 import { INewProduct } from "@models/products"
 import { createProduct, getAllProducts } from "@services/products"
+import ValidationException from "@exceptions/ValidationException"
 
 
 export const getAll = async (req: Request, res: Response) => {
@@ -24,8 +25,9 @@ export const createOneMiddleware = (req: Request, res: Response, next: NextFunct
     }
   }
 
-  const validate = new Ajv().compile(schema)
-  if (!validate(req.body)) throw validate.errors
+  const validate = new Ajv().compile<INewProduct>(schema)
+  if (!validate(req.body))
+    return next(new ValidationException("create new product", schema, validate.errors))
 
   return next()
 };

@@ -12,5 +12,8 @@ export const GlobalVars = {
   PORT: parseInt(process.env.PORT as string) || 3000,
   db: {
     URL: process.env.MONGODB_URI,
+  },
+  debug: {
+    showErrorTrace: ["true", "1", "yes"].includes(process.env.SHOW_ERROR_TRACE as string)
   }
 }
