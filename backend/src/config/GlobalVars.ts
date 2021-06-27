@@ -1,14 +1,11 @@
-// Check environment
-const isProd = process.env.NODE_ENV === "production" ? "production" : "development"
+import { config } from "dotenv";
 import { existsSync } from 'fs'
 import { resolve } from "path"
-const envPath = resolve(process.cwd(),
-  `.env.${isProd ? "production" : "development"}`
-)
 
-import { config } from "dotenv";
-// if dev or prod env file is available, take it. Other use lead std .env
-if (existsSync(envPath)) config({ path: envPath });
+const isProd = process.env.NODE_ENV === "production"
+const envPath = resolve(process.cwd(), `.env.${isProd ? "production" : "development"}`)
+// if .env.development | .env.production isn't available, load regular .env
+config(existsSync(envPath) ? { path: envPath } : {});
 
 export const GlobalVars = {
   isProd,
