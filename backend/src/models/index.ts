@@ -3,23 +3,30 @@ import mongoose, { ConnectOptions } from "mongoose";
 // Use mongoose with promises
 // mongoose.Promise = global.Promise;
 
-const { db: { URL, USER, PASSWORD, DB } } = GlobalVars;
-
-const connectionOptions: ConnectOptions = {
-  dbName: DB,
-  user: USER,
-  pass: PASSWORD,
-  useNewUrlParser: true, 
-  useUnifiedTopology: true,
+export type MongoConnectionParams = {
+  URL: string;
+  USER: string;
+  PASSWORD: string;
+  DB: string;
 }
 
-export const connectToMongo = new Promise((resolve, reject) => {
+export const connectToMongo = (
+  { URL, USER, PASSWORD, DB }: MongoConnectionParams
+) => new Promise((resolve, reject) => {
   if (
     !URL ||
     !USER ||
     !PASSWORD ||
     !DB)
     return reject("Check you mongo URL, USER and PASSWORD")
+
+  const connectionOptions: ConnectOptions = {
+    dbName: DB,
+    user: USER,
+    pass: PASSWORD,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
 
   mongoose
     .connect(URL!, connectionOptions)
@@ -42,7 +49,7 @@ export const connectToMongo = new Promise((resolve, reject) => {
     console.error("MONGO HAS RECONNECTED!")
     // throw new Error(err);
   });
-  
+
   mongoose.connection.on('close', err => {
     console.log("MONGO HAS BEEN CLOSED!")
     // throw new Error(err);

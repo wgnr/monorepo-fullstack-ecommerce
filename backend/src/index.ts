@@ -9,7 +9,7 @@ import { connectToMongo } from "@models/index"
 (async () => {
   // Connect to services
   await Promise.all([
-    connectToMongo
+    connectToMongo(GlobalVars.db)
   ])
     .then(console.log)
     .catch(e => {
