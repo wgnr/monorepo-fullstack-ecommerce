@@ -1,1 +1,1 @@
-export { GlobalVars } from "@config/GlobalVars"
+export { GlobalVars } from "@config/globalVars"

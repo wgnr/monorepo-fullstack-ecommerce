@@ -2,6 +2,9 @@ import { config } from "dotenv";
 import { existsSync } from 'fs'
 import { resolve } from "path"
 
+const getEnvValueTruthy = (value: string): boolean => ["true", "1", "yes", "on"].includes(value.toLowerCase())
+
+/* LOAD CONFIGURATION */
 const isProd = process.env.NODE_ENV === "production"
 const envPath = resolve(process.cwd(), `.env.${isProd ? "production" : "development"}`)
 // if .env.development | .env.production isn't available, load regular .env
@@ -17,6 +20,6 @@ export const GlobalVars = {
     DB: process.env.MONGODB_DB,
   },
   debug: {
-    showErrorTrace: ["true", "1", "yes"].includes(process.env.SHOW_ERROR_TRACE as string)
+    showErrorTrace: getEnvValueTruthy(String(process.env.SHOW_ERROR_TRACE))
   }
 }
