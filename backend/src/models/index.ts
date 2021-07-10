@@ -13,11 +13,7 @@ export type MongoConnectionParams = {
 export const connectToMongo = (
   { URL, USER, PASSWORD, DB }: MongoConnectionParams
 ) => new Promise((resolve, reject) => {
-  if (
-    !URL ||
-    !USER ||
-    !PASSWORD ||
-    !DB)
+  if ([URL, USER, PASSWORD, DB].some(d => !d))
     return reject("Check you mongo URL, USER and PASSWORD")
 
   const connectionOptions: ConnectOptions = {
@@ -26,6 +22,7 @@ export const connectToMongo = (
     pass: PASSWORD,
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false
   }
 
   mongoose
