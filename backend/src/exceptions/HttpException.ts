@@ -1,8 +1,8 @@
-import { GlobalVars } from "@config/GlobalVars"
+import { GlobalVars } from "@config/globalVars"
 
-const { debug: { showErrorTrace } } = GlobalVars
+const { debug: { SHOW_ERROR_TRACE } } = GlobalVars
 
-export default abstract class HttpException extends Error {
+export default class HttpException extends Error {
   constructor(
     public status: number,
     public message: string) {
@@ -13,7 +13,7 @@ export default abstract class HttpException extends Error {
     return {
       status: this.status,
       message: this.message,
-      ...(showErrorTrace ? { stack: this.stack } : {})
+      ...(SHOW_ERROR_TRACE ? { stack: this.stack } : {})
     }
   }
 }

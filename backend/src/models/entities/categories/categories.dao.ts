@@ -9,23 +9,26 @@ class CategoriesDAO extends CommonDAO<ICategory> {
     super(categoriesModel)
   }
 
-  async getByNames(names: string[]): Promise<ICategory[]> {
-    this.mongoDebug("getByNames", arguments)
+  async getByName(name: string) {
+    return await this.model.findOne({ name })
+  }
+
+  async getManyByNames(names: string[]): Promise<ICategory[]> {
+    this.mongoDebug("getManyByNames", { names })
     return await this.model.find({ name: { $in: names } })
   }
 
   async addProduct(categoryId: ObjectId, productId: ObjectId): Promise<void> {
-    this.mongoDebug("getByNames", arguments)
+    this.mongoDebug("addProduct", { categoryId, productId })
     await this.updateOneById(categoryId, { $push: { products: productId } })
   }
 
   async getProducts(categoryName: string): Promise<IProduct[]> {
-    this.mongoDebug("getByNames", arguments)
+    this.mongoDebug("getProducts", { categoryName })
     const augmentedCategory = await this.model.findOne({ name: categoryName }).populate("products")
 
     if (!augmentedCategory) return []
 
-    // @ts-ignore --> populate fetchs the products
     const products: IProduct[] = augmentedCategory.products
     return products
   }
