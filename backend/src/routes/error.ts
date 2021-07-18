@@ -11,5 +11,8 @@ export const router = (err: Errback, req: Request, res: Response, next: NextFunc
     return res.status(err.status).json(err.getJSON())
   }
 
-  return res.status(500).json(err)
+  return res.status(500).json({
+    message: String(err),
+    error: err
+  })
 };

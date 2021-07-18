@@ -1,5 +1,6 @@
 import { GlobalVars } from "@config/index"
-import mongoose, { ConnectOptions } from "mongoose";
+import { ValidationException } from "@exceptions/index";
+import mongoose, { ConnectOptions, Types } from "mongoose";
 // Use mongoose with promises
 // mongoose.Promise = global.Promise;
 
@@ -52,3 +53,7 @@ export const connectToMongo = (
     // throw new Error(err);
   });
 })
+
+export const isValidMongoId = (id: string | number | Types.ObjectId) => {
+  return mongoose.Types.ObjectId.isValid(id) ? null : new ValidationException(`Invalid mongo id: '${id}'`)
+}
