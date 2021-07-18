@@ -1,19 +1,126 @@
+import Ajv, { JTDSchemaType } from "ajv/dist/jtd"
 import { Request, Response, NextFunction } from "express";
 import CategoryService from "@services/categories"
 import CategoryDTO from "@models/entities/categories/categories.dto"
-import { HttpException } from "@exceptions/index";
+import { INewCategory, IAddProduct } from "@models/entities/categories/categories.interfaces"
+import { SchemaValidationException, ValidationException } from "@exceptions/index";
+import { isValidMongoId } from "@models/index"
+
 
 
 class CategoriesControllers {
-  async getAllCategories(req: Request, res: Response, next: NextFunction) {
+  async getOneOrALl(req: Request, res: Response, next: NextFunction) {
     const { query: { name } } = req
     const { params: { id } } = req
+    let response
 
-    let result = await CategoryService.getOneOrAll({ id, name: name && String(name) })
-    if (!result) return next(new HttpException(404, "Nothing found"))
+    try {
+      if (id) {
+        response = await CategoryService.getById(id)
+      } else if (typeof name === "string") {
+        response = await CategoryService.getOneByName(name)
+      } else {
+        response = await CategoryService.getAll()
+      }
 
-    // @ts-ignore // TODO extends interfaces from document
-    return res.json(CategoryDTO.returnCategories(result.toObject()))
+      return res.json(response)
+    } catch (error) {
+      return next(error)
+    }
+  }
+
+  validateCreate(req: Request, res: Response, next: NextFunction) {
+    const schema: JTDSchemaType<INewCategory> = {
+      properties: {
+        name: { type: "string" },
+      },
+      optionalProperties: {
+        products: {
+          elements: { type: "string" }
+        }
+      }
+    }
+
+    const validate = new Ajv().compile<INewCategory>(schema)
+    if (!validate(req.body))
+      return next(new SchemaValidationException("Category", schema, validate.errors))
+
+    const { products } = req.body;
+    if (products) {
+      for (const productId of products) {
+        const errorFound = isValidMongoId(productId)
+        if (errorFound) return next(errorFound)
+      }
+    }
+
+    return next()
+  }
+
+  async create(req: Request, res: Response, next: NextFunction) {
+    const { body } = req
+
+    try {
+      return res.json(await CategoryService.create(body))
+    } catch (error) {
+      return next(error)
+    }
+  }
+
+  validateAddOrRemoveProduct(req: Request, res: Response, next: NextFunction) {
+    const schema: JTDSchemaType<IAddProduct> = {
+      properties: {
+        products: {
+          elements: { type: "string" }
+        }
+      },
+    }
+
+    const validate = new Ajv().compile<IAddProduct>(schema)
+    if (!validate(req.body))
+      return next(new SchemaValidationException("Category", schema, validate.errors))
+
+    const { products } = req.body;
+    if (products) {
+      for (const productId of products) {
+        const errorFound = isValidMongoId(productId)
+        if (errorFound) return next(errorFound)
+      }
+    }
+
+    return next()
+  }
+
+  async addOrDeleteProducts(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params
+    const { products } = req.body
+
+    try {
+      let response
+      if (req.method === "POST") {
+        response = await CategoryService.addProducts(id, products)
+      } else if (req.method === "DELETE") {
+        response = await CategoryService.removeProducts(id, products)
+      } else {
+        return res.end()
+      }
+      return res.json(response)
+    } catch (error) {
+      return next(error)
+    }
+  }
+
+  async delete(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params
+    try {
+      return res.json(await CategoryService.delete(id))
+    } catch (error) {
+      return next(error)
+    }
+  }
+
+  validateMongoId(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params
+    return next(id && isValidMongoId(id))
   }
 }
 

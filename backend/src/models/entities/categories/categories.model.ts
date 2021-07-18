@@ -13,13 +13,15 @@ const categoriesSchema = new Schema<ICategory>({
   products: [
     {
       type: Schema.Types.ObjectId,
-      ref: ProductsCollectionName,
+      ref: "product" //ProductsCollectionName,
     }
   ],
   enabled: {
     type: Boolean,
     default: true
   }
+}, {
+  versionKey: false
 })
 
 export const categoriesModel: Model<ICategory> = model<ICategory>(

@@ -6,40 +6,20 @@ import { IProduct } from "@models/entities/products/products.interfaces"
 import ProductsService from "@services/products"
 
 class CategoriesService {
-  async create(category: INewCategory) {
-    const newCategory = CategoriesDTO.createNew(category)
-    return await CategoriesDAO.create(newCategory)
-  }
-
   async getAll() {
     return await CategoriesDAO.getMany()
-  }
-
-  async getOneOrAll({ id, name }: { id?: string, name?: string }) {
-    let response;
-
-    if (id) {
-      response = await this.getById(id)
-    } else if (name) {
-      response = await this.getOneByName(name)
-    } else {
-      response = await this.getAll()
-    }
-
-    return response
-
   }
 
   async getById(id: string) {
     return await CategoriesDAO.getOneById(id)
   }
 
-  async getProducts(categoryName: string): Promise<IProduct[]> {
-    return await CategoriesDAO.getProducts(categoryName)
-  }
-
   async getOneByName(name: string) {
     return await CategoriesDAO.getByName(name)
+  }
+
+  async getProducts(categoryName: string): Promise<IProduct[]> {
+    return await CategoriesDAO.getProducts(categoryName)
   }
 
   async getManyByName(names: string[]) {
@@ -52,27 +32,55 @@ class CategoriesService {
     return (await CategoriesDAO.getManyByNames(names)).map(c => c._id!)
   }
 
+  async create(category: INewCategory) {
+    const newCateogryDTO = CategoriesDTO.createNew(category)
+    const categoryCreated = await CategoriesDAO.create(newCateogryDTO)
+
+    if (categoryCreated.products.length > 0) {
+      await ProductsService.addCategory(categoryCreated.products, categoryCreated._id)
+    }
+
+    return categoryCreated
+  }
+
+  async delete(categoryId: string) {
+    await CategoriesDAO.deleteCategory(categoryId)
+    await ProductsService.removeCategory(null, categoryId)
+  }
+
+  async addProducts(categoryId: string, productIds: string[]) {
+    await CategoriesDAO.getOneById(categoryId)
+    await ProductsService.addCategory(productIds, categoryId)
+    await CategoriesDAO.addProduct(categoryId, productIds)
+  }
+
+  async removeProducts(categoryId: string, productIds: string[]) {
+    await CategoriesDAO.getOneById(categoryId)
+    await ProductsService.removeCategory(productIds, categoryId)
+    await CategoriesDAO.removeProduct(categoryId, productIds)
+  }
+
   /**
    * Ensures each category in product is also in the category products array
    */
-  async syncProductAndCategory(products: IProduct): Promise<void> {
-    const productId = products._id!
+  async syncProductAndCategory(product: IProduct): Promise<void> {
+    const productId = product._id!
 
-    for (const categoryId of products.categories) {
-      const category = await CategoriesDAO.getOneById(categoryId)
-
-      if (!category) {
-        // Category doesn't exist, remove from product category
-        await ProductsService.removeCategory(productId, categoryId)
-      } else if (!category.products.includes(productId)) {
-        await CategoriesDAO.addProduct(categoryId, productId)
+    for (const categoryId of product.categories) {
+      try {
+        const category = await CategoriesDAO.getOneById(categoryId)
+        if (!category.products.includes(productId)) {
+          await CategoriesDAO.addProduct(categoryId, <string>productId)
+        }
+      } catch (e) {
+        await ProductsService.removeCategory(<string>productId, categoryId)
       }
     }
   }
 
   // return the names that doesn't exists
   async validateCategoriesNames(names: string[] | undefined): Promise<string[]> {
-    if (!names) return []
+    if (!names || !names.length) return []
 
     const uniqueNames = Array.from(new Set(names))
     const result = (await this.getManyByName(uniqueNames)).map(c => c.name)

@@ -38,7 +38,7 @@ export default abstract class CommonDAO<T> {
   async updateMany(filter: FilterQuery<T>, payload: T) {
     this.mongoDebug("updateMany", { filter, payload })
 
-    const result = await this.model.updateMany(filter, payload)
+    await this.model.updateMany(filter, payload)
     return this.getMany(filter)
   }
 

@@ -10,26 +10,64 @@ class CategoriesDAO extends CommonDAO<ICategory> {
   }
 
   async getByName(name: string) {
+    this.mongoDebug("getByName", { name })
+
     return await this.model.findOne({ name })
+      .orFail(this.throwNotFoundError({ name }))
   }
 
-  async getManyByNames(names: string[]): Promise<ICategory[]> {
+  async getManyByNames(names: string[]) {
     this.mongoDebug("getManyByNames", { names })
+
     return await this.model.find({ name: { $in: names } })
+      .orFail(this.throwNotFoundError({ names }))
   }
 
-  async addProduct(categoryId: ObjectId, productId: ObjectId): Promise<void> {
+  async deleteCategory(id: string) {
+    this.mongoDebug("deleteCategory", { id })
+
+    return await this.model.findByIdAndDelete(id)
+      .orFail(this.throwNotFoundError({ id }))
+  }
+
+  async addProduct(categoryId: string, productId: string | string[]) {
     this.mongoDebug("addProduct", { categoryId, productId })
-    await this.updateOneById(categoryId, { $push: { products: productId } })
+
+    const update = {
+      $addToSet: {
+        products:
+          Array.isArray(productId) ? { $each: productId } : productId
+      }
+    }
+
+    // await this.updateOneById(categoryId, { $push: { products: productId } })
+    return await this.updateOneById(categoryId, update)
+  }
+
+  async removeProduct(categoryId: string, productId: string | string[]) {
+    this.mongoDebug("removeProduct", { categoryId, productId })
+
+    const update = {
+      $pull: {
+        products:
+          Array.isArray(productId) ? { $in: productId } : productId
+      }
+    }
+
+    return await this.updateOneById(categoryId, update)
   }
 
   async getProducts(categoryName: string): Promise<IProduct[]> {
     this.mongoDebug("getProducts", { categoryName })
-    const augmentedCategory = await this.model.findOne({ name: categoryName }).populate("products")
+
+    const augmentedCategory = await this.model.findOne({ name: categoryName })
+      .orFail(this.throwNotFoundError({ categoryName }))
+      .populate("products")
 
     if (!augmentedCategory) return []
 
-    const products: IProduct[] = augmentedCategory.products
+    const products = augmentedCategory.products
+
     return products
   }
 }

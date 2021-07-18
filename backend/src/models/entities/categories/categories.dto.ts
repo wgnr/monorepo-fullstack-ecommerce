@@ -8,17 +8,16 @@ class CategoriesDTO {
     }
   }
 
-  returnCategories(categories: ICategory | ICategory[]) {
-    return Array.isArray(categories) ?
-      categories.map(this.removeFields) :
-      this.removeFields(categories)
-  }
+  // returnCategories(categories: MICategory | MICategory[]) {
+  //   return Array.isArray(categories) ?
+  //     categories.map(c => this.removeFields(c.toObject())) :
+  //     this.removeFields(categories.toObject())
+  // }
 
-  private removeFields(category: ICategory): Omit<ICategory, "__v"> {
-    const newCategory = { ...category }
-    // @ts-ignore // TODO relacionado a usar la interfaz de mongoose
-    delete newCategory.__v
-    return newCategory
-  }
+  // private removeFields(category: ICategory) {
+  //   const newCategory = { ...category }
+  //   delete newCategory.__v
+  //   return newCategory
+  // }
 }
 export default new CategoriesDTO
