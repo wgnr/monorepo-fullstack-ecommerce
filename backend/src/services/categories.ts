@@ -1,6 +1,5 @@
 import { ObjectId } from "mongoose"
 import CategoriesDAO from "@models/entities/categories/categories.dao"
-import CategoriesDTO from "@models/entities/categories/categories.dto"
 import { INewCategory } from "@models/entities/categories/categories.interfaces"
 import { IProduct } from "@models/entities/products/products.interfaces"
 import ProductsService from "@services/products"
@@ -18,10 +17,6 @@ class CategoriesService {
     return await CategoriesDAO.getByName(name)
   }
 
-  async getProducts(categoryName: string): Promise<IProduct[]> {
-    return await CategoriesDAO.getProducts(categoryName)
-  }
-
   async getManyByName(names: string[]) {
     return await CategoriesDAO.getManyByNames(names)
   }
@@ -33,14 +28,22 @@ class CategoriesService {
   }
 
   async create(category: INewCategory) {
-    const newCateogryDTO = CategoriesDTO.createNew(category)
-    const categoryCreated = await CategoriesDAO.create(newCateogryDTO)
-
-    if (categoryCreated.products.length > 0) {
-      await ProductsService.addCategory(categoryCreated.products, categoryCreated._id)
+    const newCategory = {
+      ...category,
+      products: [...new Set(category.products)]
     }
 
-    return categoryCreated
+    if (newCategory.products.length > 0) {
+      await ProductsService.validateProductIdsExist(newCategory.products)
+    }
+
+    const createdCategory = await CategoriesDAO.create(newCategory)
+
+    if (createdCategory.products.length > 0) {
+      await ProductsService.addCategory(createdCategory.products, createdCategory._id)
+    }
+
+    return createdCategory
   }
 
   async delete(categoryId: string) {

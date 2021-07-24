@@ -1,8 +1,6 @@
-import { ObjectId } from "mongoose"
 import CommonDAO from "@models/entities/CommonDAO"
 import { ICategory } from "@models/entities/categories/categories.interfaces"
 import { categoriesModel } from "@models/entities/categories/categories.model"
-import { IProduct } from "@models/entities/products/products.interfaces"
 
 class CategoriesDAO extends CommonDAO<ICategory> {
   constructor() {
@@ -40,7 +38,6 @@ class CategoriesDAO extends CommonDAO<ICategory> {
       }
     }
 
-    // await this.updateOneById(categoryId, { $push: { products: productId } })
     return await this.updateOneById(categoryId, update)
   }
 
@@ -55,20 +52,6 @@ class CategoriesDAO extends CommonDAO<ICategory> {
     }
 
     return await this.updateOneById(categoryId, update)
-  }
-
-  async getProducts(categoryName: string): Promise<IProduct[]> {
-    this.mongoDebug("getProducts", { categoryName })
-
-    const augmentedCategory = await this.model.findOne({ name: categoryName })
-      .orFail(this.throwNotFoundError({ categoryName }))
-      .populate("products")
-
-    if (!augmentedCategory) return []
-
-    const products = augmentedCategory.products
-
-    return products
   }
 }
 

@@ -17,7 +17,7 @@ router.delete("/:id",
   CategoriesControllers.validateMongoId,
   CategoriesControllers.delete)
 
-// Add product to category
+// Add products to category
 router.post("/:id/products",
   CategoriesControllers.validateMongoId,
   CategoriesControllers.validateAddOrRemoveProduct,

@@ -10,16 +10,10 @@ const categoriesSchema = new Schema<ICategory>({
     require: true,
     unique: true
   },
-  products: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "product" //ProductsCollectionName,
-    }
-  ],
-  enabled: {
-    type: Boolean,
-    default: true
-  }
+  products: [{
+    type: Schema.Types.ObjectId,
+    ref: "product" //ProductsCollectionName,
+  }]
 }, {
   versionKey: false
 })

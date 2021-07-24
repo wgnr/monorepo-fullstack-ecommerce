@@ -1,7 +1,6 @@
 import Ajv, { JTDSchemaType } from "ajv/dist/jtd"
 import { Request, Response, NextFunction } from "express";
 import CategoryService from "@services/categories"
-import CategoryDTO from "@models/entities/categories/categories.dto"
 import { INewCategory, IAddProduct } from "@models/entities/categories/categories.interfaces"
 import { SchemaValidationException, ValidationException } from "@exceptions/index";
 import { isValidMongoId } from "@models/index"
