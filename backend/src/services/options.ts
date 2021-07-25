@@ -1,4 +1,4 @@
-import { IOptions, valueType, INewOption, IOptionsDocument } from "@models/entities/options/options.interface"
+import { IOptions, valueType, IOptionNew, IOptionsDocument } from "@models/entities/options/options.interface"
 import OptionsDAO from "@models/entities/options/options.dao"
 import { ValidationException } from "@exceptions/index"
 import VariantsService from "@services/variants"
@@ -42,7 +42,7 @@ class OptionsService {
     }
   }
 
-  async create(option: INewOption) {
+  async create(option: IOptionNew) {
     const newOption = {
       ...option,
       values: [...new Set(option.values)].map(value => ({ value }))

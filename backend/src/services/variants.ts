@@ -6,6 +6,10 @@ import { ValidationException } from "@exceptions/index"
 
 
 class VariantsService {
+  async getById(id: string) {
+    return await VariantsDAO.getOneById(id)
+  }
+
   async getPopulatedById(id: string) {
     const variant = await VariantsDAO.getPopullatedById(id)
     const options = await Promise.all(

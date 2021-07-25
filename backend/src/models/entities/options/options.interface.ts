@@ -14,7 +14,7 @@ export interface IDeleteOption {
   values?: valueType[]
 }
 
-export interface INewOption extends IOptionsBase, IUpdateOption { }
+export interface IOptionNew extends IOptionsBase, IUpdateOption { }
 
 // Model Interfaces
 export interface IOptionValue {

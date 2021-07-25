@@ -1,7 +1,7 @@
-import { IOptions, INewOption } from "@models/entities/options/options.interface"
+import { IOptions, IOptionNew } from "@models/entities/options/options.interface"
 
 export class OptionsDTO {
-  static new(optionData: INewOption) {
+  static new(optionData: IOptionNew) {
     const values = Array.from(new Set(optionData.values))
       .map(value => ({ value }));
 
