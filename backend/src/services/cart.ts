@@ -32,9 +32,18 @@ class CartsService {
     const cart = await this.getById(cartId)
     this.validateCartCanModifyProducts(cart)
 
-    await Promise.all(itemsToAdd.map(
+    const variants = await Promise.all(itemsToAdd.map(
       items => VariantsService.getById(items.variantId)
     ))
+
+    // Validate if stock is enough
+    itemsToAdd.forEach(item => {
+      const { quantity, variantId } = item
+      const { stock } = variants.filter(variant => variant.id === variantId)[0]
+      if (stock < quantity) {
+        throw new ValidationException(`Item ${variantId} have stock ${stock} and it was requested ${quantity}`)
+      }
+    })
 
     for (const cartItem of itemsToAdd) {
       const itemInCart = cart.variants.find(
