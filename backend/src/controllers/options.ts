@@ -1,7 +1,7 @@
 import Ajv, { JTDSchemaType } from "ajv/dist/jtd"
 import { Request, Response, NextFunction } from "express";
 import OptionsService from "@services/options"
-import { IUpdateOption, INewOption, IDeleteOption } from "@models/entities/options/options.interface"
+import { IUpdateOption, IOptionNew, IDeleteOption } from "@models/entities/options/options.interface"
 import { SchemaValidationException, ValidationException } from "@exceptions/index";
 import { isValidMongoId } from "@models/index"
 
@@ -37,7 +37,7 @@ class OptionsControllers {
       return next(new ValidationException("values can't be empty"))
     }
 
-    const schema: JTDSchemaType<INewOption> = {
+    const schema: JTDSchemaType<IOptionNew> = {
       properties: {
         name: { type: "string" },
         values: {
@@ -46,7 +46,7 @@ class OptionsControllers {
       }
     }
 
-    const validate = new Ajv().compile<INewOption>(schema)
+    const validate = new Ajv().compile<IOptionNew>(schema)
     if (!validate(body))
       return next(new SchemaValidationException("Option object", schema, validate.errors))
 
