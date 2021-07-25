@@ -1,20 +1,34 @@
-import { ObjectId } from "mongoose";
+import { Document } from "mongoose";
 
+interface IOptionsBase {
+  name: string;
+}
+
+// Controller interfaces
 export type valueType = string
 
 export interface IUpdateOption {
   values: valueType[]
 }
-
-export interface INewOption extends IUpdateOption {
-  name: string;
+export interface IDeleteOption {
+  values?: valueType[]
 }
 
+export interface INewOption extends IOptionsBase, IUpdateOption { }
+
+// Model Interfaces
 export interface IOptionValue {
-  _id: ObjectId;
   value: string;
 }
 
-export interface IOptions extends Omit<INewOption, "values"> {
+export interface IOptions extends IOptionsBase {
   values: IOptionValue[]
+}
+
+export interface IOptionValueDocument extends Document {
+  value: string;
+}
+
+export interface IOptionsDocument extends IOptionsBase, Document {
+  values: IOptionValueDocument[]
 }

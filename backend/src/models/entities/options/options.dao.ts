@@ -14,7 +14,8 @@ class OptionsDAO extends CommonDAO<IOptions>{
 
     return await this.model.findOne({
       "values._id": Types.ObjectId(id)
-    }).orFail(this.throwNotFoundError({ id }))
+    })
+      .orFail(this.throwNotFoundError({ id }))
   }
 
   async getManyByValuesId(ids: string[]) {
@@ -47,7 +48,7 @@ class OptionsDAO extends CommonDAO<IOptions>{
     return await this.updateOneById(_id, {
       $pull: {
         values: {
-          value: Array.isArray(values) ? { $in: values } : values
+          _id: Array.isArray(values) ? { $in: values } : values
         }
       }
     })

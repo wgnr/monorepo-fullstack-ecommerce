@@ -13,10 +13,10 @@ router.post("",
 
 router.put("/:id",
   OptionsControllers.validateMongoId,
-  OptionsControllers.validateUpdateAndRemove,
+  OptionsControllers.validateUpdate,
   OptionsControllers.update)
 
 router.delete("/:id",
   OptionsControllers.validateMongoId,
-  OptionsControllers.validateUpdateAndRemove,
+  OptionsControllers.validateRemove,
   OptionsControllers.remove)

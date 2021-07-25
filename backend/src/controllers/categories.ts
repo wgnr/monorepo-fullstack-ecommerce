@@ -1,8 +1,8 @@
 import Ajv, { JTDSchemaType } from "ajv/dist/jtd"
 import { Request, Response, NextFunction } from "express";
 import CategoryService from "@services/categories"
-import { INewCategory, IAddProduct } from "@models/entities/categories/categories.interfaces"
-import { SchemaValidationException, ValidationException } from "@exceptions/index";
+import { ICategoryNew, ICategoryAddProduct } from "@models/entities/categories/categories.interfaces"
+import { SchemaValidationException } from "@exceptions/index";
 import { isValidMongoId } from "@models/index"
 
 
@@ -29,7 +29,7 @@ class CategoriesControllers {
   }
 
   validateCreate(req: Request, res: Response, next: NextFunction) {
-    const schema: JTDSchemaType<INewCategory> = {
+    const schema: JTDSchemaType<ICategoryNew> = {
       properties: {
         name: { type: "string" },
       },
@@ -40,7 +40,7 @@ class CategoriesControllers {
       }
     }
 
-    const validate = new Ajv().compile<INewCategory>(schema)
+    const validate = new Ajv().compile<ICategoryNew>(schema)
     if (!validate(req.body))
       return next(new SchemaValidationException("Category", schema, validate.errors))
 
@@ -66,7 +66,7 @@ class CategoriesControllers {
   }
 
   validateAddOrRemoveProduct(req: Request, res: Response, next: NextFunction) {
-    const schema: JTDSchemaType<IAddProduct> = {
+    const schema: JTDSchemaType<ICategoryAddProduct> = {
       properties: {
         products: {
           elements: { type: "string" }
@@ -74,7 +74,7 @@ class CategoriesControllers {
       },
     }
 
-    const validate = new Ajv().compile<IAddProduct>(schema)
+    const validate = new Ajv().compile<ICategoryAddProduct>(schema)
     if (!validate(req.body))
       return next(new SchemaValidationException("Category", schema, validate.errors))
 

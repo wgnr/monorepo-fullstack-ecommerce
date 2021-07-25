@@ -14,6 +14,12 @@ class CategoriesDAO extends CommonDAO<ICategory> {
       .orFail(this.throwNotFoundError({ name }))
   }
 
+  async getManyByIds(ids: string[]) {
+    this.mongoDebug("getManyByIds", { ids })
+
+    return await this.getMany({ _id: { $in: ids } })
+  }
+
   async getManyByNames(names: string[]) {
     this.mongoDebug("getManyByNames", { names })
 

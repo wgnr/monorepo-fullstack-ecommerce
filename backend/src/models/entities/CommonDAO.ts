@@ -32,7 +32,7 @@ export default abstract class CommonDAO<T> {
     this.mongoDebug("updateOneById", { id, payload })
 
     return await this.model.findByIdAndUpdate(id, payload, { new: true })
-      .orFail(this.throwNotFoundError({ id, payload }))
+      .orFail(this.throwNotFoundError({ id }))
   }
 
   async updateMany(filter: FilterQuery<T>, payload: T) {

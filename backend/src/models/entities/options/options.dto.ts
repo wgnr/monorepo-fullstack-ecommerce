@@ -1,4 +1,4 @@
-import { INewOption, IOptions } from "@models/entities/options/options.interface"
+import { IOptions, INewOption } from "@models/entities/options/options.interface"
 
 export class OptionsDTO {
   static new(optionData: INewOption) {
@@ -15,3 +15,5 @@ export class OptionsDTO {
     return { name, values }
   }
 }
+
+export default new OptionsDTO

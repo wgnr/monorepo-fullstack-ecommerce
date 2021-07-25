@@ -6,12 +6,10 @@ const optionsValuesSchema = new Schema<IOptionValue>({
   value: {
     type: String,
     require: true,
-    unique: true
   }
 })
 
 const OptionsSchema = new Schema<IOptions>({
-  id: { type: String, require: true },
   name: { type: String, require: true, unique: true },
   values: [optionsValuesSchema],
 }, {

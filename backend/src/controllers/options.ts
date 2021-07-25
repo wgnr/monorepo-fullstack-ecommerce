@@ -1,7 +1,7 @@
 import Ajv, { JTDSchemaType } from "ajv/dist/jtd"
 import { Request, Response, NextFunction } from "express";
 import OptionsService from "@services/options"
-import { INewOption, IUpdateOption } from "@models/entities/options/options.interface"
+import { IUpdateOption, INewOption, IDeleteOption } from "@models/entities/options/options.interface"
 import { SchemaValidationException, ValidationException } from "@exceptions/index";
 import { isValidMongoId } from "@models/index"
 
@@ -33,7 +33,7 @@ class OptionsControllers {
   validateCreate(req: Request, res: Response, next: NextFunction) {
     const { body } = req
 
-    if (body.values.length === 0) {
+    if (body.values?.length === 0) {
       return next(new ValidationException("values can't be empty"))
     }
 
@@ -62,7 +62,7 @@ class OptionsControllers {
     }
   }
 
-  validateUpdateAndRemove(req: Request, res: Response, next: NextFunction) {
+  validateUpdate(req: Request, res: Response, next: NextFunction) {
     const { body } = req
 
     if (body.values?.length === 0) {
@@ -95,12 +95,42 @@ class OptionsControllers {
     }
   }
 
+  validateRemove(req: Request, res: Response, next: NextFunction) {
+    const { body } = req
+
+    const schema: JTDSchemaType<IDeleteOption> = {
+      optionalProperties: {
+        values: {
+          elements: { type: "string" },
+        },
+      }
+    }
+
+    const validate = new Ajv().compile<IDeleteOption>(schema)
+    if (!validate(body))
+      return next(new SchemaValidationException("Option object", schema, validate.errors))
+
+    const { values } = req.body;
+    if (values) {
+      for (const valueId of values) {
+        const errorFound = isValidMongoId(valueId)
+        if (errorFound) return next(errorFound)
+      }
+    }
+
+    return next()
+  }
+
   async remove(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params
     const { values } = req.body
 
     try {
-      await OptionsService.removeValues(id, values)
+      if (!values) {
+        await OptionsService.remove(id)
+      } else {
+        await OptionsService.removeValues(id, values)
+      }
       return res.sendStatus(204)
     } catch (error) {
       return next(error)

@@ -1,7 +1,6 @@
-import { ObjectId } from "mongoose"
 import CategoriesDAO from "@models/entities/categories/categories.dao"
-import { INewCategory } from "@models/entities/categories/categories.interfaces"
-import { IProduct } from "@models/entities/products/products.interfaces"
+import { ICategoryNew } from "@models/entities/categories/categories.interfaces"
+import { IProductDocument } from "@models/entities/products/products.interfaces"
 import ProductsService from "@services/products"
 
 class CategoriesService {
@@ -13,6 +12,10 @@ class CategoriesService {
     return await CategoriesDAO.getOneById(id)
   }
 
+  async getManyByIds(ids: string[]) {
+    return await CategoriesDAO.getManyByIds(ids)
+  }
+
   async getOneByName(name: string) {
     return await CategoriesDAO.getByName(name)
   }
@@ -21,13 +24,13 @@ class CategoriesService {
     return await CategoriesDAO.getManyByNames(names)
   }
 
-  async getIdsFromNames(names: string[] | undefined): Promise<ObjectId[]> {
+  async getIdsFromNames(names: string[] | undefined) {
     if (!names || names?.length === 0) return []
 
     return (await CategoriesDAO.getManyByNames(names)).map(c => c._id!)
   }
 
-  async create(category: INewCategory) {
+  async create(category: ICategoryNew) {
     const newCategory = {
       ...category,
       products: [...new Set(category.products)]
@@ -66,8 +69,8 @@ class CategoriesService {
   /**
    * Ensures each category in product is also in the category products array
    */
-  async syncProductAndCategory(product: IProduct): Promise<void> {
-    const productId = product._id!
+  async syncProductAndCategory(product: IProductDocument): Promise<void> {
+    const productId = product._id
 
     for (const categoryId of product.categories) {
       try {
@@ -82,12 +85,19 @@ class CategoriesService {
   }
 
   // return the names that doesn't exists
-  async validateCategoriesNames(names: string[] | undefined): Promise<string[]> {
-    if (!names || !names.length) return []
+  // async validateCategoriesNames(names: string[] | undefined): Promise<string[]> {
+  //   if (!names || !names.length) return []
 
-    const uniqueNames = Array.from(new Set(names))
-    const result = (await this.getManyByName(uniqueNames)).map(c => c.name)
-    return uniqueNames.filter(un => !result.includes(un))
+  //   const uniqueNames = Array.from(new Set(names))
+  //   const result = (await this.getManyByName(uniqueNames)).map(c => c.name)
+  //   return uniqueNames.filter(un => !result.includes(un))
+  // }
+
+  async validateCategoriesExistByIds(categoriesIds: string[] | undefined) {
+    if (!categoriesIds) return
+
+    const ids = [...new Set(categoriesIds)]
+    await this.getManyByIds(ids)
   }
 }
 
