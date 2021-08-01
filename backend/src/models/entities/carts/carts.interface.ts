@@ -6,7 +6,6 @@ export enum CartStatus {
   OPEN = "OPEN",
   IN_CHECKOUT = "IN_CHECKOUT",
   PURCHASED = "PURCHASED",
-  CANCELLED = "CANCELLED",
 }
 
 export interface ICartAddItem {
@@ -27,3 +26,5 @@ export interface ICart {
   status: CartStatus,
   user: string;
 }
+
+export interface ICartDocument extends ICart, Document { }

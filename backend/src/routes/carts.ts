@@ -15,11 +15,13 @@ router.post("/:id",
   CartsControllers.validateAddOrUpdateVariant,
   CartsControllers.addOrUpdateVariant
 )
+
 router.put("/:id",
   CartsControllers.validateMongoId,
   CartsControllers.validateAddOrUpdateVariant,
   CartsControllers.addOrUpdateVariant
 )
+
 // Clear prodcuts from  to custome cart or a particular one
 router.delete("/:id/variant/:variantId",
   CartsControllers.validateMongoId,

@@ -1,4 +1,4 @@
-import { Types } from "mongoose"
+import { Types, ClientSession, QueryOptions } from "mongoose"
 import CommonDAO from "@models/entities/CommonDAO"
 import { IVariants } from "@models/entities/variants/variants.interfaces"
 import { VariantsModel } from "@models/entities/variants/variants.model"
@@ -34,6 +34,28 @@ class VariantsDAO extends CommonDAO<IVariants> {
 
     return response.n
 
+  }
+
+  async addStockInCheckout(variantId: string, quantity: number, session: ClientSession) {
+    this.mongoDebug("addStockInCheckout", { variantId, quantity })
+
+    const options: QueryOptions = { session, new: true }
+    return await this.model.findByIdAndUpdate(
+      variantId,
+      { $inc: { stockInCheckout: quantity } },
+      options
+    ).orFail(this.throwNotFoundError({ variantId }))
+  }
+
+  async releaseStockInCheckout(variantId: string, quantity: number, session: ClientSession) {
+    this.mongoDebug("releaseStockInCheckout", { variantId, quantity })
+
+    const options: QueryOptions = { session, new: true }
+    return await this.model.findByIdAndUpdate(
+      variantId,
+      { $inc: { stock: -quantity } },
+      options
+    ).orFail(this.throwNotFoundError({ variantId }))
   }
 }
 

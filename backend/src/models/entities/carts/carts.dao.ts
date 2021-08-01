@@ -8,8 +8,22 @@ class CartsDAO extends CommonDAO<ICart>{
     super(CategoriesModel)
   }
 
-  async getManyByStatusName(name: CartStatus) {
-    this.mongoDebug("getManyByStatusName", { name })
+  async getPopulatedById(cartId: string) {
+    this.mongoDebug("getPopulatedById", { cartId })
+
+    return await this.model.findById(cartId)
+      .populate({
+        path: "variants.variant",
+        populate: {
+          path: "product",
+          model: "product"
+        }
+      })
+      .orFail(this.throwNotFoundError({ cartId }))
+  }
+
+  async getManyByStatus(name: CartStatus) {
+    this.mongoDebug("getManyByStatus", { name })
 
     return await this.getMany({ status: name })
   }

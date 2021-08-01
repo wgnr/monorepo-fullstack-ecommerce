@@ -1,4 +1,4 @@
-import { IOptions, valueType, IOptionNew, IOptionsDocument } from "@models/entities/options/options.interface"
+import { IOptions, valueType, IOptionNew, IOptionsDocument, IOptionSummary } from "@models/entities/options/options.interface"
 import OptionsDAO from "@models/entities/options/options.dao"
 import { ValidationException } from "@exceptions/index"
 import VariantsService from "@services/variants"
@@ -25,17 +25,17 @@ class OptionsService {
     return await OptionsDAO.getOneByValueId(id)
   }
 
-  async getOptionNameAndValueByValueId(id: string) {
+  async getOptionNameAndValueByValueId(id: string): Promise<IOptionSummary> {
     const option = await this.getByValueId(id) as IOptionsDocument
     const value = option.values.find(value => value.id === id)!
 
     return {
       option: {
-        id: option._id,
+        id: option.id as string,
         name: option.name
       },
       value: {
-        id: value.id,
+        id: value.id as string,
         name: value.value,
 
       }

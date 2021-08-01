@@ -1,8 +1,10 @@
+import { ClientSession } from "mongoose"
 import ProductsService from "@services/products"
 import VariantsDAO from "@models/entities/variants/variants.dao"
-import { IVariants, IVariantUpdate } from "@models/entities/variants/variants.interfaces"
+import { IVariants, IVariantsDocument, IVariantUpdate } from "@models/entities/variants/variants.interfaces"
 import OptionsService from "@services/options"
 import { ValidationException } from "@exceptions/index"
+import { ICartItem } from "@models/entities/carts/carts.interface"
 
 
 class VariantsService {
@@ -64,6 +66,34 @@ class VariantsService {
   async delete(variantId: string) {
     // TODO check if variant is used in any cart
     return await VariantsDAO.deleteById(variantId)
+  }
+
+  async freezeStock(itemsInCart: ICartItem, session: ClientSession) {
+    const { variant: variantId, quantity } = itemsInCart
+    const variant = await VariantsDAO.addStockInCheckout(variantId, quantity, session) as IVariantsDocument
+    this.validateStocksAfterUpdate(variant)
+  }
+
+  async unfreezeStock(itemsInCart: ICartItem, session: ClientSession) {
+    const { variant: variantId, quantity } = itemsInCart
+    const variant = await VariantsDAO.addStockInCheckout(variantId, -quantity, session) as IVariantsDocument
+    this.validateStocksAfterUpdate(variant)
+  }
+
+  async discountStock(itemsInCart: ICartItem, session: ClientSession) {
+    const { variant: variantId, quantity } = itemsInCart
+    await this.unfreezeStock(itemsInCart, session)
+    const variant = await VariantsDAO.releaseStockInCheckout(variantId, quantity, session) as IVariantsDocument
+    this.validateStocksAfterUpdate(variant)
+  }
+
+  validateStocksAfterUpdate({ id, stockInCheckout, availableStock }: IVariantsDocument) {
+    if (stockInCheckout < 0) {
+      throw new ValidationException(`Variant ${id} have stockInCheckout ${stockInCheckout}`)
+    }
+    if (availableStock < 0) {
+      throw new ValidationException(`Variant ${id} has available stock ${availableStock}`)
+    }
   }
 }
 

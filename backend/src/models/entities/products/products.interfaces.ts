@@ -6,7 +6,7 @@ export interface IProductBase {
   description?: string;
   img?: string;
   name: string;
-  price?: number;
+  price: number;
   slug?: string;
 }
 

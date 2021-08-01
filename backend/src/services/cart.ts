@@ -1,7 +1,13 @@
+import { ClientSession, ObjectId } from "mongoose"
 import VariantsService from "@services/variants"
-import { CartStatus, ICartAddItem, ICart } from "@models/entities/carts/carts.interface"
-import CartsDAO from "@models/entities/carts/carts.dao"
+import OptionsService from "@services/options"
 import ValidationException from "@exceptions/ValidationException"
+import { IVariantsDocument } from "@models/entities/variants/variants.interfaces"
+import { CartStatus, ICartAddItem, ICart, ICartDocument } from "@models/entities/carts/carts.interface"
+import CartsDAO from "@models/entities/carts/carts.dao"
+import { IProduct } from "@models/entities/products/products.interfaces"
+import { IOptionSummary } from "@models/entities/options/options.interface"
+
 
 class CartsService {
   async create(userId: string) {
@@ -20,12 +26,66 @@ class CartsService {
     return await CartsDAO.getOneById(id)
   }
 
+  async getPopulatedById(id: string) {
+    return await CartsDAO.getPopulatedById(id)
+  }
+
+  async getFullPopulatedById(id: string) {
+    const cart = await this.getPopulatedById(id)
+    return await this.populateOptions(cart.toJSON())
+  }
+
   async getByStatus(statusName: string) {
     if (!Object.values(CartStatus).includes(statusName as CartStatus)) {
       throw new ValidationException(`Invalid status name: ${statusName}`)
     }
 
-    return await CartsDAO.getManyByStatusName(statusName as CartStatus)
+    return await CartsDAO.getManyByStatus(statusName as CartStatus)
+  }
+
+  getTotalPrice(cart: ICartDocument) {
+    return cart.variants.reduce((total, itemInCart) => {
+      // TODO improve the way i take values from populateddoc
+      const { price } = (itemInCart.variant as IVariantsDocument).product as IProduct
+      const { quantity } = itemInCart
+      return total + price * quantity
+    }, 0)
+  }
+
+  async populateOptions(cart: ICart) {
+    const optionsArr = cart.variants.flatMap(
+      cartVariant =>
+        (cartVariant.variant as IVariantsDocument).options.map(o => String(o))
+    )
+
+    const allOptionsIds = [...new Set(optionsArr)]
+
+    const optionsByNameAndValue = await Promise.all(allOptionsIds.map(
+      optionId => OptionsService.getOptionNameAndValueByValueId(optionId)
+    ))
+
+    cart.variants.forEach(variant => {
+      console.log(variant)
+      variant.variant.options = variant.variant.options.map((optionId: ObjectId) => optionsByNameAndValue.find(
+        optionWithNameAndValue => optionWithNameAndValue.value.id === String(optionId)
+      ))
+      console.log(variant)
+
+    })
+    return cart
+  }
+
+  async getProductsSummary(cart: ICart) {
+    const populatedCart = await this.populateOptions(cart);
+    console.log(populatedCart)
+    return populatedCart.variants.map(itemInCart => {
+      const { quantity } = itemInCart
+      const { name } = (itemInCart.variant as IVariantsDocument).product as IProduct
+      const options = ((itemInCart.variant as IVariantsDocument).options as IOptionSummary[])
+        .map(option => `${option.option.name}: ${option.value.name}`)
+
+      return `${quantity}x ${name} ${options.length > 0 ? `(${options.join(" | ")})` : ""}`
+    })
   }
 
   async upsertProducts(cartId: string, itemsToAdd: ICartAddItem[]) {
@@ -39,9 +99,10 @@ class CartsService {
     // Validate if stock is enough
     itemsToAdd.forEach(item => {
       const { quantity, variantId } = item
-      const { stock } = variants.filter(variant => variant.id === variantId)[0]
-      if (stock < quantity) {
-        throw new ValidationException(`Item ${variantId} have stock ${stock} and it was requested ${quantity}`)
+      const { availableStock } = variants.filter(variant => variant.id === variantId)[0] as IVariantsDocument
+
+      if (availableStock < quantity) {
+        throw new ValidationException(`Item ${variantId} has available stock ${availableStock} and it was requested ${quantity}`)
       }
     })
 
@@ -72,9 +133,45 @@ class CartsService {
     }
   }
 
-  // async chageStatus(newStatus: CartStatus) {
-  //   return await 
-  // }
+  validateCartIsNotEmpty(cart: ICart) {
+    if (!cart?.variants?.length) {
+      throw new ValidationException("Cart must have at least one product. It's empty")
+    }
+  }
+
+  async chageStatus(cart: ICartDocument, newStatus: CartStatus, session: ClientSession) {
+    if (cart.status === CartStatus.PURCHASED) throw new ValidationException("Cart is already purchased. Can't be opened.")
+
+    // Manipulate stock
+    if (newStatus === CartStatus.OPEN) {
+      if (cart.status !== CartStatus.IN_CHECKOUT) {
+        throw new ValidationException("Only cart in checkout can be opened.")
+      }
+      await Promise.all(cart.variants.map(
+        itemInCart => VariantsService.unfreezeStock(itemInCart, session)
+      ))
+
+    } else if (newStatus === CartStatus.IN_CHECKOUT) {
+      if (cart.status !== CartStatus.OPEN) {
+        throw new ValidationException("Only an open cart can be in checkout")
+      }
+      await Promise.all(cart.variants.map(
+        itemInCart => VariantsService.freezeStock(itemInCart, session)
+      ))
+
+    } else if (newStatus === CartStatus.PURCHASED) {
+      if (cart.status !== CartStatus.IN_CHECKOUT) {
+        throw new ValidationException("Only a cart in checkout can be purchased.")
+      }
+      await Promise.all(cart.variants.map(
+        itemInCart => VariantsService.discountStock(itemInCart, session)
+      ))
+    }
+
+    cart.status = newStatus
+    await cart.save({ session })
+  }
+
 
   async removeVariant(cartId: string, variantId: string) {
     const cart = await this.getById(cartId)

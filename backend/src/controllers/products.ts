@@ -53,12 +53,14 @@ class ProductController {
 
     const schema: JTDSchemaType<IProductNew[]> = {
       elements: {
-        properties: { name: { type: "string" }, },
+        properties: {
+          name: { type: "string" },
+          price: { type: "float32" },
+        },
         optionalProperties: {
           categories: { elements: { type: "string" } },
           description: { type: "string" },
           img: { type: "string" },
-          price: { type: "float32" },
           slug: { type: "string" },
           variants: {
             elements: {
@@ -157,11 +159,13 @@ class ProductController {
     const product = req.body as IProductBase
 
     const schema: JTDSchemaType<IProductBase> = {
-      properties: { name: { type: "string" } },
+      properties: {
+        name: { type: "string" },
+        price: { type: "float32" },
+      },
       optionalProperties: {
         description: { type: "string" },
         img: { type: "string" },
-        price: { type: "float32" },
         slug: { type: "string" },
       }
     }

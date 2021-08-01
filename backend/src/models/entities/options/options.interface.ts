@@ -4,6 +4,17 @@ interface IOptionsBase {
   name: string;
 }
 
+export interface IOptionSummary{
+  option: {
+      id: string;
+      name: string;
+  };
+  value: {
+      id: string;
+      name: string;
+  };
+}
+
 // Controller interfaces
 export type valueType = string
 

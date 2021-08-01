@@ -64,7 +64,6 @@ class CartsControllers {
     }
   }
 
-
   async removeVariant(req: Request, res: Response, next: NextFunction) {
     const { id, variantId } = req.params
     try {

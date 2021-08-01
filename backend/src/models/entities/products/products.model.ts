@@ -14,7 +14,7 @@ const ProductsSchema = new Schema<IProduct>(
     description: String,
     img: String,
     name: { type: String, require: true },
-    price: Number,
+    price: { type: Number, default: 0 },
     slug: String,
     variants: [{
       type: Schema.Types.ObjectId,
