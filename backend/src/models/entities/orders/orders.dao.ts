@@ -1,5 +1,5 @@
 import CommonDAO from "@models/entities/CommonDAO"
-import { IOrder, OrderStatus } from "@models/entities/orders/orders.interface"
+import { IOrder, IOrderDocument, OrderStatus } from "@models/entities/orders/orders.interface"
 import { OrdersModel } from "@models/entities/orders/orders.model"
 
 
@@ -14,12 +14,12 @@ class OrdersDAO extends CommonDAO<IOrder>{
     return await this.getMany({ status: name })
   }
 
-  async getPopulatedById(id: string) {
+  async getPopulatedById(id: string): Promise<IOrderDocument> {
     this.mongoDebug("getPopulatedById", { id })
 
     return await this.model.findById(id)
       .populate("cart")
-      .orFail(this.throwNotFoundError({ id }))
+      .orFail(this.throwNotFoundError({ id })) as IOrderDocument
   }
 }
 

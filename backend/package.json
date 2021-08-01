@@ -24,6 +24,7 @@
     "helmet": "^4.6.0",
     "mongoose": "^5.12.14",
     "nanoid": "^3.1.23",
+    "nodemailer": "^6.6.3",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -33,6 +34,7 @@
     "@types/helmet": "^4.0.0",
     "@types/mongoose": "^5.11.97",
     "@types/node": "^15.0.3",
+    "@types/nodemailer": "^6.4.4",
     "@types/uuid": "^8.3.0",
     "ts-node-dev": "^1.1.6",
     "tsconfig-paths": "^3.9.0",

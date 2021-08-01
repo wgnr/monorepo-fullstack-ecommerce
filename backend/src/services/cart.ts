@@ -65,19 +65,15 @@ class CartsService {
     ))
 
     cart.variants.forEach(variant => {
-      console.log(variant)
       variant.variant.options = variant.variant.options.map((optionId: ObjectId) => optionsByNameAndValue.find(
         optionWithNameAndValue => optionWithNameAndValue.value.id === String(optionId)
       ))
-      console.log(variant)
-
     })
     return cart
   }
 
   async getProductsSummary(cart: ICart) {
     const populatedCart = await this.populateOptions(cart);
-    console.log(populatedCart)
     return populatedCart.variants.map(itemInCart => {
       const { quantity } = itemInCart
       const { name } = (itemInCart.variant as IVariantsDocument).product as IProduct

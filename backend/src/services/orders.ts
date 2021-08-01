@@ -4,7 +4,7 @@ import OrdersDAO from "@models/entities/orders/orders.dao"
 import { IOrderDocument, IOrderPayload, IOrderPayment, OrderStatus } from "@models/entities/orders/orders.interface"
 import CartsService from "@services/cart"
 import ValidationException from "@exceptions/ValidationException"
-
+import { sendOrderSummary } from "@utils/email/index"
 class OrdersService {
   async getById(orderId: string) {
     return await OrdersDAO.getOneById(orderId)
@@ -61,14 +61,13 @@ class OrdersService {
 
   async pay(orderId: string, paymentPayload: IOrderPayment) {
     const order = await this.getPopulatedById(orderId)
+
     await this.chageStatus(order, OrderStatus.COMPLETED)
+
     order.payment = { ...paymentPayload }
 
-    try {
-      // TODO send email
-    } catch (emailError) {
-      console.log(`There was an error send purchase email. ${emailError.message}`)
-    }
+    await sendOrderSummary(order)
+
     await order.save()
     return order
   }

@@ -2,7 +2,7 @@ import { GlobalVars } from "@config/index"
 import { ValidationException } from "@exceptions/index";
 import mongoose, { ConnectOptions, Types } from "mongoose";
 // Use mongoose with promises
-// mongoose.Promise = global.Promise;
+mongoose.Promise = global.Promise;
 
 export type MongoConnectionParams = {
   URL: string;

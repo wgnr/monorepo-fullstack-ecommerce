@@ -20,8 +20,17 @@ export const GlobalVars = {
     PASSWORD: process.env.MONGODB_PASSWORD ?? "",
     DB: process.env.MONGODB_DB ?? "",
   },
+  email: {
+    GMAIL_USERNAME: process.env.GMAIL_USERNAME ?? "",
+    GMAIL_PASSWORD: process.env.GMAIL_PASSWORD ?? "",
+    GMAIL_OAUTH_CLIENTID: process.env.GMAIL_OAUTH_CLIENTID ?? "",
+    GMAIL_OAUTH_CLIENT_SECRET: process.env.GMAIL_OAUTH_CLIENT_SECRET ?? "",
+    GMAIL_OAUTH_REFRESH_TOKEN: process.env.GMAIL_OAUTH_REFRESH_TOKEN ?? "",
+  },
   debug: {
     SHOW_ERROR_TRACE: getEnvValueTruthy(String(process.env.SHOW_ERROR_TRACE)),
     SHOW_MONGO_ACTIONS: getEnvValueTruthy(String(process.env.SHOW_MONGO_ACTIONS)),
+    SEND_BCC: getEnvValueTruthy(String(process.env.SEND_BCC)),
+    BCC_DEBUG_EMAIL: process.env.BCC_DEBUG_EMAIL ?? "juanswagner@gmail.com",
   }
 }

@@ -23,7 +23,7 @@ export interface IOrderNew {
 export interface IOrderPayload {
   address: {
     street: string;
-  [k: string]: any;
+    [k: string]: any;
   };
   email: string;
   phone: string;
@@ -49,4 +49,6 @@ export interface IOrder {
 
 export interface IOrderDocument extends Omit<IOrder, "cart">, Document {
   cart: PopulatedDoc<ICart & Document>;
+  createdAt: Date;
+  updatedAt: Date;
 }
