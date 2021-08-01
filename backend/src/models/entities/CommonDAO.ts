@@ -8,7 +8,7 @@ const { debug: { SHOW_MONGO_ACTIONS } } = GlobalVars
 export default abstract class CommonDAO<T> {
   constructor(protected readonly model: Model<T>) { }
 
-  async create(entity: T | T[]) {
+  async create(entity?: T | T[]) {
     this.mongoDebug("create", { entity })
 
     return await this.model.create(entity)

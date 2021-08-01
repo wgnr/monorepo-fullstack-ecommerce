@@ -3,6 +3,7 @@ import { CartStatus, ICartDocument } from "@models/entities/carts/carts.interfac
 import OrdersDAO from "@models/entities/orders/orders.dao"
 import { IOrderDocument, IOrderPayload, IOrderPayment, OrderStatus } from "@models/entities/orders/orders.interface"
 import CartsService from "@services/cart"
+import UsersService from "@services/users"
 import ValidationException from "@exceptions/ValidationException"
 import { sendOrderSummary } from "@utils/email/index"
 class OrdersService {
@@ -82,11 +83,12 @@ class OrdersService {
       throw new ValidationException(`Order is ${order.status}!. No action taken`)
 
     await mongoose.connection.transaction(async (session: ClientSession) => {
-      const { cart } = order
+      const { cart, user } = order
 
       if (newStatus === OrderStatus.COMPLETED &&
         order.status === OrderStatus.AWAITING_PAYMENT) {
         await CartsService.chageStatus(cart, CartStatus.PURCHASED, session)
+        await UsersService.assignNewCart(user, session)
       } else if (newStatus === OrderStatus.CANCELLED &&
         order.status === OrderStatus.AWAITING_PAYMENT) {
         await CartsService.chageStatus(cart, CartStatus.OPEN, session)

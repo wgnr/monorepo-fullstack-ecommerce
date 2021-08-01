@@ -12,7 +12,13 @@ const VariantsSchema = new Schema<IVariants>({
   stockInCheckout: { type: Number, default: 0 },
   options: [Schema.Types.ObjectId]
 }, {
-  versionKey: false
+  versionKey: false,
+  toJSON: {
+    virtuals: true
+  },
+  toObject: {
+    virtuals: true
+  }
 })
 
 VariantsSchema.virtual("availableStock").get(function (this: IVariantsDocument) {

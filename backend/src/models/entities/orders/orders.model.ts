@@ -1,4 +1,4 @@
-import { nanoid } from 'nanoid/non-secure'
+import { nanoid } from 'nanoid'
 export const collectionName = "order"
 import { Model, model, Schema } from "mongoose"
 import { IOrder, OrderStatus, } from "@models/entities/orders/orders.interface"
@@ -21,7 +21,10 @@ const ordersSchema = new Schema<IOrder>({
     default: OrderStatus.AWAITING_PAYMENT
   },
   total: Number,
-  user: String, // TODO usar la referenca de mongo
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "user"
+  },
 }, {
   versionKey: false,
   timestamps: true

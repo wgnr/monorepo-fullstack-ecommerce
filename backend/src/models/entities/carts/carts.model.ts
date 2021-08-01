@@ -13,10 +13,17 @@ const cartsSchema = new Schema<ICart>({
       type: Schema.Types.ObjectId,
       ref: "variant",
     },
-    quantity: { type: Number, require: true, default: 0 },
+    quantity: {
+      type: Number,
+      require: true,
+      default: 0
+    },
     comment: String,
   }],
-  user: String
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "user",
+  }
 }, {
   versionKey: false,
   timestamps: true
