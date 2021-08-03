@@ -3,25 +3,30 @@ import OrdersControllers from "@controllers/orders"
 
 export const router = express.Router();
 
-router.get("/:id?",
+router.get("/:orderId?",
   OrdersControllers.validateMongoId,
+  OrdersControllers.selfResource,
   OrdersControllers.getAllOrById)
 
 router.post("",
   OrdersControllers.validateCreate,
+  OrdersControllers.selfResource,
   OrdersControllers.create)
 
-router.put("/:id",
+router.put("/:orderId",
   OrdersControllers.validateMongoId,
   OrdersControllers.validateUpdateInfo,
+  OrdersControllers.selfResource,
   OrdersControllers.updateInfo)
 
-router.post("/:id",
+router.post("/:orderId",
   OrdersControllers.validateMongoId,
   OrdersControllers.validatePay,
+  OrdersControllers.selfResource,
   OrdersControllers.pay)
 
 
-router.delete("/:id",
+router.delete("/:orderId",
   OrdersControllers.validateMongoId,
+  OrdersControllers.selfResource,
   OrdersControllers.cancell)

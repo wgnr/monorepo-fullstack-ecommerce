@@ -3,28 +3,32 @@ import CategoriesControllers from "@controllers/categories"
 
 export const router = express.Router();
 
-router.get("/:id?",
+router.get("/:categoryId?",
   CategoriesControllers.validateMongoId,
   CategoriesControllers.getOneOrALl)
 
 // Create new cateogry
 router.post("",
+  CategoriesControllers.adminOnly,
   CategoriesControllers.validateCreate,
   CategoriesControllers.create)
 
 // Delete category
-router.delete("/:id",
+router.delete("/:categoryId",
+  CategoriesControllers.adminOnly,
   CategoriesControllers.validateMongoId,
   CategoriesControllers.delete)
 
 // Add products to category
-router.post("/:id/products",
+router.post("/:categoryId/products",
+  CategoriesControllers.adminOnly,
   CategoriesControllers.validateMongoId,
   CategoriesControllers.validateAddOrRemoveProduct,
   CategoriesControllers.addOrDeleteProducts)
 
 // Remove products from category
-router.delete("/:id/products",
+router.delete("/:categoryId/products",
+  CategoriesControllers.adminOnly,
   CategoriesControllers.validateMongoId,
   CategoriesControllers.validateAddOrRemoveProduct,
   CategoriesControllers.addOrDeleteProducts)

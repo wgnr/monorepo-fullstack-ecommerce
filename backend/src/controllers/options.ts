@@ -1,19 +1,25 @@
 import Ajv, { JTDSchemaType } from "ajv/dist/jtd"
 import { Request, Response, NextFunction } from "express";
-import OptionsService from "@services/options"
-import { IUpdateOption, IOptionNew, IDeleteOption } from "@models/entities/options/options.interface"
-import { SchemaValidationException, ValidationException } from "@exceptions/index";
+import { AuthJWT } from "@auth/index";
 import { isValidMongoId } from "@models/index"
+import { IUpdateOption, IOptionNew, IDeleteOption } from "@models/entities/options/options.interface"
+import { IUser } from "@models/entities/users/users.interface";
+import { SchemaValidationException, ValidationException } from "@exceptions/index";
+import OptionsService from "@services/options"
 
-class OptionsControllers {
+class OptionsControllers extends AuthJWT {
+  selfResource(req: Request, res: Response, next: NextFunction): void {
+    return next()
+  }
+
   async getAllOrById(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params
+    const { optionId } = req.params
     const { name } = req.query
     let response
 
     try {
-      if (id) {
-        response = await OptionsService.getById(id)
+      if (optionId) {
+        response = await OptionsService.getById(optionId)
       } else if (typeof name === "string") {
         response = await OptionsService.getByName(name)
       } else {
@@ -26,8 +32,8 @@ class OptionsControllers {
   }
 
   validateMongoId(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params
-    return next(id && isValidMongoId(id))
+    const { optionId } = req.params
+    return next(optionId && isValidMongoId(optionId))
   }
 
   validateCreate(req: Request, res: Response, next: NextFunction) {
@@ -85,11 +91,11 @@ class OptionsControllers {
   }
 
   async update(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params
+    const { optionId } = req.params
     const { values } = req.body
 
     try {
-      return res.json(await OptionsService.addValues(id, values))
+      return res.json(await OptionsService.addValues(optionId, values))
     } catch (error) {
       return next(error)
     }
@@ -122,14 +128,14 @@ class OptionsControllers {
   }
 
   async remove(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params
+    const { optionId } = req.params
     const { values } = req.body
 
     try {
       if (!values) {
-        await OptionsService.remove(id)
+        await OptionsService.remove(optionId)
       } else {
-        await OptionsService.removeValues(id, values)
+        await OptionsService.removeValues(optionId, values)
       }
       return res.sendStatus(204)
     } catch (error) {

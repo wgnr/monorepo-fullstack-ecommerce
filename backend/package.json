@@ -26,6 +26,10 @@
     "mongoose": "^5.12.14",
     "nanoid": "^3.1.23",
     "nodemailer": "^6.6.3",
+    "passport": "^0.4.1",
+    "passport-facebook": "^3.0.0",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -37,6 +41,10 @@
     "@types/mongoose": "^5.11.97",
     "@types/node": "^15.0.3",
     "@types/nodemailer": "^6.4.4",
+    "@types/passport": "^1.0.7",
+    "@types/passport-facebook": "^2.1.11",
+    "@types/passport-jwt": "^3.0.6",
+    "@types/passport-local": "^1.0.34",
     "@types/uuid": "^8.3.0",
     "ts-node-dev": "^1.1.6",
     "tsconfig-paths": "^3.9.0",

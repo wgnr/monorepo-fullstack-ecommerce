@@ -1,12 +1,20 @@
 import mongoose, { ClientSession } from "mongoose"
-import { CartStatus, ICartDocument } from "@models/entities/carts/carts.interface"
-import OrdersDAO from "@models/entities/orders/orders.dao"
+import { CartStatus } from "@models/entities/carts/carts.interface"
 import { IOrderDocument, IOrderPayload, IOrderPayment, OrderStatus } from "@models/entities/orders/orders.interface"
+import { sendOrderSummary } from "@utils/email/index"
 import CartsService from "@services/cart"
+import OrdersDAO from "@models/entities/orders/orders.dao"
 import UsersService from "@services/users"
 import ValidationException from "@exceptions/ValidationException"
-import { sendOrderSummary } from "@utils/email/index"
 class OrdersService {
+  async getOrdersByUserId(userId: string) {
+    return await OrdersDAO.getManyByUserId(userId)
+  }
+
+  async getOrdersCountByUserId(userId: string) {
+    return await OrdersDAO.getCountByUserId(userId)
+  }
+
   async getById(orderId: string) {
     return await OrdersDAO.getOneById(orderId)
   }
@@ -99,6 +107,10 @@ class OrdersService {
     })
 
     return order
+  }
+
+  async verifyOrderBelongsToUser(orderId: string, userId: string) {
+    return await OrdersDAO.checkOrderBelongsToUserById(orderId, userId)
   }
 }
 

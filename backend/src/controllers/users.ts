@@ -1,25 +1,51 @@
 import { Request, Response, NextFunction } from "express";
 import Ajv, { JTDSchemaType } from "ajv/dist/jtd"
-import { IProductNew, IProductBase } from "@models/entities/products/products.interfaces"
-import UsersService from "@services/users"
-import { SchemaValidationException, ValidationException } from "@exceptions/index"
+import { AuthJWT } from "@auth/index";
 import { isValidMongoId } from "@models/index";
-import { IVariantBase, IVariantUpdate } from "@models/entities/variants/variants.interfaces";
+import { IUser, IUserDocument } from "@models/entities/users/users.interface";
 import { IUserUpdate, IUserNew, IUserUpdatePassword } from "@models/entities/users/users.interface";
+import { SchemaValidationException, ValidationException } from "@exceptions/index"
+import UsersService from "@services/users"
 
-class UsersController {
+class UsersController extends AuthJWT {
+  async selfResource(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const user = (req.user) as IUser
+    const { params: { userId } } = req
+
+    if (req.isUnauthenticated())
+      return next("Unauthenticated")
+
+    if (AuthJWT.isAdmin(user)) {
+      res.locals.isAdmin = { ...res.locals, isAdmin: true }
+      return next()
+    }
+
+    const { _id } = (req.user) as IUserDocument
+
+    if (String(_id) !== userId) {
+      return next("Unauthorise")
+    }
+
+    return next()
+  }
+
   async getAllOrById(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params
+    const { userId } = req.params
     const { email } = req.query
+    const { isAdmin = false } = res.locals
     let response
 
     try {
-      if (id) {
-        response = await UsersService.getById(id)
-      } else if (typeof email === "string") {
-        response = await UsersService.getByEmail(email)
+      if (isAdmin) {
+        if (userId) {
+          response = await UsersService.getById(userId)
+        } else if (typeof email === "string") {
+          response = await UsersService.getByEmail(email)
+        } else {
+          response = await UsersService.getAll()
+        }
       } else {
-        response = await UsersService.getAll()
+        response = await UsersService.getById(userId)
       }
       return res.json(response)
     } catch (error) {
@@ -77,9 +103,9 @@ class UsersController {
   };
 
   async update(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params
+    const { userId } = req.params
     try {
-      return res.json(await UsersService.update(id, req.body));
+      return res.json(await UsersService.update(userId, req.body));
     } catch (error) {
       return next(error);
     }
@@ -106,28 +132,28 @@ class UsersController {
   };
 
   async updatePassword(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params
+    const { userId } = req.params
     try {
-      return res.json(await UsersService.updatePassword(id, req.body));
+      return res.json(await UsersService.updatePassword(userId, req.body));
     } catch (error) {
       return next(error);
     }
   }
 
   async delete(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params
+    const { userId } = req.params
     try {
-      return res.json(await UsersService.delete(id));
+      return res.json(await UsersService.delete(userId));
     } catch (error) {
       return next(error);
     }
   }
 
   validateMongoId(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params
+    const { userId } = req.params
     let errorFlag = null
-    if (id) {
-      errorFlag = isValidMongoId(id)
+    if (userId) {
+      errorFlag = isValidMongoId(userId)
     }
     return next(errorFlag)
   }

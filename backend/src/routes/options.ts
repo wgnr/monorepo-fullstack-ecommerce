@@ -3,20 +3,23 @@ import OptionsControllers from "@controllers/options"
 
 export const router = express.Router();
 
-router.get("/:id?",
+router.get("/:optionId?",
   OptionsControllers.validateMongoId,
   OptionsControllers.getAllOrById)
 
 router.post("",
+  OptionsControllers.adminOnly,
   OptionsControllers.validateCreate,
   OptionsControllers.create)
 
-router.put("/:id",
+router.put("/:optionId",
+  OptionsControllers.adminOnly,
   OptionsControllers.validateMongoId,
   OptionsControllers.validateUpdate,
   OptionsControllers.update)
 
-router.delete("/:id",
+router.delete("/:optionId",
+  OptionsControllers.adminOnly,
   OptionsControllers.validateMongoId,
   OptionsControllers.validateRemove,
   OptionsControllers.remove)

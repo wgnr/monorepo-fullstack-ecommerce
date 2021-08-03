@@ -1,5 +1,7 @@
+import express, { Request, Response } from "express"
 import { GlobalVars } from "@config/index"
-import express from "express"
+import { AuthJWT } from "@auth/auth.controller";
+import { router as authRouter } from "@routes/auth"
 import { router as cartsRouter } from "@routes/carts"
 import { router as categoriesRouter } from "@routes/categories"
 import { router as optionsRouter } from "@routes/options"
@@ -9,13 +11,15 @@ import { router as usersRouter } from "@routes/users"
 
 export const router = express.Router()
 
-router.use("/cart", cartsRouter)
-router.use("/categories", categoriesRouter)
-router.use("/options", optionsRouter)
-router.use("/orders", ordersRouter)
-router.use("/products", productsRouter)
-router.use("/users", usersRouter)
+router.use("/auth", authRouter)
+router.use("/cart", AuthJWT.verifyJWT(), cartsRouter)
+router.use("/categories", AuthJWT.verifyJWT(), categoriesRouter)
+router.use("/options", AuthJWT.verifyJWT(), optionsRouter)
+router.use("/orders", AuthJWT.verifyJWT(), ordersRouter)
+router.use("/products", AuthJWT.verifyJWT(), productsRouter)
+router.use("/users", AuthJWT.verifyJWT(), usersRouter)
 
-router.get("/configs", (req, res) => {
-  res.json(GlobalVars)
-})
+router.get("/configs", AuthJWT.verifyJWT(), AuthJWT.adminOnly,
+  (req: Request, res: Response) => {
+    res.json(GlobalVars)
+  })

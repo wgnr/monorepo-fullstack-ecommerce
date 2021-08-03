@@ -1,20 +1,26 @@
 import { Request, Response, NextFunction } from "express";
 import Ajv, { JTDSchemaType } from "ajv/dist/jtd"
+import { AuthJWT } from "@auth/index";
 import { IProductNew, IProductBase } from "@models/entities/products/products.interfaces"
-import ProductService from "@services/products"
-import { SchemaValidationException, ValidationException } from "@exceptions/index"
 import { isValidMongoId } from "@models/index";
+import { IUser, IUserDocument } from "@models/entities/users/users.interface";
 import { IVariantBase, IVariantUpdate } from "@models/entities/variants/variants.interfaces";
+import { SchemaValidationException, ValidationException } from "@exceptions/index"
+import ProductService from "@services/products"
 
-class ProductController {
+class ProductController extends AuthJWT {
+  selfResource(req: Request, res: Response, next: NextFunction) {
+    return next()
+  }
+
   async getAllOrById(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params
+    const { productId } = req.params
     const { category } = req.query
     let response
 
     try {
-      if (id) {
-        response = await ProductService.getById(id)
+      if (productId) {
+        response = await ProductService.getById(productId)
       } else if (typeof category === "string") {
         response = await ProductService.getByCategoryName(category)
       } else {
@@ -37,9 +43,9 @@ class ProductController {
   }
 
   async getVariantPopulatedByProductId(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params
+    const { productId } = req.params
     try {
-      return res.json(await ProductService.getPopulatedByProductId(id));
+      return res.json(await ProductService.getPopulatedByProductId(productId));
     } catch (error) {
       return next(error)
     }
@@ -145,9 +151,9 @@ class ProductController {
 
 
   async addVariant(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params;
+    const { productId } = req.params;
     try {
-      return res.json(await ProductService.addVariant(id, req.body));
+      return res.json(await ProductService.addVariant(productId, req.body));
     } catch (error) {
       return next(error)
     }
@@ -178,9 +184,9 @@ class ProductController {
   };
 
   async updateProducts(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params
+    const { productId } = req.params
     try {
-      return res.json(await ProductService.update(id, req.body));
+      return res.json(await ProductService.update(productId, req.body));
     } catch (error) {
       return next(error)
     }
@@ -220,9 +226,9 @@ class ProductController {
   };
 
   async delete(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params
+    const { productId } = req.params
     try {
-      const deletedCount = await ProductService.delete(id)
+      const deletedCount = await ProductService.delete(productId)
       return res.status(201).json(deletedCount)
     } catch (error) {
       return next(error)
@@ -230,10 +236,10 @@ class ProductController {
   }
 
   validateMongoId(req: Request, res: Response, next: NextFunction) {
-    const { id, variantId } = req.params
+    const { productId, variantId } = req.params
     let errorFlag = null
-    if (id) {
-      errorFlag = isValidMongoId(id)
+    if (productId) {
+      errorFlag = isValidMongoId(productId)
     }
     if (variantId) {
       errorFlag = isValidMongoId(variantId)

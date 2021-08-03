@@ -3,7 +3,7 @@ import ProductsControllers from "@controllers/products"
 
 export const router = express.Router();
 
-router.get("/:id?",
+router.get("/:productId?",
   ProductsControllers.validateMongoId,
   ProductsControllers.getAllOrById
 );
@@ -14,25 +14,28 @@ router.get("/variant/:variantId",
   ProductsControllers.getVariantById
 )
 
-router.get("/:id/populated",
+router.get("/:productId/populated",
   ProductsControllers.validateMongoId,
   ProductsControllers.getVariantPopulatedByProductId
 );
 
 // Create new product
 router.post("",
+  ProductsControllers.adminOnly,
   ProductsControllers.validateCreateProducts,
   ProductsControllers.create
 )
 
 // Add new variant
-router.post("/:id/variant",
+router.post("/:productId/variant",
+  ProductsControllers.adminOnly,
   ProductsControllers.validateAddVariant,
   ProductsControllers.addVariant
 )
 
 // Update name, descriptcion, price
-router.put("/:id",
+router.put("/:productId",
+  ProductsControllers.adminOnly,
   ProductsControllers.validateMongoId,
   ProductsControllers.validateUpdateProducts,
   ProductsControllers.updateProducts
@@ -40,19 +43,22 @@ router.put("/:id",
 
 // Actualizar la info de un variant (stock)
 router.put("/variant/:variantId",
+  ProductsControllers.adminOnly,
   ProductsControllers.validateMongoId,
   ProductsControllers.validateUpdateVariant,
   ProductsControllers.updateVariant
 )
 
 // Delete product
-router.delete("/:id",
+router.delete("/:productId",
+  ProductsControllers.adminOnly,
   ProductsControllers.validateMongoId,
   ProductsControllers.delete
 )
 
 // Delete variant
 router.delete("/variant/:variantId",
+  ProductsControllers.adminOnly,
   ProductsControllers.validateMongoId,
   ProductsControllers.deleteVariant
 )

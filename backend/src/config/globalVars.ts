@@ -32,5 +32,10 @@ export const GlobalVars = {
     SHOW_MONGO_ACTIONS: getEnvValueTruthy(String(process.env.SHOW_MONGO_ACTIONS)),
     SEND_BCC: getEnvValueTruthy(String(process.env.SEND_BCC)),
     BCC_DEBUG_EMAIL: process.env.BCC_DEBUG_EMAIL ?? "juanswagner@gmail.com",
+  },
+  jwt: {
+    JWT_TOKEN_SECRET: process.env.JWT_TOKEN_SECRET ?? "MAKE_SURE_TO_CHANGE_THIS_SECRET_AFTER_!@##$%^&*",
+    // https://github.com/vercel/ms
+    JWT_EXPIRATION_TIME: process.env.JWT_EXPIRATION_TIME ?? "1d"
   }
 }

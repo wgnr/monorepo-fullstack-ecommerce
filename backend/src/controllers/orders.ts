@@ -1,23 +1,61 @@
 import Ajv, { JTDSchemaType } from "ajv/dist/jtd"
 import { Request, Response, NextFunction } from "express";
-import OrdersService from "@services/orders"
-import { isValidMongoId } from "@models/index";
+import { AuthJWT } from "@auth/index";
 import { IOrderNew, IOrderPayment, OrderStatus } from "@models/entities/orders/orders.interface";
+import { isValidMongoId } from "@models/index";
+import { IUser, IUserDocument } from "@models/entities/users/users.interface";
 import { SchemaValidationException } from "@exceptions/index";
+import OrdersService from "@services/orders"
 
-class OrdersController {
+class OrdersController extends AuthJWT {
+  async selfResource(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const user = (req.user) as IUser
+    const { params: { orderId } } = req
+
+    if (req.isUnauthenticated())
+      return next("Unauthenticated")
+
+    if (AuthJWT.isAdmin(user)) {
+      res.locals.isAdmin = { ...res.locals, isAdmin: true }
+      return next()
+    }
+
+    const { _id } = (req.user) as IUserDocument
+
+    if (orderId) {
+      const ordersFromUser = await OrdersService.verifyOrderBelongsToUser(orderId, _id)
+      if (ordersFromUser === 0) {
+        return next("Nothing to show.")
+      }
+    }
+
+    return next()
+  }
+
   async getAllOrById(req: Request, res: Response, next: NextFunction) {
     const { query: { status } } = req
-    const { params: { id } } = req
+    const { params: { orderId } } = req
+    const { isAdmin = false } = res.locals
+    const { _id } = (req.user) as IUserDocument
+
     let response
 
     try {
-      if (id) {
-        response = await OrdersService.getById(id)
-      } else if (typeof status === "string") {
-        response = await OrdersService.getByStatus(status as OrderStatus)
+      if (isAdmin) {
+        if (orderId) {
+          response = await OrdersService.getById(orderId)
+        } else if (typeof status === "string") {
+          response = await OrdersService.getByStatus(status as OrderStatus)
+        } else {
+          response = await OrdersService.getAll()
+        }
       } else {
-        response = await OrdersService.getAll()
+        if (orderId) {
+          response = await OrdersService.getById(orderId)
+        }
+        else {
+          response = await OrdersService.getOrdersByUserId(_id)
+        }
       }
       return res.json(response)
     } catch (error) {
@@ -81,10 +119,10 @@ class OrdersController {
   }
 
   async pay(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params
+    const { orderId } = req.params
 
     try {
-      return res.json(await OrdersService.pay(id, req.body))
+      return res.json(await OrdersService.pay(orderId, req.body))
     } catch (error) {
       return next(error)
     }
@@ -113,31 +151,31 @@ class OrdersController {
   }
 
   async updateInfo(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params
+    const { orderId } = req.params
     const { payload } = req.body
 
     try {
-      return res.json(await OrdersService.update(id, payload))
+      return res.json(await OrdersService.update(orderId, payload))
     } catch (error) {
       return next(error)
     }
   }
 
   async cancell(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params
+    const { orderId } = req.params
 
     try {
-      return res.json(await OrdersService.cancell(id))
+      return res.json(await OrdersService.cancell(orderId))
     } catch (error) {
       return next(error)
     }
   }
 
   validateMongoId(req: Request, res: Response, next: NextFunction) {
-    const { id, variantId } = req.params
+    const { orderId, variantId } = req.params
     let errorFlag = null
-    if (id) {
-      errorFlag = isValidMongoId(id)
+    if (orderId) {
+      errorFlag = isValidMongoId(orderId)
     }
     if (variantId) {
       errorFlag = isValidMongoId(variantId)

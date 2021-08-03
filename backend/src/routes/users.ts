@@ -3,33 +3,38 @@ import UsersControllers from "@controllers/users"
 
 export const router = express.Router();
 
-router.get("/:id?",
+router.get("/:userId?",
   UsersControllers.validateMongoId,
+  UsersControllers.selfResource,
   UsersControllers.getAllOrById
 );
 
 // Create new user
 router.post("",
+  UsersControllers.adminOnly,
   UsersControllers.validateCreate,
   UsersControllers.create
 )
 
 // Update user
-router.put("/:id",
+router.put("/:userId",
   UsersControllers.validateMongoId,
   UsersControllers.validateUpdate,
+  UsersControllers.selfResource,
   UsersControllers.update
 )
 
 // Update password
-router.put("/:id/password",
+router.put("/:userId/password",
   UsersControllers.validateMongoId,
   UsersControllers.validateUpdatePassword,
+  UsersControllers.selfResource,
   UsersControllers.updatePassword
 )
 
-// Delete product
-router.delete("/:id",
+// Delete user
+router.delete("/:userId",
+  UsersControllers.adminOnly,
   UsersControllers.validateMongoId,
   UsersControllers.delete
 )

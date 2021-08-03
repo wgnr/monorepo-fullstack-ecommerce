@@ -1,21 +1,40 @@
 import Ajv, { JTDSchemaType } from "ajv/dist/jtd"
 import { Request, Response, NextFunction } from "express";
-import CategoryService from "@services/categories"
+import { AuthJWT } from "@auth/index";
 import { ICategoryNew, ICategoryAddProduct } from "@models/entities/categories/categories.interfaces"
-import { SchemaValidationException } from "@exceptions/index";
 import { isValidMongoId } from "@models/index"
+import { IUser } from "@models/entities/users/users.interface";
+import { SchemaValidationException } from "@exceptions/index";
+import CategoryService from "@services/categories"
 
 
+class CategoriesControllers extends AuthJWT {
+  selfResource(req: Request, res: Response, next: NextFunction): void {
+    const user = (req.user) as IUser
+    const { params: { cartId } } = req
 
-class CategoriesControllers {
+    if (req.isUnauthenticated())
+      return next("Unauthenticated")
+
+    if (AuthJWT.isAdmin(user)) {
+      res.locals.isAdmin = { ...res.locals, isAdmin: true }
+      return next()
+    }
+
+    if (String(user.currentCart) !== cartId)
+      return next("That's not yours.")
+
+    return next()
+  }
+
   async getOneOrALl(req: Request, res: Response, next: NextFunction) {
     const { query: { name } } = req
-    const { params: { id } } = req
+    const { params: { categoryId } } = req
     let response
 
     try {
-      if (id) {
-        response = await CategoryService.getById(id)
+      if (categoryId) {
+        response = await CategoryService.getById(categoryId)
       } else if (typeof name === "string") {
         response = await CategoryService.getOneByName(name)
       } else {
@@ -90,15 +109,15 @@ class CategoriesControllers {
   }
 
   async addOrDeleteProducts(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params
+    const { categoryId } = req.params
     const { products } = req.body
 
     try {
       let response
       if (req.method === "POST") {
-        response = await CategoryService.addProducts(id, products)
+        response = await CategoryService.addProducts(categoryId, products)
       } else if (req.method === "DELETE") {
-        response = await CategoryService.removeProducts(id, products)
+        response = await CategoryService.removeProducts(categoryId, products)
       } else {
         return res.end()
       }
@@ -109,17 +128,17 @@ class CategoriesControllers {
   }
 
   async delete(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params
+    const { categoryId } = req.params
     try {
-      return res.json(await CategoryService.delete(id))
+      return res.json(await CategoryService.delete(categoryId))
     } catch (error) {
       return next(error)
     }
   }
 
   validateMongoId(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params
-    return next(id && isValidMongoId(id))
+    const { categoryId } = req.params
+    return next(categoryId && isValidMongoId(categoryId))
   }
 }
 
