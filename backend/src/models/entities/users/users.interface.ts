@@ -20,6 +20,7 @@ interface IUserBase {
   firstName: string;
   lastName: string;
   password: string;
+  type?: UserType;
 }
 
 export interface IUserNew extends IUserBase { }

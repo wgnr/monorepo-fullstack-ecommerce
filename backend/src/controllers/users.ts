@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import Ajv, { JTDSchemaType } from "ajv/dist/jtd"
 import { AuthJWT } from "@auth/index";
 import { isValidMongoId } from "@models/index";
-import { IUser, IUserDocument } from "@models/entities/users/users.interface";
+import { IUser, IUserDocument, UserType } from "@models/entities/users/users.interface";
 import { IUserUpdate, IUserNew, IUserUpdatePassword } from "@models/entities/users/users.interface";
 import { SchemaValidationException, ValidationException } from "@exceptions/index"
 import UsersService from "@services/users"
@@ -62,6 +62,9 @@ class UsersController extends AuthJWT {
         firstName: { type: "string" },
         lastName: { type: "string" },
         password: { type: "string", },
+      },
+      optionalProperties: {
+        type: { enum: Object.values(UserType) }
       }
     }
 

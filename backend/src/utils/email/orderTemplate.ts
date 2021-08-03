@@ -1,6 +1,9 @@
+import { SendMailOptions } from "nodemailer";
 import { IOrderDocument } from "@models/entities/orders/orders.interface";
+import { sendMail } from "@utils/email/index"
 
-export const orderEmailBody = (order: IOrderDocument) => {
+
+const orderEmailBody = (order: IOrderDocument) => {
   const { total, orderNumber, details, updatedAt } = order;
 
   return `
@@ -15,4 +18,25 @@ export const orderEmailBody = (order: IOrderDocument) => {
       </ul>
     </div>
   `
+}
+
+export const sendOrderSummary = async (order: IOrderDocument) => {
+  const { email } = order.payload!
+  if (!email) {
+    console.error(`No email address was provided for the order ${order.orderNumber}`)
+    return
+  }
+
+  const emailOptions: SendMailOptions = {
+    to: email,
+    subject: `Your purchase has been completed! Purchase Order #: ${order.orderNumber}`,
+    html: orderEmailBody(order)
+  }
+
+  try {
+    await sendMail(emailOptions)
+    console.log(`Order ${order.orderNumber} sent to ${email} successfully.`)
+  } catch (err) {
+    console.error(`There was an error sending the order ${order.orderNumber} to ${email}`)
+  }
 }

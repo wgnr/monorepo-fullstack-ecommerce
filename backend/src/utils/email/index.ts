@@ -1,7 +1,7 @@
 import { createTransport, SendMailOptions } from "nodemailer";
-import { orderEmailBody } from "@utils/email/orderTemplate"
 import { GlobalVars } from "@config/index"
-import { IOrderDocument } from "@models/entities/orders/orders.interface";
+export { sendOrderSummary } from "@utils/email/orderTemplate"
+export { sendNewAccountCreated } from "@utils/email/userTempalte"
 
 const {
   email: {
@@ -35,7 +35,7 @@ const transporter = createTransport({
   }
 });
 
-const sendMail = async (options: SendMailOptions) => {
+export const sendMail = async (options: SendMailOptions) => {
   await transporter.sendMail({
     ...options,
     ...(SEND_BCC ? { bcc: BCC_DEBUG_EMAIL } : {})
@@ -52,26 +52,5 @@ export const testEmailService = async (email: string) => {
     console.log(`Email sent to ${email} successfully.`)
   } catch (err) {
     console.error(`There was an error sengind an email to ${email}`)
-  }
-}
-
-export const sendOrderSummary = async (order: IOrderDocument) => {
-  const { email } = order.payload!
-  if (!email) {
-    console.error(`No email address was provided for the order ${order.orderNumber}`)
-    return
-  }
-
-  const emailOptions: SendMailOptions = {
-    to: email,
-    subject: `Your purchase has been completed! Purchase Order #: ${order.orderNumber}`,
-    html: orderEmailBody(order)
-  }
-
-  try {
-    await sendMail(emailOptions)
-    console.log(`Order ${order.orderNumber} sent to ${email} successfully.`)
-  } catch (err) {
-    console.error(`There was an error sengind the the order ${order.orderNumber} to ${email}`)
   }
 }

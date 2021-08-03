@@ -1,8 +1,9 @@
 import { ClientSession, Types } from "mongoose"
-import UsersDAO from "@models/entities/users/users.dao"
-import CartsService from "@services/cart"
-import { ValidationException } from "@exceptions/index"
 import { IUserUpdate, IUserDocument, IUserNew, IUserUpdatePassword } from "@models/entities/users/users.interface"
+import { sendNewAccountCreated } from "@utils/email/index"
+import { ValidationException } from "@exceptions/index"
+import CartsService from "@services/cart"
+import UsersDAO from "@models/entities/users/users.dao"
 import UsersDTO from "@models/entities/users/users.dto"
 
 
@@ -31,6 +32,8 @@ class UsersService {
       ...user,
       currentCart: newCartId
     })
+
+    await sendNewAccountCreated(newUser as IUserDocument)
 
     return newUser;
   }
