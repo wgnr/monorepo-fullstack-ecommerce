@@ -1,6 +1,6 @@
 import Ajv, { JTDSchemaType } from "ajv/dist/jtd"
 import { Request, Response, NextFunction } from "express";
-import { AuthJWT } from "@auth/index";
+import { JWTController } from "@auth/index";
 import { ICategoryNew, ICategoryAddProduct } from "@models/entities/categories/categories.interfaces"
 import { isValidMongoId } from "@models/index"
 import { IUser } from "@models/entities/users/users.interface";
@@ -8,7 +8,7 @@ import { SchemaValidationException } from "@exceptions/index";
 import CategoryService from "@services/categories"
 
 
-class CategoriesControllers extends AuthJWT {
+class CategoriesControllers extends JWTController {
   selfResource(req: Request, res: Response, next: NextFunction): void {
     const user = (req.user) as IUser
     const { params: { cartId } } = req
@@ -16,7 +16,7 @@ class CategoriesControllers extends AuthJWT {
     if (req.isUnauthenticated())
       return next("Unauthenticated")
 
-    if (AuthJWT.isAdmin(user)) {
+    if (JWTController.isAdmin(user)) {
       res.locals.isAdmin = { ...res.locals, isAdmin: true }
       return next()
     }

@@ -1,2 +1,2 @@
-import "@auth/strategies/passport-jwt"
-export { AuthJWT } from "@auth/auth.controller"
+export { JWTController } from "@auth/jwt/jwt.controller"
+export { StrategiesController } from "@auth/strategies/strategies.controller"

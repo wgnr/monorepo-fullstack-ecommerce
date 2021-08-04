@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import Ajv, { JTDSchemaType } from "ajv/dist/jtd"
-import { AuthJWT } from "@auth/index";
+import { JWTController } from "@auth/index";
 import { isValidMongoId } from "@models/index";
-import { IUser, IUserDocument, UserType } from "@models/entities/users/users.interface";
+import { IUser, IUserDocument, IUserNewPublic, UserType } from "@models/entities/users/users.interface";
 import { IUserUpdate, IUserNew, IUserUpdatePassword } from "@models/entities/users/users.interface";
 import { SchemaValidationException, ValidationException } from "@exceptions/index"
 import UsersService from "@services/users"
 
-class UsersController extends AuthJWT {
+class UsersController extends JWTController {
   async selfResource(req: Request, res: Response, next: NextFunction): Promise<void> {
     const user = (req.user) as IUser
     const { params: { userId } } = req
@@ -15,7 +15,7 @@ class UsersController extends AuthJWT {
     if (req.isUnauthenticated())
       return next("Unauthenticated")
 
-    if (AuthJWT.isAdmin(user)) {
+    if (JWTController.isAdmin(user)) {
       res.locals.isAdmin = { ...res.locals, isAdmin: true }
       return next()
     }
@@ -78,6 +78,30 @@ class UsersController extends AuthJWT {
 
     return next()
   };
+
+  validateCreatePublic(req: Request, res: Response, next: NextFunction) {
+    const user: IUserNewPublic = req.body
+
+    const schema: JTDSchemaType<IUserNewPublic> = {
+      properties: {
+        email: { type: "string" },
+        firstName: { type: "string" },
+        lastName: { type: "string" },
+        password: { type: "string", },
+      }
+    }
+
+    const validate = new Ajv().compile<IUserNewPublic>(schema)
+    if (!validate(user))
+      return next(new ValidationException(
+        validate.errors?.join("/n") ?? "Can validate create user payload."
+      ))
+
+    if (!UsersService.validatePassword(user.password))
+      return next(new ValidationException("Password must have at least 8 alphanumric characters"))
+
+    return next()
+  }
 
   async create(req: Request, res: Response, next: NextFunction) {
     try {

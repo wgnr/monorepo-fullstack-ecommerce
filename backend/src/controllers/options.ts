@@ -1,13 +1,13 @@
 import Ajv, { JTDSchemaType } from "ajv/dist/jtd"
 import { Request, Response, NextFunction } from "express";
-import { AuthJWT } from "@auth/index";
+import { JWTController } from "@auth/index";
 import { isValidMongoId } from "@models/index"
 import { IUpdateOption, IOptionNew, IDeleteOption } from "@models/entities/options/options.interface"
 import { IUser } from "@models/entities/users/users.interface";
 import { SchemaValidationException, ValidationException } from "@exceptions/index";
 import OptionsService from "@services/options"
 
-class OptionsControllers extends AuthJWT {
+class OptionsControllers extends JWTController {
   selfResource(req: Request, res: Response, next: NextFunction): void {
     return next()
   }

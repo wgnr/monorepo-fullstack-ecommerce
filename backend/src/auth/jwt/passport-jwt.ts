@@ -8,7 +8,7 @@ import {
 import { GlobalVars } from "@config/globalVars"
 import UsersService from "@services/users"
 
-const { jwt: { JWT_TOKEN_SECRET } } = GlobalVars
+const { auth: { jwt: { JWT_TOKEN_SECRET } } } = GlobalVars
 
 const options: StrategyOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

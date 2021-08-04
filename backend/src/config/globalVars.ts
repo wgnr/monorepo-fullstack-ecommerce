@@ -6,14 +6,17 @@ export const getEnvValueTruthy =
   (value: string): boolean => ["true", "1", "yes", "on"].includes(value.toLowerCase())
 
 /* LOAD CONFIGURATION */
-const isProd = process.env.NODE_ENV === "production"
-const envPath = resolve(process.cwd(), `.env.${isProd ? "production" : "development"}`)
+const IS_PROD = process.env.NODE_ENV === "production"
+const envPath = resolve(process.cwd(), `.env.${IS_PROD ? "production" : "development"}`)
 // if .env.development | .env.production isn't available, load regular .env
 config(existsSync(envPath) ? { path: envPath } : {});
 
+const PORT = parseInt(process.env.PORT as string) || 3000
+
 export const GlobalVars = {
-  isProd,
+  IS_PROD,
   PORT: parseInt(process.env.PORT as string) || 3000,
+  SERVER_URL: IS_PROD ? process.env.PROD_URL : `http://localhost:${PORT}`,
   db: {
     URL: process.env.MONGODB_URI ?? "",
     USER: process.env.MONGODB_USER ?? "",
@@ -33,9 +36,15 @@ export const GlobalVars = {
     SEND_BCC: getEnvValueTruthy(String(process.env.SEND_BCC)),
     BCC_DEBUG_EMAIL: process.env.BCC_DEBUG_EMAIL ?? "juanswagner@gmail.com",
   },
-  jwt: {
-    JWT_TOKEN_SECRET: process.env.JWT_TOKEN_SECRET ?? "MAKE_SURE_TO_CHANGE_THIS_SECRET_AFTER_!@##$%^&*",
-    // https://github.com/vercel/ms
-    JWT_EXPIRATION_TIME: process.env.JWT_EXPIRATION_TIME ?? "1d"
+  auth: {
+    jwt: {
+      JWT_TOKEN_SECRET: process.env.JWT_TOKEN_SECRET ?? "MAKE_SURE_TO_CHANGE_THIS_SECRET_AFTER_!@##$%^&*",
+      // https://github.com/vercel/ms
+      JWT_EXPIRATION_TIME: process.env.JWT_EXPIRATION_TIME ?? "1d"
+    },
+    socials: {
+      FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID ?? "",
+      FACEBOOK_APP_SECRET: process.env.FACEBOOK_APP_SECRET ?? ""
+    }
   }
 }

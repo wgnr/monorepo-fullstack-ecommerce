@@ -1,8 +1,9 @@
+import "@auth/jwt/passport-jwt"
 import { Request, Response, NextFunction } from "express";
-import passport from "passport"
+import passport, { AuthenticateOptions } from "passport";
 import { IUser, UserType } from "@models/entities/users/users.interface";
 
-export abstract class AuthJWT {
+export abstract class JWTController {
   // Only owner of the resource can access
   abstract selfResource(req: Request, res: Response, next: NextFunction): void;
 
@@ -11,7 +12,7 @@ export abstract class AuthJWT {
   }
 
   adminOnly(req: Request, res: Response, next: NextFunction) {
-    return AuthJWT.adminOnly(req, res, next)
+    return JWTController.adminOnly(req, res, next)
   }
 
   static adminOnly(req: Request, res: Response, next: NextFunction) {
@@ -20,7 +21,7 @@ export abstract class AuthJWT {
 
     const user = req.user as IUser
 
-    if (!AuthJWT.isAdmin(user)) {
+    if (!JWTController.isAdmin(user)) {
       res.locals.isAdmin = { ...res.locals, isAdmin: true }
       return next("Admin only")
     }
@@ -28,7 +29,12 @@ export abstract class AuthJWT {
     return next()
   }
 
-  static verifyJWT() {
-    return passport.authenticate('jwt', { session: false })
+  static authenticate() {
+    const options: AuthenticateOptions = {
+      session: false,
+      failWithError: true,
+    }
+
+    return passport.authenticate('jwt', options)
   }
 }

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Ajv, { JTDSchemaType } from "ajv/dist/jtd"
-import { AuthJWT } from "@auth/index";
+import { JWTController } from "@auth/index";
 import { IProductNew, IProductBase } from "@models/entities/products/products.interfaces"
 import { isValidMongoId } from "@models/index";
 import { IUser, IUserDocument } from "@models/entities/users/users.interface";
@@ -8,7 +8,7 @@ import { IVariantBase, IVariantUpdate } from "@models/entities/variants/variants
 import { SchemaValidationException, ValidationException } from "@exceptions/index"
 import ProductService from "@services/products"
 
-class ProductController extends AuthJWT {
+class ProductController extends JWTController {
   selfResource(req: Request, res: Response, next: NextFunction) {
     return next()
   }

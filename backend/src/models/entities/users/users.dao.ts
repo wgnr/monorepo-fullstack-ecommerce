@@ -12,7 +12,16 @@ class UsersDAO extends CommonDAO<IUser>{
     this.mongoDebug("getOneByEmail", { email })
 
     return await this.model.findOne({ email })
+      .lean()
       .orFail(this.throwNotFoundError({ email }))
+  }
+
+  async getByFacebookId(id: string) {
+    this.mongoDebug("getByFacebookId", { id })
+
+    return await this.model.findOne({ "social.facebook.id": id })
+      .lean()
+      .orFail(this.throwNotFoundError({ id }))
   }
 
   async assignNewCart(userId: string, cartId: string, session: ClientSession) {

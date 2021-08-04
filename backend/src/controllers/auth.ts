@@ -1,26 +1,36 @@
 import { Request, Response, NextFunction } from "express";
-import { sign } from "jsonwebtoken"
-import { AuthJWT } from '@auth/index'
-import { GlobalVars } from "@config/index";
+import { StrategiesController } from '@auth/index'
+import { IUserDocument, IUserNewPublic } from "@models/entities/users/users.interface";
+import AuthServices from "@services/auth"
+import UsersControllers from "@controllers/users"
 
-const { jwt: { JWT_TOKEN_SECRET, JWT_EXPIRATION_TIME } } = GlobalVars
-
-class AuthControllers extends AuthJWT {
+class AuthControllers extends StrategiesController {
   selfResource(req: Request, res: Response, next: NextFunction) {
     return next()
   }
 
-  login(req: Request, res: Response, next: NextFunction) {
-    const token = sign({}, JWT_TOKEN_SECRET, {
-      // https://github.com/vercel/ms
-      expiresIn: JWT_EXPIRATION_TIME,
-      subject: "6106f48f8477be391049fb94",
-    })
-    return res.json({ token })
+  async login(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { _id: userId } = req.user as IUserDocument
+      const token = await AuthServices.generateToken(String(userId))
+      return res.json({ token })
+    } catch (error) {
+      return next(error);
+    }
   }
-  logout(req: Request, res: Response, next: NextFunction) { }
 
-  signup(req: Request, res: Response, next: NextFunction) { }
+  validatePublicSignup(req: Request, res: Response, next: NextFunction) {
+    return UsersControllers.validateCreatePublic(req, res, next)
+  }
+
+  async publicSignup(req: Request, res: Response, next: NextFunction) {
+    try {
+      const user: IUserNewPublic = req.body
+      return res.status(201).json(await AuthServices.createPublicUser(user))
+    } catch (error) {
+      return next(error);
+    }
+  }
 }
 
 export default new AuthControllers

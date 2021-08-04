@@ -1,13 +1,13 @@
 import Ajv, { JTDSchemaType } from "ajv/dist/jtd"
 import { Request, Response, NextFunction } from "express";
-import { AuthJWT } from "@auth/index";
+import { JWTController } from "@auth/index";
 import { IOrderNew, IOrderPayment, OrderStatus } from "@models/entities/orders/orders.interface";
 import { isValidMongoId } from "@models/index";
 import { IUser, IUserDocument } from "@models/entities/users/users.interface";
 import { SchemaValidationException } from "@exceptions/index";
 import OrdersService from "@services/orders"
 
-class OrdersController extends AuthJWT {
+class OrdersController extends JWTController {
   async selfResource(req: Request, res: Response, next: NextFunction): Promise<void> {
     const user = (req.user) as IUser
     const { params: { orderId } } = req
@@ -15,7 +15,7 @@ class OrdersController extends AuthJWT {
     if (req.isUnauthenticated())
       return next("Unauthenticated")
 
-    if (AuthJWT.isAdmin(user)) {
+    if (JWTController.isAdmin(user)) {
       res.locals.isAdmin = { ...res.locals, isAdmin: true }
       return next()
     }

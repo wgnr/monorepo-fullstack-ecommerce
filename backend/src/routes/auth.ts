@@ -3,6 +3,19 @@ import AuthControllers from "@controllers/auth"
 
 export const router = express.Router();
 
-router.post('/login', AuthControllers.login);
-router.post('/logout', AuthControllers.logout);
-router.post('/signup', AuthControllers.signup);
+router.post('/login',
+  AuthControllers.authenticateLocalLogin(),
+  AuthControllers.login);
+
+router.post('/signup',
+  AuthControllers.validatePublicSignup,
+  AuthControllers.publicSignup);
+
+router.get(
+  "/facebook",
+  AuthControllers.authenticateFacebookLogin());
+
+router.get(
+  "/facebook/callback",
+  AuthControllers.authenticateFacebookLoginCallback(),
+  AuthControllers.login);

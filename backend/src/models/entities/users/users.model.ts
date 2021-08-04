@@ -23,7 +23,7 @@ const UsersSchema = new Schema<IUser>({
   },
   email: {
     type: String,
-    require: true,
+    // require: true,
     unique: true,
     trim: true
   },
@@ -33,6 +33,7 @@ const UsersSchema = new Schema<IUser>({
   password: {
     type: String,
   },
+  social: { type: Object },
   type: {
     type: String,
     enum: Object.values(UserType),

@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express"
 import { GlobalVars } from "@config/index"
-import { AuthJWT } from "@auth/auth.controller";
+import { JWTController } from "@auth/jwt/jwt.controller";
 import { router as authRouter } from "@routes/auth"
 import { router as cartsRouter } from "@routes/carts"
 import { router as categoriesRouter } from "@routes/categories"
@@ -12,14 +12,16 @@ import { router as usersRouter } from "@routes/users"
 export const router = express.Router()
 
 router.use("/auth", authRouter)
-router.use("/cart", AuthJWT.verifyJWT(), cartsRouter)
-router.use("/categories", AuthJWT.verifyJWT(), categoriesRouter)
-router.use("/options", AuthJWT.verifyJWT(), optionsRouter)
-router.use("/orders", AuthJWT.verifyJWT(), ordersRouter)
-router.use("/products", AuthJWT.verifyJWT(), productsRouter)
-router.use("/users", AuthJWT.verifyJWT(), usersRouter)
+router.use("/cart", JWTController.authenticate(), cartsRouter)
+router.use("/categories", JWTController.authenticate(), categoriesRouter)
+router.use("/options", JWTController.authenticate(), optionsRouter)
+router.use("/orders", JWTController.authenticate(), ordersRouter)
+router.use("/products", JWTController.authenticate(), productsRouter)
+router.use("/users", JWTController.authenticate(), usersRouter)
 
-router.get("/configs", AuthJWT.verifyJWT(), AuthJWT.adminOnly,
+router.get("/configs",
+  JWTController.authenticate(),
+  JWTController.adminOnly,
   (req: Request, res: Response) => {
     res.json(GlobalVars)
   })

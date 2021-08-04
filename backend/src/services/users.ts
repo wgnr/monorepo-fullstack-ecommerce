@@ -1,5 +1,5 @@
 import { ClientSession, Types } from "mongoose"
-import { IUserUpdate, IUserDocument, IUserNew, IUserUpdatePassword } from "@models/entities/users/users.interface"
+import { IUserUpdate, IUserDocument, IUserNew, IUserUpdatePassword, UserType, IUserNewFacebook } from "@models/entities/users/users.interface"
 import { sendNewAccountCreated } from "@utils/email/index"
 import { ValidationException } from "@exceptions/index"
 import CartsService from "@services/cart"
@@ -16,8 +16,13 @@ class UsersService {
     return UsersDTO.returnMany(await UsersDAO.getMany() as IUserDocument[])
   }
 
-  async getByEmail(email: string) {
-    return UsersDTO.returnOne(await UsersDAO.getOneByEmail(email) as IUserDocument)
+  async getByEmail(email: string, includePassword: boolean = false) {
+    const user = await UsersDAO.getOneByEmail(email)
+    return includePassword ? user : UsersDTO.returnOne(user as IUserDocument)
+  }
+
+  async getByFacebookId(id: string) {
+    return await UsersDAO.getByFacebookId(id)
   }
 
   async create(user: IUserNew) {
@@ -36,6 +41,37 @@ class UsersService {
     await sendNewAccountCreated(newUser as IUserDocument)
 
     return newUser;
+  }
+
+  async createPublic(user: IUserNew) {
+    const newUser: IUserNew = {
+      ...user,
+      type: UserType.USER
+    }
+    return await this.create(newUser);
+  }
+
+  async createSocial(user: IUserNewFacebook) {
+    if (user.email) {
+      if (await this.getByEmail(user.email).catch(e => false))
+        throw new ValidationException(`Email already exists: ${user.email}`)
+    }
+
+    const newId = Types.ObjectId();
+    const newCartId = (await CartsService.create(String(newId)))._id
+    const newUser = await UsersDAO.create({
+      // @ts-ignore
+      _id: newId,
+      ...user,
+      currentCart: newCartId
+    })
+
+    if (user.email) {
+      await sendNewAccountCreated(newUser as IUserDocument)
+    }
+
+    return newUser;
+
   }
 
   async assignNewCart(userId: string, session: ClientSession) {
