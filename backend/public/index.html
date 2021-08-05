@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Document</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <script type="text/javascript">
+      // Remove #_=_ by facebook
+      if (window.location.hash && window.location.hash == "#_=_") {
+        window.location.hash = "";
+      }
+    </script>
+    <div class="container">
+      <div class="logged"></div>
+
+      <h1>Carga de productos</h1>
+      <form action="/api/products" method="post" class="form-group">
+        <label
+          ><span>Title:</span
+          ><input type="text" name="title" class="form-control"
+        /></label>
+        <label
+          ><span>Price:</span
+          ><input type="number" name="price" class="form-control"
+        /></label>
+        <label
+          ><span
+            >Thumbnail
+            <a href="https://www.iconfinder.com/free_icons" target="_blank"
+              >URL</a
+            >:</span
+          ><input class="form-control" type="url" name="thumbnail"
+        /></label>
+        <input type="submit" value="Cargar!" class="btn btn-primary" />
+        <input type="reset" value="Reset" class="btn btn-primary" />
+      </form>
+
+      <br />
+      <br />
+      <div class="productsContainer"></div>
+      <div class="chatContainer">
+        <h2>Centro de Mensajes</h2>
+        <form action="">
+          <label>
+            <span>Email</span>
+            <input
+              type="email"
+              name="id"
+              id="email"
+              autocomplete="email"
+              placeholder="Ingrese su email"
+              class="form-control"
+              required
+            />
+          </label>
+          <label>
+            <span>Nombre</span>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              autocomplete="name"
+              placeholder="Nombre"
+              class="form-control"
+            />
+          </label>
+          <label>
+            <span>Apellido</span>
+            <input
+              type="text"
+              name="surname"
+              id="surname"
+              autocomplete="family-name"
+              placeholder="Apellido"
+              class="form-control"
+            />
+          </label>
+          <label>
+            <span>Edad</span>
+            <input
+              type="number"
+              name="age"
+              id="age"
+              autocomplete="off"
+              placeholder="Edad"
+              class="form-control"
+            />
+          </label>
+          <label>
+            <span>Alias</span>
+            <input
+              type="text"
+              name="alias"
+              id="alias"
+              autocomplete="nickname"
+              placeholder="Alias"
+              class="form-control"
+            />
+          </label>
+          <label>
+            <span>Avatar</span>
+            <input
+              type="url"
+              name="avatar"
+              id="avatar"
+              autocomplete="url"
+              placeholder="url avatar"
+              class="form-control"
+            />
+          </label>
+          <hr class="dropdown-divider" />
+          <ol class="list-group chatMessages"></ol>
+          <div class="chatBtnsContainer">
+            <input
+              type="text"
+              name="msg"
+              autocomplete="off"
+              placeholder="Ingresá un mensaje..."
+              class="form-control"
+              required
+            /><input type="submit" value="Enviar!" class="btn btn-primary" />
+          </div>
+        </form>
+      </div>
+
+      <script>
+        const userName = document.cookie
+          .split(";")
+          .reduce(
+            (desiredCookie, currCookie) =>
+              currCookie.trim().startsWith("user=")
+                ? decodeURIComponent(currCookie.split("=")[1])
+                : desiredCookie,
+            ""
+          );
+
+        if (userName) {
+          document.querySelector("div.logged").innerHTML = `
+          <form
+          action="/api/auth/logout"
+          method="post"
+          class="form-group form-auth"
+          >
+          <h2>Bienvenido ${userName}</h2>
+          <input type="submit" value="logout" class="btn btn-primary" />
+        </form>
+          `;
+        }
+
+        fetch("/api/auth/me")
+          .then((r) => r.json())
+          .then((r) => {
+            if (userName && r.email) {
+              document.querySelector("div.logged").innerHTML = `
+          <form
+          action="/api/auth/logout"
+          method="post"
+          class="form-group form-auth"
+          >
+          <img src="${r.photo}" alt="user picture">
+          <h2>Bienvenido ${userName}</h2>
+          <h2>(${r.email})</h2>
+          <input type="submit" value="logout" class="btn btn-primary" />
+        </form>
+          `;
+            }
+          })
+          .catch((e) => console.log(e));
+      </script>
+
+      <script src="/socket.io/socket.io.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/normalizr@3.6.1/dist/normalizr.browser.min.js"></script>
+
+      <script>
+        var socket = io();
+
+        socket.on("products", (payload) => {
+          document.querySelector(".productsContainer").innerHTML = payload;
+        });
+
+        socket.on("chat", (messages) => {
+          const schema = normalizr.schema;
+          const denormalize = normalizr.denormalize;
+
+          const userSchema = new schema.Entity("user");
+          const messageSchema = new schema.Entity("message", {
+            author: userSchema,
+          });
+          const messagesSchema = new schema.Entity("messages", {
+            messages: [messageSchema],
+          });
+
+          const messagesDenorm = denormalize(
+            messages.result,
+            messagesSchema,
+            messages.entities
+          );
+
+          const templateNewMessage = ({ date, text, author: { id } }) => `
+                  <li class="list-group-item">
+                      <span class="chatMsgEmail">${id}</span>
+                      [<span class="chatMsgTimestamp">${date}</span>]:
+                      <span class="chatMsgMessage">${text}</span>
+                  </li>
+                  `;
+
+          const MessageListDOM = document.querySelector(".chatMessages");
+
+          MessageListDOM.innerHTML = messagesDenorm.messages
+            .map((m) => templateNewMessage(m))
+            .join("");
+
+          document
+            .querySelector(".chatContainer li:last-child")
+            ?.scrollIntoView({ behavior: "smooth" });
+        });
+
+        // Handle Send Message!
+        const sendMessageEvent = document.querySelector(".chatContainer form");
+        sendMessageEvent.addEventListener("submit", (e) => {
+          e.preventDefault();
+
+          const msg = document.querySelector("input[name='msg']");
+
+          const message = { text: msg.value, author: {} };
+          ["id", "name", "surname", "age", "alias", "avatar"].forEach(
+            (e) =>
+              (message.author[e] = document.querySelector(
+                `input[name='${e}']`
+              ).value)
+          );
+          socket.emit("chat", message);
+
+          msg.value = "";
+          msg.focus();
+        });
+      </script>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,88 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+.logged{
+  width: 100%;
+  max-width: 1024px;
+  padding: 16px;
+  border-radius: 5px;
+  background-color: #b2c1d1;
+
+}
+.form-auth{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+label {
+  display: flex;
+  flex-direction: column;
+}
+
+/* HANDLEBARS STYLES*/
+.container-table {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+
+.tabla-table img {
+  height: 35px;
+}
+
+/* CHAT STYLES*/
+.chatContainer {
+  background-color: #778899;
+  padding: 15px 25px;
+  border-radius: 5px;
+  margin-bottom: 64px;
+}
+
+li {
+  background-color: transparent !important;
+}
+
+ol {
+  background-color: #b2c1d1;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+
+.chatBtnsContainer {
+  display: flex;
+}
+
+.chatMsgEmail {
+  color: blue;
+  font-weight: bold;
+}
+
+.chatMsgTimestamp {
+  color: brown;
+}
+
+.chatMsgMessage {
+  color: green;
+  font-style: italic;
+}
+
+.chatBtnsContainer>input {
+  margin-left: 6px;
+
+}
