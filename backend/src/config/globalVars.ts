@@ -12,11 +12,12 @@ const envPath = resolve(process.cwd(), `.env.${IS_PROD ? "production" : "develop
 config(existsSync(envPath) ? { path: envPath } : {});
 
 const PORT = parseInt(process.env.PORT as string) || 3000
+const defaultServerUrl = `http://localhost:${PORT}`
 
 export const GlobalVars = {
   IS_PROD,
   PORT: parseInt(process.env.PORT as string) || 3000,
-  SERVER_URL: IS_PROD ? process.env.PROD_URL : `http://localhost:${PORT}`,
+  SERVER_URL: IS_PROD ? process.env.PROD_URL ?? defaultServerUrl : defaultServerUrl,
   db: {
     URL: process.env.MONGODB_URI ?? "",
     USER: process.env.MONGODB_USER ?? "",
@@ -40,7 +41,7 @@ export const GlobalVars = {
     jwt: {
       JWT_TOKEN_SECRET: process.env.JWT_TOKEN_SECRET ?? "MAKE_SURE_TO_CHANGE_THIS_SECRET_AFTER_!@##$%^&*",
       // https://github.com/vercel/ms
-      JWT_EXPIRATION_TIME: process.env.JWT_EXPIRATION_TIME ?? "1d"
+      JWT_EXPIRATION_TIME: process.env.JWT_EXPIRATION_TIME ?? "1d",
     },
     socials: {
       FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID ?? "",

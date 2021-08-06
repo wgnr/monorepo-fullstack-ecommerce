@@ -8,6 +8,7 @@ import { router as optionsRouter } from "@routes/options"
 import { router as ordersRouter } from "@routes/orders"
 import { router as productsRouter } from "@routes/products"
 import { router as usersRouter } from "@routes/users"
+import { router as chatRouter } from "@routes/chat"
 
 export const router = express.Router()
 
@@ -18,6 +19,7 @@ router.use("/options", JWTController.authenticate(), optionsRouter)
 router.use("/orders", JWTController.authenticate(), ordersRouter)
 router.use("/products", JWTController.authenticate(), productsRouter)
 router.use("/users", JWTController.authenticate(), usersRouter)
+router.use("/chat", JWTController.authenticate(), chatRouter)
 
 router.get("/configs",
   JWTController.authenticate(),

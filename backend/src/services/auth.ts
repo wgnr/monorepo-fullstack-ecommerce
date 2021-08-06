@@ -12,6 +12,7 @@ class AuthService {
       // https://github.com/vercel/ms
       expiresIn: JWT_EXPIRATION_TIME,
       subject: sub,
+      algorithm: 'HS512',
     })
   }
 

@@ -13,6 +13,7 @@ const { auth: { jwt: { JWT_TOKEN_SECRET } } } = GlobalVars
 const options: StrategyOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: JWT_TOKEN_SECRET,
+  algorithms: ['HS512']
 };
 
 const verify: VerifyCallback = async (decodedTokenPayload, done) => {
