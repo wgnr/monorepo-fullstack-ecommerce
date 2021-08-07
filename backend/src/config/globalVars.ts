@@ -47,5 +47,14 @@ export const GlobalVars = {
       FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID ?? "",
       FACEBOOK_APP_SECRET: process.env.FACEBOOK_APP_SECRET ?? ""
     }
+  },
+  seed: {
+    SEED_MONGODB_URL: process.env.SEED_MONGODB_URL ?? "",
+    SEED_MONGODB_DB: process.env.SEED_MONGODB_DB ?? "",
+    SEED_MONGODB_USER: process.env.SEED_MONGODB_USER ?? "",
+    SEED_MONGODB_PASSWORD: process.env.SEED_MONGODB_PASSWORD ?? "",
+    SEED_ADMIN_EMAIL: process.env.SEED_ADMIN_EMAIL ?? process.env.BCC_DEBUG_EMAIL ?? "juanswagner@gmail.com",
+    SEED_ADMIN_PASSWORD: process.env.SEED_ADMIN_PASSWORD ?? "generic_password",
+    SEED_SERVER_API_URL: process.env.SEED_SERVER_API_URL || defaultServerUrl,
   }
 }
