@@ -13,16 +13,6 @@ export interface IOrderNew {
   payload: IOrderPayload;
 }
 
-// // Model Interfaces
-// export interface IOrderPayload {
-//   address: {
-//     street: string;
-//     [k: string]: any;
-//   };
-//   email: string;
-//   phone: string;
-//   [k: string]: any;
-// }
 // Model Interfaces
 export interface IOrderPayload {
   address: {
