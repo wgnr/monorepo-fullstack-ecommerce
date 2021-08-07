@@ -7,6 +7,7 @@ import { IUser, IUserDocument } from "@models/entities/users/users.interface";
 import { IVariantBase, IVariantUpdate } from "@models/entities/variants/variants.interfaces";
 import { SchemaValidationException, ValidationException } from "@exceptions/index"
 import ProductService from "@services/products"
+import multer from "multer"
 
 class ProductController extends JWTController {
   selfResource(req: Request, res: Response, next: NextFunction) {
@@ -159,6 +160,51 @@ class ProductController extends JWTController {
     }
   }
 
+  async saveImage(req: Request, res: Response, next: NextFunction) {
+    const { productId } = req.params;
+    const fileName = await ProductService.getFileName(productId)
+
+    const storage = multer.diskStorage({
+      destination: './public/images/products',
+      filename: function (req, file, cb) {
+        const [extention] = file.originalname.split(".").slice(-1)
+        cb(null, `${fileName}.${extention}`)
+      }
+    })
+
+    return multer({
+      fileFilter: (req, file, cb) => {
+        if ((file.mimetype).includes('jpeg') || (file.mimetype).includes('png') || (file.mimetype).includes('jpg')) {
+          cb(null, true);
+        } else {
+          cb(null, false);
+        }
+      },
+      storage,
+    }).single("file")(req, res, next)
+  }
+
+  async addImage(req: Request, res: Response, next: NextFunction) {
+    const { productId } = req.params;
+    const { file } = req
+    if (!file) throw new ValidationException("No file was provided")
+    try {
+      return res.json(await ProductService.addImage(productId, file.filename));
+    } catch (error) {
+      return next(error)
+    }
+  }
+
+  async removeImage(req: Request, res: Response, next: NextFunction) {
+    const { productId, imageName } = req.params;
+    if (!imageName) throw new ValidationException("No image name was provided")
+
+    try {
+      return res.json(await ProductService.removeImage(productId, imageName));
+    } catch (error) {
+      return next(error)
+    }
+  }
 
 
   async validateUpdateProducts(req: Request, res: Response, next: NextFunction) {
@@ -171,7 +217,6 @@ class ProductController extends JWTController {
       },
       optionalProperties: {
         description: { type: "string" },
-        img: { type: "string" },
         slug: { type: "string" },
       }
     }

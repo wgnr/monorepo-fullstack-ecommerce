@@ -1,3 +1,4 @@
+import { readdir, unlink } from 'fs/promises';
 import { ObjectId } from "mongoose"
 import CategoriesService from "@services/categories"
 import OptionsService from "@services/options"
@@ -55,6 +56,27 @@ class ProductService {
     })
 
     return responseProduct
+  }
+
+  async getFileName(productId: string) {
+    try {
+      const files = await readdir("./public/images/products");
+      const nextNumber = String(
+        files.filter(f => f.startsWith(productId)).length
+      ).padStart(3, "0")
+      return `${productId}-${nextNumber}`
+    } catch (err) {
+      return `${productId}-000`
+    }
+  }
+
+  async addImage(productId: string, fileName: string) {
+    return await ProductsDAO.insertImage(productId, fileName)
+  }
+
+  async removeImage(productId: string, fileName: string) {
+    await unlink(`./public/images/products/${fileName}`);
+    return await ProductsDAO.removeImage(productId, fileName)
   }
 
   async createProducts(products: IProductNew[]) {

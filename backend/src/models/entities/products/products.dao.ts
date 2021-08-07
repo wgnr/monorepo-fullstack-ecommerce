@@ -51,7 +51,25 @@ class ProductsDAO extends CommonDAO<IProduct> {
       { $addToSet: { categories: categoryId } }
     )
       .orFail(this.throwNotFoundError({ productIds }))
+  }
 
+  async insertImage(productId: string, fileName: string) {
+    this.mongoDebug("insertImage", { productId, fileName })
+
+    await this.model.updateOne(
+      { _id: productId },
+      { $addToSet: { photos: fileName } }
+    )
+      .orFail(this.throwNotFoundError({ productId }))
+  }
+  async removeImage(productId: string, fileName: string) {
+    this.mongoDebug("removeImage", { productId, fileName })
+
+    await this.model.updateOne(
+      { _id: productId },
+      { $pull: { photos: fileName } }
+    )
+      .orFail(this.throwNotFoundError({ productId }))
   }
 
   async removeCategory(productId: string | string[] | null, categoryId: string) {

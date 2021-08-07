@@ -33,6 +33,13 @@ router.post("/:productId/variant",
   ProductsControllers.addVariant
 )
 
+// Add image to produc
+router.post("/:productId/image",
+  ProductsControllers.adminOnly,
+  ProductsControllers.saveImage,
+  ProductsControllers.addImage
+)
+
 // Update name, descriptcion, price
 router.put("/:productId",
   ProductsControllers.adminOnly,
@@ -61,4 +68,11 @@ router.delete("/variant/:variantId",
   ProductsControllers.adminOnly,
   ProductsControllers.validateMongoId,
   ProductsControllers.deleteVariant
+)
+
+// Delete image from produc
+router.delete("/:productId/image/:imageName",
+  ProductsControllers.adminOnly,
+  ProductsControllers.validateMongoId,
+  ProductsControllers.removeImage
 )

@@ -4,7 +4,6 @@ import { IVariantBase, IVariants } from "@models/entities/variants/variants.inte
 
 export interface IProductBase {
   description?: string;
-  img?: string;
   name: string;
   price: number;
   slug?: string;
@@ -17,6 +16,7 @@ export interface IProductNew extends IProductBase {
 
 // Model Interfaces
 export interface IProduct extends IProductBase {
+  photos?: string[];
   categories: PopulatedDoc<ICategory & Document>[];
   // categories: string[];
   deletedAt?: string;

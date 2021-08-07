@@ -12,7 +12,7 @@ const ProductsSchema = new Schema<IProduct>(
     }],
     deletedAt: Date,
     description: String,
-    img: String,
+    photos: [String],
     name: { type: String, require: true },
     price: { type: Number, default: 0 },
     slug: String,
