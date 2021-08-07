@@ -64,7 +64,8 @@ class UsersController extends JWTController {
         password: { type: "string", },
       },
       optionalProperties: {
-        type: { enum: Object.values(UserType) }
+        type: { enum: Object.values(UserType) },
+        phone: { type: "string", },
       }
     }
 
@@ -88,6 +89,9 @@ class UsersController extends JWTController {
         firstName: { type: "string" },
         lastName: { type: "string" },
         password: { type: "string", },
+      },
+      optionalProperties: {
+        phone: { type: "string", },
       }
     }
 

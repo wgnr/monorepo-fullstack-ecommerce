@@ -20,6 +20,7 @@ interface IUserBase {
   firstName: string;
   lastName: string;
   password: string;
+  phone?: string;
   type?: UserType;
 }
 

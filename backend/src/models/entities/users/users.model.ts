@@ -29,6 +29,7 @@ const UsersSchema = new Schema<IUser>({
   },
   firstName: String,
   lastName: String,
+  phone: String,
   deletedAt: Date,
   password: {
     type: String,
