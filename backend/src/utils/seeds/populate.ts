@@ -45,6 +45,7 @@ const {
         post(token, SEED_SERVER_API_URL, PATHS.CARTS + "/" + cartId, payload)
       )
     );
+    
     console.log("Populate Orders");
     const orders = await Promise.all(
       mockOrders(carts).map(payload => post(token, SEED_SERVER_API_URL, PATHS.ORDERS, payload))
