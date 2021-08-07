@@ -1,18 +1,18 @@
 import { config } from "dotenv";
-import { existsSync } from 'fs'
-import { resolve } from "path"
+import { existsSync } from "fs";
+import { resolve } from "path";
 
-export const getEnvValueTruthy =
-  (value: string): boolean => ["true", "1", "yes", "on"].includes(value.toLowerCase())
+export const getEnvValueTruthy = (value: string): boolean =>
+  ["true", "1", "yes", "on"].includes(value.toLowerCase());
 
 /* LOAD CONFIGURATION */
-const IS_PROD = process.env.NODE_ENV === "production"
-const envPath = resolve(process.cwd(), `.env.${IS_PROD ? "production" : "development"}`)
+const IS_PROD = process.env.NODE_ENV === "production";
+const envPath = resolve(process.cwd(), `.env.${IS_PROD ? "production" : "development"}`);
 // if .env.development | .env.production isn't available, load regular .env
 config(existsSync(envPath) ? { path: envPath } : {});
 
-const PORT = parseInt(process.env.PORT as string) || 3000
-const defaultServerUrl = `http://localhost:${PORT}`
+const PORT = parseInt(process.env.PORT as string) || 3000;
+const defaultServerUrl = `http://localhost:${PORT}`;
 
 export const GlobalVars = {
   IS_PROD,
@@ -39,22 +39,24 @@ export const GlobalVars = {
   },
   auth: {
     jwt: {
-      JWT_TOKEN_SECRET: process.env.JWT_TOKEN_SECRET ?? "MAKE_SURE_TO_CHANGE_THIS_SECRET_AFTER_!@##$%^&*",
+      JWT_TOKEN_SECRET:
+        process.env.JWT_TOKEN_SECRET ?? "MAKE_SURE_TO_CHANGE_THIS_SECRET_AFTER_!@##$%^&*",
       // https://github.com/vercel/ms
       JWT_EXPIRATION_TIME: process.env.JWT_EXPIRATION_TIME ?? "1d",
     },
     socials: {
       FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID ?? "",
-      FACEBOOK_APP_SECRET: process.env.FACEBOOK_APP_SECRET ?? ""
-    }
+      FACEBOOK_APP_SECRET: process.env.FACEBOOK_APP_SECRET ?? "",
+    },
   },
   seed: {
     SEED_MONGODB_URL: process.env.SEED_MONGODB_URL ?? "",
     SEED_MONGODB_DB: process.env.SEED_MONGODB_DB ?? "",
     SEED_MONGODB_USER: process.env.SEED_MONGODB_USER ?? "",
     SEED_MONGODB_PASSWORD: process.env.SEED_MONGODB_PASSWORD ?? "",
-    SEED_ADMIN_EMAIL: process.env.SEED_ADMIN_EMAIL ?? process.env.BCC_DEBUG_EMAIL ?? "juanswagner@gmail.com",
+    SEED_ADMIN_EMAIL:
+      process.env.SEED_ADMIN_EMAIL ?? process.env.BCC_DEBUG_EMAIL ?? "juanswagner@gmail.com",
     SEED_ADMIN_PASSWORD: process.env.SEED_ADMIN_PASSWORD ?? "generic_password",
     SEED_SERVER_API_URL: process.env.SEED_SERVER_API_URL || defaultServerUrl,
-  }
-}
+  },
+};

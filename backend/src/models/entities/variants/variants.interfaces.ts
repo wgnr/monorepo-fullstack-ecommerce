@@ -1,6 +1,6 @@
-import { Document, PopulatedDoc, Types } from 'mongoose';
-import { IProduct } from "@models/entities/products/products.interfaces"
-import { IOptionSummary } from '@models/entities/options/options.interface';
+import { Document, PopulatedDoc, Types } from "mongoose";
+import { IProduct } from "@models/entities/products/products.interfaces";
+import { IOptionSummary } from "@models/entities/options/options.interface";
 
 export interface IVariantBase {
   options?: string[];

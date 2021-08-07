@@ -1,7 +1,7 @@
 import { createTransport, SendMailOptions } from "nodemailer";
-import { GlobalVars } from "@config/index"
-export { sendOrderSummary } from "@utils/email/orderTemplate"
-export { sendNewAccountCreated } from "@utils/email/userTempalte"
+import { GlobalVars } from "@config/index";
+export { sendOrderSummary } from "@utils/email/orderTemplate";
+export { sendNewAccountCreated } from "@utils/email/userTempalte";
 
 const {
   email: {
@@ -10,13 +10,9 @@ const {
     GMAIL_OAUTH_CLIENTID,
     GMAIL_OAUTH_CLIENT_SECRET,
     GMAIL_OAUTH_REFRESH_TOKEN,
-
   },
-  debug: {
-    SEND_BCC,
-    BCC_DEBUG_EMAIL
-  }
-} = GlobalVars
+  debug: { SEND_BCC, BCC_DEBUG_EMAIL },
+} = GlobalVars;
 
 // Source: https://www.freecodecamp.org/news/use-nodemailer-to-send-emails-from-your-node-js-server/
 const transporter = createTransport({
@@ -31,26 +27,26 @@ const transporter = createTransport({
     refreshToken: GMAIL_OAUTH_REFRESH_TOKEN,
   },
   tls: {
-    rejectUnauthorized: false
-  }
+    rejectUnauthorized: false,
+  },
 });
 
 export const sendMail = async (options: SendMailOptions) => {
   await transporter.sendMail({
     ...options,
-    ...(SEND_BCC ? { bcc: BCC_DEBUG_EMAIL } : {})
-  })
-}
+    ...(SEND_BCC ? { bcc: BCC_DEBUG_EMAIL } : {}),
+  });
+};
 
 export const testEmailService = async (email: string) => {
   try {
     await sendMail({
       to: email,
       subject: `TEST | #{new Date}`,
-      text: `Test  ${new Date().toISOString()}`
-    })
-    console.log(`Email sent to ${email} successfully.`)
+      text: `Test  ${new Date().toISOString()}`,
+    });
+    console.log(`Email sent to ${email} successfully.`);
   } catch (err) {
-    console.error(`There was an error sengind an email to ${email}`)
+    console.error(`There was an error sengind an email to ${email}`);
   }
-}
+};

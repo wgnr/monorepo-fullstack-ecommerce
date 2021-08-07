@@ -1,9 +1,9 @@
-import { Document, PopulatedDoc, } from "mongoose"
+import { Document, PopulatedDoc } from "mongoose";
 import { ICart } from "@models/entities/carts/carts.interface";
 
 export enum UserType {
   USER = "USER",
-  ADMIN = "ADMIN"
+  ADMIN = "ADMIN",
 }
 
 export interface IUserUpdate {
@@ -24,9 +24,9 @@ interface IUserBase {
   type?: UserType;
 }
 
-export interface IUserNewPublic extends Omit<IUserBase, "type"> { }
+export interface IUserNewPublic extends Omit<IUserBase, "type"> {}
 
-export interface IUserNew extends IUserBase { }
+export interface IUserNew extends IUserBase {}
 
 export interface IUserNewFacebook extends Omit<Omit<IUserBase, "password">, "email"> {
   email?: string;

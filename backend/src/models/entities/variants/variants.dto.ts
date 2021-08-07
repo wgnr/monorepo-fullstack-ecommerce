@@ -1,5 +1,3 @@
-class VariantsDTO {
+class VariantsDTO {}
 
-}
-
-export default new VariantsDTO
+export default new VariantsDTO();

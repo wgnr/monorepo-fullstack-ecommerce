@@ -1,5 +1,5 @@
-import { Document, PopulatedDoc, ObjectId } from 'mongoose';
-import { IProduct } from "@models/entities/products/products.interfaces"
+import { Document, PopulatedDoc } from "mongoose";
+import { IProduct } from "@models/entities/products/products.interfaces";
 
 interface ICategoryBase {
   name: string;
@@ -7,11 +7,11 @@ interface ICategoryBase {
 
 // Controller Interfaces
 export interface ICategoryAddProduct {
-  products: string[]
+  products: string[];
 }
 
 export interface ICategoryNew extends ICategoryBase {
-  products?: string[]
+  products?: string[];
 }
 
 // Model Interfaces
@@ -19,5 +19,4 @@ export interface ICategory extends ICategoryBase {
   products: PopulatedDoc<IProduct & Document>[];
   // products: string[]
 }
-export interface ICategoryDocument extends ICategoryBase, Document {
-}
+export interface ICategoryDocument extends ICategoryBase, Document {}

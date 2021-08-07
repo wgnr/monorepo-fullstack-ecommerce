@@ -1,32 +1,41 @@
 import express from "express";
-import OrdersControllers from "@controllers/orders"
+import OrdersControllers from "@controllers/orders";
 
 export const router = express.Router();
 
-router.get("/:orderId?",
+router.get(
+  "/:orderId?",
   OrdersControllers.validateMongoId,
   OrdersControllers.selfResource,
-  OrdersControllers.getAllOrById)
+  OrdersControllers.getAllOrById
+);
 
-router.post("",
+router.post(
+  "",
   OrdersControllers.validateCreate,
   OrdersControllers.selfResource,
-  OrdersControllers.create)
+  OrdersControllers.create
+);
 
-router.put("/:orderId",
+router.put(
+  "/:orderId",
   OrdersControllers.validateMongoId,
   OrdersControllers.validateUpdateInfo,
   OrdersControllers.selfResource,
-  OrdersControllers.updateInfo)
+  OrdersControllers.updateInfo
+);
 
-router.post("/:orderId",
+router.post(
+  "/:orderId",
   OrdersControllers.validateMongoId,
   OrdersControllers.validatePay,
   OrdersControllers.selfResource,
-  OrdersControllers.pay)
+  OrdersControllers.pay
+);
 
-
-router.delete("/:orderId",
+router.delete(
+  "/:orderId",
   OrdersControllers.validateMongoId,
   OrdersControllers.selfResource,
-  OrdersControllers.cancell)
+  OrdersControllers.cancell
+);

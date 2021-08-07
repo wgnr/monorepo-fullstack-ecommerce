@@ -1,34 +1,44 @@
 import express from "express";
-import CategoriesControllers from "@controllers/categories"
+import CategoriesControllers from "@controllers/categories";
 
 export const router = express.Router();
 
-router.get("/:categoryId?",
+router.get(
+  "/:categoryId?",
   CategoriesControllers.validateMongoId,
-  CategoriesControllers.getOneOrALl)
+  CategoriesControllers.getOneOrALl
+);
 
 // Create new cateogry
-router.post("",
+router.post(
+  "",
   CategoriesControllers.adminOnly,
   CategoriesControllers.validateCreate,
-  CategoriesControllers.create)
+  CategoriesControllers.create
+);
 
 // Delete category
-router.delete("/:categoryId",
+router.delete(
+  "/:categoryId",
   CategoriesControllers.adminOnly,
   CategoriesControllers.validateMongoId,
-  CategoriesControllers.delete)
+  CategoriesControllers.delete
+);
 
 // Add products to category
-router.post("/:categoryId/products",
+router.post(
+  "/:categoryId/products",
   CategoriesControllers.adminOnly,
   CategoriesControllers.validateMongoId,
   CategoriesControllers.validateAddOrRemoveProduct,
-  CategoriesControllers.addOrDeleteProducts)
+  CategoriesControllers.addOrDeleteProducts
+);
 
 // Remove products from category
-router.delete("/:categoryId/products",
+router.delete(
+  "/:categoryId/products",
   CategoriesControllers.adminOnly,
   CategoriesControllers.validateMongoId,
   CategoriesControllers.validateAddOrRemoveProduct,
-  CategoriesControllers.addOrDeleteProducts)
+  CategoriesControllers.addOrDeleteProducts
+);

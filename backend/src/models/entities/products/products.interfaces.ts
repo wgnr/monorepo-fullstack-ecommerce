@@ -1,6 +1,6 @@
-import { Document, PopulatedDoc } from 'mongoose';
-import { ICategory } from "@models/entities/categories/categories.interfaces"
-import { IVariantBase, IVariants } from "@models/entities/variants/variants.interfaces"
+import { Document, PopulatedDoc } from "mongoose";
+import { ICategory } from "@models/entities/categories/categories.interfaces";
+import { IVariantBase, IVariants } from "@models/entities/variants/variants.interfaces";
 
 export interface IProductBase {
   description?: string;

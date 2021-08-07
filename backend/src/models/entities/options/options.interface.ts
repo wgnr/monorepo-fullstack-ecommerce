@@ -4,28 +4,28 @@ interface IOptionsBase {
   name: string;
 }
 
-export interface IOptionSummary{
+export interface IOptionSummary {
   option: {
-      id: string;
-      name: string;
+    id: string;
+    name: string;
   };
   value: {
-      id: string;
-      name: string;
+    id: string;
+    name: string;
   };
 }
 
 // Controller interfaces
-export type valueType = string
+export type valueType = string;
 
 export interface IUpdateOption {
-  values: valueType[]
+  values: valueType[];
 }
 export interface IDeleteOption {
-  values?: valueType[]
+  values?: valueType[];
 }
 
-export interface IOptionNew extends IOptionsBase, IUpdateOption { }
+export interface IOptionNew extends IOptionsBase, IUpdateOption {}
 
 // Model Interfaces
 export interface IOptionValue {
@@ -33,7 +33,7 @@ export interface IOptionValue {
 }
 
 export interface IOptions extends IOptionsBase {
-  values: IOptionValue[]
+  values: IOptionValue[];
 }
 
 export interface IOptionValueDocument extends Document {
@@ -41,5 +41,5 @@ export interface IOptionValueDocument extends Document {
 }
 
 export interface IOptionsDocument extends IOptionsBase, Document {
-  values: IOptionValueDocument[]
+  values: IOptionValueDocument[];
 }

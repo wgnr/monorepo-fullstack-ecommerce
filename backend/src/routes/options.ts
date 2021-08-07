@@ -1,25 +1,29 @@
 import express from "express";
-import OptionsControllers from "@controllers/options"
+import OptionsControllers from "@controllers/options";
 
 export const router = express.Router();
 
-router.get("/:optionId?",
-  OptionsControllers.validateMongoId,
-  OptionsControllers.getAllOrById)
+router.get("/:optionId?", OptionsControllers.validateMongoId, OptionsControllers.getAllOrById);
 
-router.post("",
+router.post(
+  "",
   OptionsControllers.adminOnly,
   OptionsControllers.validateCreate,
-  OptionsControllers.create)
+  OptionsControllers.create
+);
 
-router.put("/:optionId",
+router.put(
+  "/:optionId",
   OptionsControllers.adminOnly,
   OptionsControllers.validateMongoId,
   OptionsControllers.validateUpdate,
-  OptionsControllers.update)
+  OptionsControllers.update
+);
 
-router.delete("/:optionId",
+router.delete(
+  "/:optionId",
   OptionsControllers.adminOnly,
   OptionsControllers.validateMongoId,
   OptionsControllers.validateRemove,
-  OptionsControllers.remove)
+  OptionsControllers.remove
+);

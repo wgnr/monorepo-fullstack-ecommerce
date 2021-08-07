@@ -1,5 +1,3 @@
-class ProductsDTO {
+class ProductsDTO {}
 
-}
-
-export default new ProductsDTO
+export default new ProductsDTO();

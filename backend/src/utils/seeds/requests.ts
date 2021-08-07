@@ -1,7 +1,6 @@
-import fetch from "node-fetch"
+import fetch from "node-fetch";
 
 export enum PATHS {
-
   CATEGORIES = "/api/categories",
   /* {
     "products": [],
@@ -82,35 +81,32 @@ export enum PATHS {
 }
 
 const optionsPOST = (body: {}, token?: string) => ({
-  method: 'post',
+  method: "post",
   body: JSON.stringify(body),
   headers: {
-    'Content-Type': 'application/json',
-    ...(token ? { 'Authorization': 'Bearer ' + token } : {})
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: "Bearer " + token } : {}),
   },
-})
+});
 
 export const getToken = async (base_url: string, email: string, password: string) => {
   try {
-    const res = await fetch(`${base_url}/api/auth/login`, optionsPOST({ email, password }))
-    const { token } = await res.json()
-    return token
+    const res = await fetch(`${base_url}/api/auth/login`, optionsPOST({ email, password }));
+    const { token } = await res.json();
+    return token;
   } catch (err) {
-    console.log(err.message)
+    console.log(err.message);
   }
-}
+};
 /* {
     "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjgzMDA2NTMsImV4cCI6MTYyODMwNjY1Mywic3ViIjoiNjEwOTMzMDdlZWE2OWYwNGQwNGEwNmE2In0.AkurrEscXCiiA_V2C8p-4zeSTVk9cf5BnnX6UiZ04RkFpKkdCvQeePdLfzxehtyav3KbzvmYXFyjjOY4VSj5PQ"
 } */
 
 export const post = async (token: string, base_url: string, path: string, payload: any) => {
   try {
-    const res = await fetch(`${base_url}${path}`, optionsPOST(payload, token))
-    return await res.json()
+    const res = await fetch(`${base_url}${path}`, optionsPOST(payload, token));
+    return await res.json();
   } catch (err) {
-    console.log(err.message)
+    console.log(err.message);
   }
-}
-
-
-
+};

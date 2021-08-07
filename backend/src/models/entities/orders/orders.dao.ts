@@ -1,45 +1,47 @@
-import CommonDAO from "@models/entities/CommonDAO"
-import { IOrder, IOrderDocument, OrderStatus } from "@models/entities/orders/orders.interface"
-import { OrdersModel } from "@models/entities/orders/orders.model"
+import CommonDAO from "@models/entities/CommonDAO";
+import { IOrder, IOrderDocument, OrderStatus } from "@models/entities/orders/orders.interface";
+import { OrdersModel } from "@models/entities/orders/orders.model";
 
-class OrdersDAO extends CommonDAO<IOrder>{
+class OrdersDAO extends CommonDAO<IOrder> {
   constructor() {
-    super(OrdersModel)
+    super(OrdersModel);
   }
 
   async getManyByStatus(name: OrderStatus) {
-    this.mongoDebug("getManyByStatus", { name })
+    this.mongoDebug("getManyByStatus", { name });
 
-    return await this.getMany({ status: name })
+    return await this.getMany({ status: name });
   }
 
   async getPopulatedById(id: string): Promise<IOrderDocument> {
-    this.mongoDebug("getPopulatedById", { id })
+    this.mongoDebug("getPopulatedById", { id });
 
-    return await this.model.findById(id)
+    return (await this.model
+      .findById(id)
       .populate("cart")
-      .orFail(this.throwNotFoundError({ id })) as IOrderDocument
+      .orFail(this.throwNotFoundError({ id }))) as IOrderDocument;
   }
 
   async getManyByUserId(userId: string) {
-    this.mongoDebug("getManyByUserId", { userId })
+    this.mongoDebug("getManyByUserId", { userId });
 
-    return await this.model.find({ user: userId })
+    return await this.model
+      .find({ user: userId })
       .lean()
-      .orFail(this.throwNotFoundError({ userId }))
+      .orFail(this.throwNotFoundError({ userId }));
   }
 
   async getCountByUserId(userId: string) {
-    this.mongoDebug("getCountByUserId", { userId })
+    this.mongoDebug("getCountByUserId", { userId });
 
-    return await this.model.countDocuments({ user: userId })
+    return await this.model.countDocuments({ user: userId });
   }
 
   async checkOrderBelongsToUserById(orderId: string, userId: string) {
-    this.mongoDebug("checkOrderBelongsToUserById", { userId })
+    this.mongoDebug("checkOrderBelongsToUserById", { userId });
 
-    return await this.model.countDocuments({ user: userId, _id: orderId })
+    return await this.model.countDocuments({ user: userId, _id: orderId });
   }
 }
 
-export default new OrdersDAO
+export default new OrdersDAO();

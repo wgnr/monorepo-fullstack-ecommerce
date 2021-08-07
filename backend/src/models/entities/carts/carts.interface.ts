@@ -1,5 +1,5 @@
 import { PopulatedDoc, Document } from "mongoose";
-import { IVariants } from "@models/entities/variants/variants.interfaces"
+import { IVariants } from "@models/entities/variants/variants.interfaces";
 
 export enum CartStatus {
   // The only state to add or remove products
@@ -22,9 +22,9 @@ export interface ICartItem {
 }
 
 export interface ICart {
-  variants: ICartItem[],
-  status: CartStatus,
+  variants: ICartItem[];
+  status: CartStatus;
   user: string;
 }
 
-export interface ICartDocument extends ICart, Document { }
+export interface ICartDocument extends ICart, Document {}

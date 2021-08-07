@@ -1,4 +1,4 @@
-import { Document, PopulatedDoc, } from "mongoose"
+import { Document, PopulatedDoc } from "mongoose";
 import { IUser, UserType } from "@models/entities/users/users.interface";
 
 export interface ISingleMessage {
@@ -13,4 +13,4 @@ export interface IChat {
   messages?: ISingleMessage[];
 }
 
-export interface IMessageDocument extends IChat, Document { }
+export interface IMessageDocument extends IChat, Document {}
