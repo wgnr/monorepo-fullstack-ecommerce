@@ -3,6 +3,7 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import path from "path";
+import compression from "compression";
 import { connectToMongo } from "@models/index";
 import { GlobalVars } from "@config/index";
 import { router } from "@routes/index";
@@ -34,6 +35,7 @@ __dirname = path.resolve();
     })
   );
   app.use(cors());
+  app.use(compression());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use("/api", router);
