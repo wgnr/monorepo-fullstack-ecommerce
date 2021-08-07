@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Chat</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <br />
+      <div class="chatContainer">
+        <h2>Chat</h2>
+        <form action="">
+          <label>
+            <span>Token</span>
+            <input
+              type="text"
+              name="token"
+              id="token"
+              autocomplete="off"
+              placeholder="Token"
+              class="form-control"
+              required
+            />
+          </label>
+
+          <label>
+            <span>To</span>
+            <input
+              type="text"
+              name="to"
+              id="to"
+              autocomplete="off"
+              placeholder="userId - Admin ONLY"
+              class="form-control"
+            />
+          </label>
+          <input
+            type="button"
+            value="Connect!"
+            class="btn btn-secondary"
+            onclick="connectWS()"
+          />
+          <hr class="dropdown-divider" />
+          <ol class="list-group chatMessages"></ol>
+          <div class="chatBtnsContainer">
+            <input
+              type="text"
+              name="msg"
+              autocomplete="off"
+              placeholder="Ingresá un mensaje..."
+              class="form-control"
+              required
+            /><input type="submit" value="Enviar!" class="btn btn-primary" />
+          </div>
+        </form>
+      </div>
+
+      <script src="/socket.io/socket.io.js"></script>
+
+      <script>
+        function connectWS() {
+          const tokenDOM = document.querySelector("#token");
+          const toDOM = document.querySelector("#to");
+          const token = tokenDOM.value;
+          if (!token) {
+            tokenDOM.focus();
+            alert("insert your token!");
+            return;
+          }
+
+          try {
+            const { sub } = JSON.parse(atob(token.split(".")[1]));
+            if (!sub) {
+              tokenDOM.focus();
+              alert("invalid token!");
+              return;
+            }
+          } catch (err) {
+            tokenDOM.focus();
+            alert("error!");
+            return;
+          }
+          console.log(toDOM);
+          console.log(toDOM.value);
+
+          var socket = io(undefined, {
+            query: { token, to: toDOM.value },
+          });
+
+          socket.on("message", (messages) => {
+            console.log(messages);
+            const templateNewMessage = ({ date, msg, sender }) => `
+                  <li class="list-group-item">
+                      <span class="chatMsgEmail">${sender}</span>
+                      [<span class="chatMsgTimestamp">${date}</span>]:
+                      <span class="chatMsgMessage">${msg}</span>
+                  </li>
+                  `;
+
+            const MessageListDOM = document.querySelector(".chatMessages");
+
+            const msgArr = Array.isArray(messages) ? messages : [messages];
+
+            MessageListDOM.innerHTML += msgArr
+              .map((m) => {
+                const t = templateNewMessage(m);
+                console.log(t);
+                return t;
+              })
+              .join("");
+
+            document
+              .querySelector(".chatContainer li:last-child")
+              ?.scrollIntoView({ behavior: "smooth" });
+          });
+
+          // Handle Send Message!
+          const sendMessageEvent = document.querySelector(
+            ".chatContainer form"
+          );
+          sendMessageEvent.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const msg = document.querySelector("input[name='msg']");
+
+            const message = { text: msg.value, author: {} };
+            ["to", "token"].forEach(
+              (e) =>
+                (message.author[e] = document.querySelector(
+                  `input[name='${e}']`
+                ).value)
+            );
+            socket.emit("message", message);
+
+            msg.value = "";
+            msg.focus();
+          });
+        }
+      </script>
+    </div>
+  </body>
+</html>
