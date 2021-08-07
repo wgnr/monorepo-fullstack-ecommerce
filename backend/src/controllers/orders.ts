@@ -70,8 +70,16 @@ class OrdersController extends JWTController {
         payload: {
           properties: {
             address: {
-              properties: { street: { type: "string" }, },
+              properties: {
+                street: { type: "string" },
+                CP: { type: "string" },
+                streetNumber: { type: "string" },
+              },
+              optionalProperties: {
+                other: { type: "string" },
+              }
             },
+            contactName: { type: "string" },
             email: { type: "string" },
             phone: { type: "string" },
           },
@@ -134,8 +142,16 @@ class OrdersController extends JWTController {
         payload: {
           properties: {
             address: {
-              properties: { street: { type: "string" }, },
+              properties: {
+                street: { type: "string" },
+                CP: { type: "string" },
+                streetNumber: { type: "string" },
+              },
+              optionalProperties: {
+                other: { type: "string" },
+              }
             },
+            contactName: { type: "string" },
             email: { type: "string" },
             phone: { type: "string" },
           },

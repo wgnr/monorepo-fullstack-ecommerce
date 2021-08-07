@@ -10,24 +10,30 @@ export enum OrderStatus {
 
 export interface IOrderNew {
   cartId: string;
-  payload: {
-    address: {
-      street: string;
-    };
-    email: string;
-    phone: string;
-  };
+  payload: IOrderPayload;
 }
 
+// // Model Interfaces
+// export interface IOrderPayload {
+//   address: {
+//     street: string;
+//     [k: string]: any;
+//   };
+//   email: string;
+//   phone: string;
+//   [k: string]: any;
+// }
 // Model Interfaces
 export interface IOrderPayload {
   address: {
     street: string;
-    [k: string]: any;
+    streetNumber: string;
+    CP: string;
+    other?: string;
   };
+  contactName: string;
   email: string;
   phone: string;
-  [k: string]: any;
 }
 
 export interface IOrderPayment {
