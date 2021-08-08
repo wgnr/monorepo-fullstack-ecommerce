@@ -7,7 +7,7 @@ import compression from "compression";
 import { connectToMongo } from "@models/index";
 import { GlobalVars } from "@config/index";
 import { router } from "@routes/index";
-import { router as ErrorRouter } from "@routes/error";
+import { router as ErrorRouter } from "@controllers/error";
 import ChatsService from "@services/chat";
 
 const PORT = GlobalVars.PORT;
