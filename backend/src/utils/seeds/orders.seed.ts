@@ -30,8 +30,8 @@ export const mockOrders = (carts: any) => {
     },
   ];
 
-  return orders
-}
+  return orders;
+};
 
 export const mockPay = {
   method: "cash",

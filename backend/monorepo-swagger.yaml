@@ -1,0 +1,1686 @@
+openapi: 3.0.0
+info:
+  title: mono-repo
+  contact:
+    name: Juan Wagner
+    url: https://github.com/wgnr/monorepo-fullstack-ecommerce
+    email: juanswagner@gmail.com
+  version: '1.0'
+servers:
+- url: https://monorepo-api.herokuapp.com
+  variables: {}
+- url: localhost:3000
+  description: ''
+  variables: {}
+paths:
+  /products:
+    get:
+      tags:
+      - Products
+      summary: Get All
+      operationId: GetAll
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    post:
+      tags:
+      - Products
+      summary: Create Product
+      operationId: CreateProduct
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreateProductRequest'
+              description: ''
+              example:
+              - categories:
+                - 60fdcfc4eb935c4aa0351b99
+                name: with PIC
+                price: 14.22
+                variants:
+                - stock: 20
+                  options:
+                  - 60fdcfc5eb935c4aa0351ba3
+                  - 60fdcfc5eb935c4aa0351ba8
+                - stock: 16
+                  options:
+                  - 60fdcfc5eb935c4aa0351ba2
+                  - 60fdcfc5eb935c4aa0351ba8
+            example:
+            - categories:
+              - 60fdcfc4eb935c4aa0351b99
+              name: with PIC
+              price: 14.22
+              variants:
+              - stock: 20
+                options:
+                - 60fdcfc5eb935c4aa0351ba3
+                - 60fdcfc5eb935c4aa0351ba8
+              - stock: 16
+                options:
+                - 60fdcfc5eb935c4aa0351ba2
+                - 60fdcfc5eb935c4aa0351ba8
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /products/variant/{variantId}:
+    get:
+      tags:
+      - Products
+      summary: Get Variant
+      operationId: GetVariant
+      parameters:
+      - name: variantId
+        in: path
+        description: Variant Id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{VARIANT_ID}}'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    put:
+      tags:
+      - Products
+      summary: Update variant
+      operationId: Updatevariant
+      parameters:
+      - name: variantId
+        in: path
+        description: Variant Id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{VARIANT_ID}}'
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatevariantRequest'
+            example:
+              stock: 200003
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    delete:
+      tags:
+      - Products
+      summary: Delete variant
+      operationId: Deletevariant
+      parameters:
+      - name: variantId
+        in: path
+        description: Variant Id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{VARIANT_ID}}'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /products/{productId}:
+    get:
+      tags:
+      - Products
+      summary: Get by Id
+      operationId: GetbyId
+      parameters:
+      - name: productId
+        in: path
+        description: Product Id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{PRODUCT_ID}}'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    put:
+      tags:
+      - Products
+      summary: Update product base info
+      operationId: Updateproductbaseinfo
+      parameters:
+      - name: productId
+        in: path
+        description: Product Id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{PRODUCT_ID}}'
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateproductbaseinfoRequest'
+            example:
+              name: Example 1XXX
+              price: 20000
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    delete:
+      tags:
+      - Products
+      summary: Delete product
+      operationId: Deleteproduct
+      parameters:
+      - name: productId
+        in: path
+        description: Product Id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{PRODUCT_ID}}'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /products/{productId}/populated:
+    get:
+      tags:
+      - Products
+      summary: Get Product popullated by Id
+      operationId: GetProductpopullatedbyId
+      parameters:
+      - name: productId
+        in: path
+        description: Product Id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{PRODUCT_ID}}'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /products/{productId}/image:
+    post:
+      tags:
+      - Products
+      summary: Add photo to product
+      operationId: Addphototoproduct
+      parameters:
+      - name: productId
+        in: path
+        description: Product Id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{PRODUCT_ID}}'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            encoding: {}
+            schema:
+              required:
+              - file
+              type: object
+              properties:
+                file:
+                  type: string
+        required: false
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /products/{productId}/image/{imageName}:
+    delete:
+      tags:
+      - Products
+      summary: Add photo to product Copy
+      operationId: AddphototoproductCopy
+      parameters:
+      - name: productId
+        in: path
+        description: Product Id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{PRODUCT_ID}}'
+      - name: imageName
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: 610dd8c201adcf4bb0da742e-000
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            encoding: {}
+            schema:
+              required:
+              - file
+              type: object
+              properties:
+                file:
+                  type: string
+        required: false
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /products/{productId}/variant:
+    post:
+      tags:
+      - Products
+      summary: Add variant to product
+      operationId: Addvarianttoproduct
+      parameters:
+      - name: productId
+        in: path
+        description: Product Id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{PRODUCT_ID}}'
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddvarianttoproductRequest'
+            example:
+              stock: 10
+              options:
+              - 60f4ad12283c6447f80b0a75
+              - 60f4ad12283c6447f80b0a79
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /categories:
+    get:
+      tags:
+      - Categories
+      summary: Get all categories
+      operationId: Getallcategories
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    post:
+      tags:
+      - Categories
+      summary: Create category
+      operationId: Createcategory
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatecategoryRequest'
+            example:
+              name: qqq
+              products: []
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /categories/{categoryId}:
+    get:
+      tags:
+      - Categories
+      summary: Get category by id
+      operationId: Getcategorybyid
+      parameters:
+      - name: categoryId
+        in: path
+        description: Category Id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{CATEGORY_ID}}'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    delete:
+      tags:
+      - Categories
+      summary: Delete category
+      operationId: Deletecategory
+      parameters:
+      - name: categoryId
+        in: path
+        description: Category Id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{CATEGORY_ID}}'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /categories/{categoryId}/products:
+    post:
+      tags:
+      - Categories
+      summary: Add product to Category
+      operationId: AddproducttoCategory
+      parameters:
+      - name: categoryId
+        in: path
+        description: Category Id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{CATEGORY_ID}}'
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddproducttoCategoryRequest'
+            example:
+              products:
+              - 60f4ad3fe8b61c176c136adf
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    delete:
+      tags:
+      - Categories
+      summary: Remove product from Category
+      operationId: RemoveproductfromCategory
+      parameters:
+      - name: categoryId
+        in: path
+        description: Category Id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{CATEGORY_ID}}'
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemoveproductfromCategoryRequest'
+            example:
+              products:
+              - 60f4ad3fe8b61c176c136adf
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /options:
+    get:
+      tags:
+      - Options
+      summary: Get all options
+      operationId: Getalloptions
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    post:
+      tags:
+      - Options
+      summary: Create option
+      operationId: Createoption
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateoptionRequest'
+            example:
+              name: fulano
+              values:
+              - XS
+              - S
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /options/{optionId}:
+    get:
+      tags:
+      - Options
+      summary: Get options by id
+      operationId: Getoptionsbyid
+      parameters:
+      - name: optionId
+        in: path
+        description: Option Id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{OPTION_ID}}'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    put:
+      tags:
+      - Options
+      summary: Add values
+      operationId: Addvalues
+      parameters:
+      - name: optionId
+        in: path
+        description: Category Id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{OPTION_ID}}'
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddvaluesRequest'
+            example:
+              values:
+              - asdsad
+              - add1
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    delete:
+      tags:
+      - Options
+      summary: Remove values
+      operationId: Removevalues
+      parameters:
+      - name: optionId
+        in: path
+        description: Option Id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{OPTION_ID}}'
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemovevaluesRequest'
+            example:
+              values:
+              - 60f4ad12283c6447f80b0a70
+              - 60f4ad12283c6447f80b0a72
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /cart:
+    get:
+      tags:
+      - Carts
+      summary: Get all carts
+      operationId: Getallcarts
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /cart/{cartId}:
+    get:
+      tags:
+      - Carts
+      summary: Get by id
+      operationId: Getbyid
+      parameters:
+      - name: cartId
+        in: path
+        description: cart id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{CART_ID}}'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    post:
+      tags:
+      - Carts
+      summary: Add or update product in cart
+      operationId: Addorupdateproductincart
+      parameters:
+      - name: cartId
+        in: path
+        description: cart id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{CART_ID}}'
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/AddorupdateproductincartRequest'
+              description: ''
+              example:
+              - variantId: 60fdd02a1b644e0b3c696e38
+                quantity: 2
+                comment: 2 XX
+              - variantId: 60fdd02a1b644e0b3c696e39
+                quantity: 2
+                comment: 7 aa
+            example:
+            - variantId: 60fdd02a1b644e0b3c696e38
+              quantity: 2
+              comment: 2 XX
+            - variantId: 60fdd02a1b644e0b3c696e39
+              quantity: 2
+              comment: 7 aa
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    delete:
+      tags:
+      - Carts
+      summary: Clear cart
+      operationId: Clearcart
+      parameters:
+      - name: cartId
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{CART_ID}}'
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ClearcartRequest'
+              description: ''
+              example:
+              - variantId: 60fdd02a1b644e0b3c696e38
+                quantity: 15
+                comment: Producto 1
+              - variantId: 60fdd02a1b644e0b3c696e39
+                quantity: 1
+                comment: Producto 2
+            example:
+            - variantId: 60fdd02a1b644e0b3c696e38
+              quantity: 15
+              comment: Producto 1
+            - variantId: 60fdd02a1b644e0b3c696e39
+              quantity: 1
+              comment: Producto 2
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /cart/6106ab4ed1c2d839f4ba42aa:
+    put:
+      tags:
+      - Carts
+      summary: Add or update product in cart Copy
+      operationId: AddorupdateproductincartCopy
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/AddorupdateproductincartCopyRequest'
+              description: ''
+              example:
+              - variantId: 60fdd02a1b644e0b3c696e38
+                quantity: 20
+                comment: Producto 1
+              - variantId: 60fdd02a1b644e0b3c696e39
+                quantity: 1
+                comment: Producto 2
+            example:
+            - variantId: 60fdd02a1b644e0b3c696e38
+              quantity: 20
+              comment: Producto 1
+            - variantId: 60fdd02a1b644e0b3c696e39
+              quantity: 1
+              comment: Producto 2
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /cart/{cartId}/variant/{variantId}:
+    delete:
+      tags:
+      - Carts
+      summary: Remove product from cart
+      operationId: Removeproductfromcart
+      parameters:
+      - name: cartId
+        in: path
+        description: cart id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{CART_ID}}'
+      - name: variantId
+        in: path
+        description: variant id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{VARIANT_ID}}'
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/RemoveproductfromcartRequest'
+              description: ''
+              example:
+              - variantId: 60fdd02a1b644e0b3c696e38
+                quantity: 15
+                comment: Producto 1
+              - variantId: 60fdd02a1b644e0b3c696e39
+                quantity: 1
+                comment: Producto 2
+            example:
+            - variantId: 60fdd02a1b644e0b3c696e38
+              quantity: 15
+              comment: Producto 1
+            - variantId: 60fdd02a1b644e0b3c696e39
+              quantity: 1
+              comment: Producto 2
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /orders:
+    get:
+      tags:
+      - Orders
+      summary: Get all orders
+      operationId: Getallorders
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    post:
+      tags:
+      - Orders
+      summary: Create order
+      operationId: Createorder
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateorderRequest'
+            example:
+              cartId: 6106f5588477be391049fbb3
+              payload:
+                address:
+                  street: OTRA RODEN
+                email: meganotito@test.com
+                phone: +5493416559542
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /orders/{orderId}:
+    get:
+      tags:
+      - Orders
+      summary: Get by Id
+      operationId: GetbyId1
+      parameters:
+      - name: orderId
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{ORDER_ID}}'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    put:
+      tags:
+      - Orders
+      summary: Update payload info
+      operationId: Updatepayloadinfo
+      parameters:
+      - name: orderId
+        in: path
+        description: order id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{ORDER_ID}}'
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatepayloadinfoRequest'
+            example:
+              payload:
+                address:
+                  street: asdasdsa
+                email: test@test.com
+                phone: +549341sadsads6559542
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    post:
+      tags:
+      - Orders
+      summary: Pay order
+      operationId: Payorder
+      parameters:
+      - name: orderId
+        in: path
+        description: order id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{ORDER_ID}}'
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayorderRequest'
+            example:
+              method: cash
+              paymentNumber: ij32k4h
+              totalPayed: 156.52
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    delete:
+      tags:
+      - Orders
+      summary: Cancel order
+      operationId: Cancelorder
+      parameters:
+      - name: orderId
+        in: path
+        description: order id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{ORDER_ID}}'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /users:
+    post:
+      tags:
+      - Users
+      summary: Create User
+      operationId: CreateUser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+            example:
+              email: pedro02@pedris.com
+              firstName: Pedro
+              lastName: Abraham
+              password: 555555j3kl4j
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    get:
+      tags:
+      - Users
+      summary: Get all
+      operationId: Getall
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /users/{userId}:
+    get:
+      tags:
+      - Users
+      summary: Get by Id
+      operationId: GetbyId12
+      parameters:
+      - name: userId
+        in: path
+        description: user id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{USER_ID}}'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    put:
+      tags:
+      - Users
+      summary: Update user
+      operationId: Updateuser
+      parameters:
+      - name: userId
+        in: path
+        description: user id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{USER_ID}}'
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateuserRequest'
+            example:
+              firstName: PedrXXXX
+              lastName: AbrahamXasdsXXasdasdsad
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    delete:
+      tags:
+      - Users
+      summary: Delete user
+      operationId: Deleteuser
+      parameters:
+      - name: userId
+        in: path
+        description: user id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{USER_ID}}'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /users/{userId}/password:
+    put:
+      tags:
+      - Users
+      summary: Update user password
+      operationId: Updateuserpassword
+      parameters:
+      - name: userId
+        in: path
+        description: user id
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{USER_ID}}'
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateuserpasswordRequest'
+            example:
+              password: PedrXXXX
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /auth/login:
+    post:
+      tags:
+      - Auth
+      summary: Login
+      operationId: Login
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            example:
+              email: juanswagner@gmail.com
+              password: holisholis
+        required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-DNS-Prefetch-Control:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: off
+            Expect-CT:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: max-age=0
+            X-Frame-Options:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: SAMEORIGIN
+            Strict-Transport-Security:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: max-age=15552000; includeSubDomains
+            X-Download-Options:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: noopen
+            X-Content-Type-Options:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: nosniff
+            X-Permitted-Cross-Domain-Policies:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: none
+            Referrer-Policy:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: no-referrer
+            X-XSS-Protection:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: '0'
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: '*'
+            Content-Length:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: '227'
+            ETag:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: W/"e3-XPfxwUruzrnVohfMZ/kKba9r5QQ"
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: Sat, 07 Aug 2021 13:54:18 GMT
+            Connection:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: keep-alive
+            Keep-Alive:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: timeout=5
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/LoginAdmin'
+              example:
+                token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjgzNDQ0NTgsImV4cCI6MTYyODM1MDQ1OCwic3ViIjoiNjEwZThmMTg4ODEyYTQ1Y2JjZTE5OGQ2In0.fDRJvTKD4mkOzSN84kgQvOXlUUtAbwu614Zx8ES7MikFwpG_xRzJ7yWA54aMv1uFVGucU1CJjsqURS9ge4yAqg
+      deprecated: false
+      security: []
+  /auth/signup:
+    post:
+      tags:
+      - Auth
+      summary: Sign Up
+      operationId: SignUp
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+            example:
+              email: pedro02@pedris.com
+              firstName: Pedro
+              lastName: Abraham
+              password: 555555j3kl4j
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /configs:
+    get:
+      tags:
+      - Misc
+      summary: Get config
+      description: Get all the configuration set in server. Admin only.
+      operationId: Getconfig
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+components:
+  schemas:
+    CreateProductRequest:
+      title: CreateProductRequest
+      required:
+      - categories
+      - name
+      - price
+      - variants
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            type: string
+          description: ''
+        name:
+          type: string
+        price:
+          type: number
+        variants:
+          type: array
+          items:
+            $ref: '#/components/schemas/Variant'
+          description: ''
+      example:
+        categories:
+        - 60fdcfc4eb935c4aa0351b99
+        name: with PIC
+        price: 14.22
+        variants:
+        - stock: 20
+          options:
+          - 60fdcfc5eb935c4aa0351ba3
+          - 60fdcfc5eb935c4aa0351ba8
+        - stock: 16
+          options:
+          - 60fdcfc5eb935c4aa0351ba2
+          - 60fdcfc5eb935c4aa0351ba8
+    Variant:
+      title: Variant
+      required:
+      - stock
+      - options
+      type: object
+      properties:
+        stock:
+          type: integer
+          format: int32
+        options:
+          type: array
+          items:
+            type: string
+          description: ''
+      example:
+        stock: 20
+        options:
+        - 60fdcfc5eb935c4aa0351ba3
+        - 60fdcfc5eb935c4aa0351ba8
+    AddvarianttoproductRequest:
+      title: AddvarianttoproductRequest
+      required:
+      - stock
+      - options
+      type: object
+      properties:
+        stock:
+          type: integer
+          format: int32
+        options:
+          type: array
+          items:
+            type: string
+          description: ''
+      example:
+        stock: 10
+        options:
+        - 60f4ad12283c6447f80b0a75
+        - 60f4ad12283c6447f80b0a79
+    UpdateproductbaseinfoRequest:
+      title: UpdateproductbaseinfoRequest
+      required:
+      - name
+      - price
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: integer
+          format: int32
+      example:
+        name: Example 1XXX
+        price: 20000
+    UpdatevariantRequest:
+      title: UpdatevariantRequest
+      required:
+      - stock
+      type: object
+      properties:
+        stock:
+          type: integer
+          format: int32
+      example:
+        stock: 200003
+    CreatecategoryRequest:
+      title: CreatecategoryRequest
+      required:
+      - name
+      - products
+      type: object
+      properties:
+        name:
+          type: string
+        products:
+          type: array
+          items:
+            type: string
+          description: ''
+      example:
+        name: qqq
+        products: []
+    AddproducttoCategoryRequest:
+      title: AddproducttoCategoryRequest
+      required:
+      - products
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            type: string
+          description: ''
+      example:
+        products:
+        - 60f4ad3fe8b61c176c136adf
+    RemoveproductfromCategoryRequest:
+      title: RemoveproductfromCategoryRequest
+      required:
+      - products
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            type: string
+          description: ''
+      example:
+        products:
+        - 60f4ad3fe8b61c176c136adf
+    CreateoptionRequest:
+      title: CreateoptionRequest
+      required:
+      - name
+      - values
+      type: object
+      properties:
+        name:
+          type: string
+        values:
+          type: array
+          items:
+            type: string
+          description: ''
+      example:
+        name: fulano
+        values:
+        - XS
+        - S
+    AddvaluesRequest:
+      title: AddvaluesRequest
+      required:
+      - values
+      type: object
+      properties:
+        values:
+          type: array
+          items:
+            type: string
+          description: ''
+      example:
+        values:
+        - asdsad
+        - add1
+    RemovevaluesRequest:
+      title: RemovevaluesRequest
+      required:
+      - values
+      type: object
+      properties:
+        values:
+          type: array
+          items:
+            type: string
+          description: ''
+      example:
+        values:
+        - 60f4ad12283c6447f80b0a70
+        - 60f4ad12283c6447f80b0a72
+    AddorupdateproductincartRequest:
+      title: AddorupdateproductincartRequest
+      required:
+      - variantId
+      - quantity
+      - comment
+      type: object
+      properties:
+        variantId:
+          type: string
+        quantity:
+          type: integer
+          format: int32
+        comment:
+          type: string
+      example:
+        variantId: 60fdd02a1b644e0b3c696e38
+        quantity: 2
+        comment: 2 XX
+    AddorupdateproductincartCopyRequest:
+      title: AddorupdateproductincartCopyRequest
+      required:
+      - variantId
+      - quantity
+      - comment
+      type: object
+      properties:
+        variantId:
+          type: string
+        quantity:
+          type: integer
+          format: int32
+        comment:
+          type: string
+      example:
+        variantId: 60fdd02a1b644e0b3c696e38
+        quantity: 20
+        comment: Producto 1
+    RemoveproductfromcartRequest:
+      title: RemoveproductfromcartRequest
+      required:
+      - variantId
+      - quantity
+      - comment
+      type: object
+      properties:
+        variantId:
+          type: string
+        quantity:
+          type: integer
+          format: int32
+        comment:
+          type: string
+      example:
+        variantId: 60fdd02a1b644e0b3c696e38
+        quantity: 15
+        comment: Producto 1
+    ClearcartRequest:
+      title: ClearcartRequest
+      required:
+      - variantId
+      - quantity
+      - comment
+      type: object
+      properties:
+        variantId:
+          type: string
+        quantity:
+          type: integer
+          format: int32
+        comment:
+          type: string
+      example:
+        variantId: 60fdd02a1b644e0b3c696e38
+        quantity: 15
+        comment: Producto 1
+    CreateorderRequest:
+      title: CreateorderRequest
+      required:
+      - cartId
+      - payload
+      type: object
+      properties:
+        cartId:
+          type: string
+        payload:
+          $ref: '#/components/schemas/Payload'
+      example:
+        cartId: 6106f5588477be391049fbb3
+        payload:
+          address:
+            street: OTRA RODEN
+          email: meganotito@test.com
+          phone: +5493416559542
+    Payload:
+      title: Payload
+      required:
+      - address
+      - email
+      - phone
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+        email:
+          type: string
+        phone:
+          type: string
+      example:
+        address:
+          street: OTRA RODEN
+        email: meganotito@test.com
+        phone: +5493416559542
+    Address:
+      title: Address
+      required:
+      - street
+      type: object
+      properties:
+        street:
+          type: string
+      example:
+        street: OTRA RODEN
+    UpdatepayloadinfoRequest:
+      title: UpdatepayloadinfoRequest
+      required:
+      - payload
+      type: object
+      properties:
+        payload:
+          $ref: '#/components/schemas/Payload'
+      example:
+        payload:
+          address:
+            street: asdasdsa
+          email: test@test.com
+          phone: +549341sadsads6559542
+    PayorderRequest:
+      title: PayorderRequest
+      required:
+      - method
+      - paymentNumber
+      - totalPayed
+      type: object
+      properties:
+        method:
+          type: string
+        paymentNumber:
+          type: string
+        totalPayed:
+          type: number
+      example:
+        method: cash
+        paymentNumber: ij32k4h
+        totalPayed: 156.52
+    CreateUserRequest:
+      title: CreateUserRequest
+      required:
+      - email
+      - firstName
+      - lastName
+      - password
+      type: object
+      properties:
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        password:
+          type: string
+      example:
+        email: pedro02@pedris.com
+        firstName: Pedro
+        lastName: Abraham
+        password: 555555j3kl4j
+    UpdateuserRequest:
+      title: UpdateuserRequest
+      required:
+      - firstName
+      - lastName
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+      example:
+        firstName: PedrXXXX
+        lastName: AbrahamXasdsXXasdasdsad
+    UpdateuserpasswordRequest:
+      title: UpdateuserpasswordRequest
+      required:
+      - password
+      type: object
+      properties:
+        password:
+          type: string
+      example:
+        password: PedrXXXX
+    LoginRequest:
+      title: LoginRequest
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: juanswagner@gmail.com
+        password: holisholis
+    LoginAdmin:
+      title: LoginAdmin
+      required:
+      - token
+      type: object
+      properties:
+        token:
+          type: string
+      example:
+        token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjgzNDQ0NTgsImV4cCI6MTYyODM1MDQ1OCwic3ViIjoiNjEwZThmMTg4ODEyYTQ1Y2JjZTE5OGQ2In0.fDRJvTKD4mkOzSN84kgQvOXlUUtAbwu614Zx8ES7MikFwpG_xRzJ7yWA54aMv1uFVGucU1CJjsqURS9ge4yAqg
+    Loginregularuser:
+      title: Loginregularuser
+      required:
+      - token
+      type: object
+      properties:
+        token:
+          type: string
+      example:
+        token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjgzNDQ0ODQsImV4cCI6MTYyODM1MDQ4NCwic3ViIjoiNjEwZThmMjIwYzVmNWE0OGIwMTBiNTgxIn0.uyYgiil45h7-fFo5K37W9bN3GSm0ID8LYaU1F6rn5qo45QlKxckQEt4z5XRErFm2PKN7WqmrjcAc0rkhESTjKA
+    SignUpRequest:
+      title: SignUpRequest
+      required:
+      - email
+      - firstName
+      - lastName
+      - password
+      type: object
+      properties:
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        password:
+          type: string
+      example:
+        email: pedro02@pedris.com
+        firstName: Pedro
+        lastName: Abraham
+        password: 555555j3kl4j
+  securitySchemes:
+    httpBearer:
+      type: http
+      scheme: bearer
+security:
+- httpBearer: []
+tags:
+- name: Products
+- name: Categories
+- name: Options
+- name: Carts
+- name: Orders
+- name: Users
+- name: Auth
+- name: Misc
+  description: ''
