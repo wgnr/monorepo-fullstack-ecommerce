@@ -1,20 +1,11 @@
-# Mono Ecommerce
+# Monorepo Ecommerce
 
+# FrontEnd
+Work in progress (?), nothing to showcase yet.
 ## Backend
+Functional ecommerce backend.
+(Description to be completed...)
 
-**package.json**:
-Dependencies:
-
-| Package | Description                                                                                                   |
-| ------- | ------------------------------------------------------------------------------------------------------------- |
-| express | Fast, unopinionated, minimalist web framework for Node.js.                                                    |
-| cors    | Express middleware to enable CORS with various options.                                                       |
-| helmet  | Express middleware to secure your apps by setting various HTTP headers, which mitigate common attack vectors. |
-| dotenv  | Zero-dependency module that loads environment variables from a .env file into process.env.                    |
-
-Dev Dependencies:
-
-| Package     | Description                     |
-| ----------- | ------------------------------- |
-| typescript  | Implement typescript transpiler |
-| ts-node-dev | Restart application on develop  |
+The server documentation can be found in [this link](https://documenter.getpostman.com/view/15950009/TzskENv9).
+- [Postman collection](./backend/monorepo.postman_collection.json).
+- [Swagger yaml](./backend/monorepo-swagger.yaml).
