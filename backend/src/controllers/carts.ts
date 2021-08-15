@@ -66,7 +66,9 @@ class CartsControllers extends JWTController {
 
     const validate = new Ajv().compile<ICartAddItem[]>(schema);
     if (!validate(items))
-      return next(new SchemaValidationException("Category", schema, validate.errors));
+      return next(
+        new SchemaValidationException("Category", schema, validate.errors)
+      );
 
     for (const item of items) {
       const errorFound = isValidMongoId(item.variantId);

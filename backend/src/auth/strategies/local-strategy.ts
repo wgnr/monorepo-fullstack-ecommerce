@@ -1,12 +1,20 @@
 import passport from "passport";
-import { Strategy as LocalStrategy, VerifyFunctionWithRequest } from "passport-local";
+import {
+  Strategy as LocalStrategy,
+  VerifyFunctionWithRequest,
+} from "passport-local";
 import bCrypt from "bcryptjs";
 import UsersServices from "@services/users";
 
 const comparePasswords = (password: string, hashedPassword: string) =>
   bCrypt.compare(password, hashedPassword);
 
-const loginVerify: VerifyFunctionWithRequest = async (req, email, password, done) => {
+const loginVerify: VerifyFunctionWithRequest = async (
+  req,
+  email,
+  password,
+  done
+) => {
   try {
     const user = await UsersServices.getByEmail(email, true);
     if (!(await comparePasswords(password, user.password!)))

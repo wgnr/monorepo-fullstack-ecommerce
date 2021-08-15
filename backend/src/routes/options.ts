@@ -3,7 +3,11 @@ import OptionsControllers from "@controllers/options";
 
 export const router = express.Router();
 
-router.get("/:optionId?", OptionsControllers.validateMongoId, OptionsControllers.getAllOrById);
+router.get(
+  "/:optionId?",
+  OptionsControllers.validateMongoId,
+  OptionsControllers.getAllOrById
+);
 
 router.post(
   "",

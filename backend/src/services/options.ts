@@ -138,12 +138,20 @@ class OptionsService {
     const valueIdsArr = Array.isArray(valueIds) ? valueIds : [valueIds];
 
     // Check if all valuesIds exists
-    const options = await Promise.all(valueIdsArr.map(id => OptionsDAO.getOneByValueId(id)));
+    const options = await Promise.all(
+      valueIdsArr.map(id => OptionsDAO.getOneByValueId(id))
+    );
 
     // optionsIds has to be unique per option
     const uniqueOptionsIds = [...new Set(options.map(o => o._id))];
-    if (uniqueOptionsIds.some(uId => options.filter(option => option.id === uId).length > 1)) {
-      throw new ValidationException("Two or more option values belongs to the same option");
+    if (
+      uniqueOptionsIds.some(
+        uId => options.filter(option => option.id === uId).length > 1
+      )
+    ) {
+      throw new ValidationException(
+        "Two or more option values belongs to the same option"
+      );
     }
   }
 }

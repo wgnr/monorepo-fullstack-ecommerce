@@ -1,6 +1,9 @@
 export const collectionName = "variant";
 import { model, Schema, Model } from "mongoose";
-import { IVariants, IVariantsDocument } from "@models/entities/variants/variants.interfaces";
+import {
+  IVariants,
+  IVariantsDocument,
+} from "@models/entities/variants/variants.interfaces";
 import { collectionName as OptionsCollectionName } from "@models/entities/options/options.model";
 
 const VariantsSchema = new Schema<IVariants>(

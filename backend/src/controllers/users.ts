@@ -8,12 +8,20 @@ import {
   IUserNewPublic,
   UserType,
 } from "@models/entities/users/users.interface";
-import { IUserUpdate, IUserNew, IUserUpdatePassword } from "@models/entities/users/users.interface";
+import {
+  IUserUpdate,
+  IUserNew,
+  IUserUpdatePassword,
+} from "@models/entities/users/users.interface";
 import { SchemaValidationException, ValidationException } from "@exceptions/index";
 import UsersService from "@services/users";
 
 class UsersController extends JWTController {
-  async selfResource(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async selfResource(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     const user = req.user as IUser;
     const {
       params: { userId },
@@ -77,10 +85,16 @@ class UsersController extends JWTController {
 
     const validate = new Ajv().compile<IUserNew>(schema);
     if (!validate(user))
-      return next(new SchemaValidationException("Create user", schema, validate.errors));
+      return next(
+        new SchemaValidationException("Create user", schema, validate.errors)
+      );
 
     if (!UsersService.validatePassword(user.password)) {
-      return next(new ValidationException("Password must have at least 8 alphanumric characters"));
+      return next(
+        new ValidationException(
+          "Password must have at least 8 alphanumric characters"
+        )
+      );
     }
 
     return next();
@@ -104,11 +118,17 @@ class UsersController extends JWTController {
     const validate = new Ajv().compile<IUserNewPublic>(schema);
     if (!validate(user))
       return next(
-        new ValidationException(validate.errors?.join("/n") ?? "Can validate create user payload.")
+        new ValidationException(
+          validate.errors?.join("/n") ?? "Can validate create user payload."
+        )
       );
 
     if (!UsersService.validatePassword(user.password))
-      return next(new ValidationException("Password must have at least 8 alphanumric characters"));
+      return next(
+        new ValidationException(
+          "Password must have at least 8 alphanumric characters"
+        )
+      );
 
     return next();
   }
@@ -133,7 +153,9 @@ class UsersController extends JWTController {
 
     const validate = new Ajv().compile<IUserUpdate>(schema);
     if (!validate(payload))
-      return next(new SchemaValidationException("Update user", schema, validate.errors));
+      return next(
+        new SchemaValidationException("Update user", schema, validate.errors)
+      );
 
     return next();
   }
@@ -158,10 +180,16 @@ class UsersController extends JWTController {
 
     const validate = new Ajv().compile<IUserUpdatePassword>(schema);
     if (!validate(payload))
-      return next(new SchemaValidationException("Update password", schema, validate.errors));
+      return next(
+        new SchemaValidationException("Update password", schema, validate.errors)
+      );
 
     if (!UsersService.validatePassword(payload.password)) {
-      return next(new ValidationException("Password must have at least 8 alphanumric characters"));
+      return next(
+        new ValidationException(
+          "Password must have at least 8 alphanumric characters"
+        )
+      );
     }
 
     return next();

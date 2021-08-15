@@ -5,12 +5,18 @@ export const mockCarts = (users: any, products: any) => {
     const cartId = user.currentCart;
     const payload: ICartAddItem[] = [
       {
-        variantId: products[Math.random() > 0.5 ? 0 : 1].variants[Math.random() > 0.5 ? 0 : 1],
+        variantId:
+          products[Math.random() > 0.5 ? 0 : 1].variants[
+            Math.random() > 0.5 ? 0 : 1
+          ],
         quantity: ~~(Math.random() * 10),
         comment: `Optional coment ${user.firstName}`,
       },
       {
-        variantId: products[Math.random() > 0.5 ? 0 : 1].variants[Math.random() > 0.5 ? 2 : 3],
+        variantId:
+          products[Math.random() > 0.5 ? 0 : 1].variants[
+            Math.random() > 0.5 ? 2 : 3
+          ],
         quantity: ~~(Math.random() * 8),
       },
     ];

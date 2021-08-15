@@ -10,7 +10,9 @@ class CategoriesDAO extends CommonDAO<ICategory> {
   async getByName(name: string) {
     this.mongoDebug("getByName", { name });
 
-    return await this.model.findOne({ name }).orFail(this.throwNotFoundError({ name }));
+    return await this.model
+      .findOne({ name })
+      .orFail(this.throwNotFoundError({ name }));
   }
 
   async getManyByIds(ids: string[]) {
@@ -30,7 +32,9 @@ class CategoriesDAO extends CommonDAO<ICategory> {
   async deleteCategory(id: string) {
     this.mongoDebug("deleteCategory", { id });
 
-    return await this.model.findByIdAndDelete(id).orFail(this.throwNotFoundError({ id }));
+    return await this.model
+      .findByIdAndDelete(id)
+      .orFail(this.throwNotFoundError({ id }));
   }
 
   async addProduct(categoryId: string, productId: string | string[]) {

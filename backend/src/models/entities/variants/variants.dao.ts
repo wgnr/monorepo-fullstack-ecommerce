@@ -36,7 +36,11 @@ class VariantsDAO extends CommonDAO<IVariants> {
     return response.n;
   }
 
-  async addStockInCheckout(variantId: string, quantity: number, session: ClientSession) {
+  async addStockInCheckout(
+    variantId: string,
+    quantity: number,
+    session: ClientSession
+  ) {
     this.mongoDebug("addStockInCheckout", { variantId, quantity });
 
     const options: QueryOptions = { session, new: true };
@@ -45,7 +49,11 @@ class VariantsDAO extends CommonDAO<IVariants> {
       .orFail(this.throwNotFoundError({ variantId }));
   }
 
-  async releaseStockInCheckout(variantId: string, quantity: number, session: ClientSession) {
+  async releaseStockInCheckout(
+    variantId: string,
+    quantity: number,
+    session: ClientSession
+  ) {
     this.mongoDebug("releaseStockInCheckout", { variantId, quantity });
 
     const options: QueryOptions = { session, new: true };

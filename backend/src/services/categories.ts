@@ -43,7 +43,10 @@ class CategoriesService {
     const createdCategory = await CategoriesDAO.create(newCategory);
 
     if (createdCategory.products.length > 0) {
-      await ProductsService.addCategory(createdCategory.products, createdCategory._id);
+      await ProductsService.addCategory(
+        createdCategory.products,
+        createdCategory._id
+      );
     }
 
     return createdCategory;

@@ -66,7 +66,8 @@ class ChatService {
           const user = (await UsersService.getById(sub)).toJSON();
 
           const isAdmin = user.type === UserType.ADMIN;
-          if (isAdmin && !toUser) return next(new Error("Must include userId in To"));
+          if (isAdmin && !toUser)
+            return next(new Error("Must include userId in To"));
 
           const data: SocketData = {
             user,

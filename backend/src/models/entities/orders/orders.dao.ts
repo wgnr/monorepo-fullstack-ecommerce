@@ -1,5 +1,9 @@
 import CommonDAO from "@models/entities/CommonDAO";
-import { IOrder, IOrderDocument, OrderStatus } from "@models/entities/orders/orders.interface";
+import {
+  IOrder,
+  IOrderDocument,
+  OrderStatus,
+} from "@models/entities/orders/orders.interface";
 import { OrdersModel } from "@models/entities/orders/orders.model";
 
 class OrdersDAO extends CommonDAO<IOrder> {

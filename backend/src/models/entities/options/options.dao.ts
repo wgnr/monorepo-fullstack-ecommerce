@@ -29,7 +29,9 @@ class OptionsDAO extends CommonDAO<IOptions> {
   async getOneByName(name: string) {
     this.mongoDebug("getOneByName", { name });
 
-    return await this.model.findOne({ name }).orFail(this.throwNotFoundError({ name }));
+    return await this.model
+      .findOne({ name })
+      .orFail(this.throwNotFoundError({ name }));
   }
 
   async addToSet(_id: string, values: string[]) {
@@ -37,7 +39,9 @@ class OptionsDAO extends CommonDAO<IOptions> {
 
     const parsedValues = values.map(value => ({ value }));
 
-    return await this.updateOneById(_id, { $addToSet: { values: { $each: parsedValues } } });
+    return await this.updateOneById(_id, {
+      $addToSet: { values: { $each: parsedValues } },
+    });
   }
 
   async removeValues(_id: string, values: string | string[]) {

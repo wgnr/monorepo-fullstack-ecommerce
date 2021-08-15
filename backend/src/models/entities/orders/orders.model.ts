@@ -33,4 +33,7 @@ const ordersSchema = new Schema<IOrder>(
   }
 );
 
-export const OrdersModel: Model<IOrder> = model<IOrder>(collectionName, ordersSchema);
+export const OrdersModel: Model<IOrder> = model<IOrder>(
+  collectionName,
+  ordersSchema
+);

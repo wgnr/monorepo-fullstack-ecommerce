@@ -2,7 +2,10 @@ import { sign } from "jsonwebtoken";
 import { GlobalVars } from "@config/index";
 import UsersDTO from "@models/entities/users/users.dto";
 import UsersService from "@services/users";
-import { IUserDocument, IUserNewPublic } from "@models/entities/users/users.interface";
+import {
+  IUserDocument,
+  IUserNewPublic,
+} from "@models/entities/users/users.interface";
 
 const {
   auth: {

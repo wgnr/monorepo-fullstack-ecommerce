@@ -2,9 +2,15 @@ import multer from "multer";
 import { Request, Response, NextFunction } from "express";
 import Ajv, { JTDSchemaType } from "ajv/dist/jtd";
 import { JWTController } from "@auth/index";
-import { IProductNew, IProductBase } from "@models/entities/products/products.interfaces";
+import {
+  IProductNew,
+  IProductBase,
+} from "@models/entities/products/products.interfaces";
 import { isValidMongoId } from "@models/index";
-import { IVariantBase, IVariantUpdate } from "@models/entities/variants/variants.interfaces";
+import {
+  IVariantBase,
+  IVariantUpdate,
+} from "@models/entities/variants/variants.interfaces";
 import { SchemaValidationException, ValidationException } from "@exceptions/index";
 import ProductService from "@services/products";
 
@@ -36,13 +42,19 @@ class ProductController extends JWTController {
     const { variantId } = req.params;
 
     try {
-      return res.json(await ProductService.getVariantPopulatedByVariantId(variantId));
+      return res.json(
+        await ProductService.getVariantPopulatedByVariantId(variantId)
+      );
     } catch (error) {
       return next(error);
     }
   }
 
-  async getVariantPopulatedByProductId(req: Request, res: Response, next: NextFunction) {
+  async getVariantPopulatedByProductId(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { productId } = req.params;
     try {
       return res.json(await ProductService.getPopulatedByProductId(productId));
@@ -54,7 +66,8 @@ class ProductController extends JWTController {
   async validateCreateProducts(req: Request, res: Response, next: NextFunction) {
     const products: IProductNew[] = req.body;
 
-    if (products?.length === 0) return next(new ValidationException("products is empty!"));
+    if (products?.length === 0)
+      return next(new ValidationException("products is empty!"));
 
     const schema: JTDSchemaType<IProductNew[]> = {
       elements: {
@@ -79,12 +92,16 @@ class ProductController extends JWTController {
 
     const validate = new Ajv().compile<IProductNew[]>(schema);
     if (!validate(products))
-      return next(new SchemaValidationException("products array", schema, validate.errors));
+      return next(
+        new SchemaValidationException("products array", schema, validate.errors)
+      );
 
     const categorieIdsArr = [
       ...new Set(
         products
-          .filter(({ categories }) => Array.isArray(categories) && categories.length > 0)
+          .filter(
+            ({ categories }) => Array.isArray(categories) && categories.length > 0
+          )
           .flatMap(product => product.categories)
       ),
     ] as string[];
@@ -129,7 +146,9 @@ class ProductController extends JWTController {
 
     const validate = new Ajv().compile<IVariantBase>(schema);
     if (!validate(variants))
-      return next(new SchemaValidationException("products array", schema, validate.errors));
+      return next(
+        new SchemaValidationException("products array", schema, validate.errors)
+      );
 
     const { options } = variants;
     if (options) {
@@ -217,7 +236,9 @@ class ProductController extends JWTController {
 
     const validate = new Ajv().compile<IProductBase>(schema);
     if (!validate(product))
-      return next(new SchemaValidationException("products array", schema, validate.errors));
+      return next(
+        new SchemaValidationException("products array", schema, validate.errors)
+      );
 
     return next();
   }
@@ -240,7 +261,9 @@ class ProductController extends JWTController {
 
     const validate = new Ajv().compile<IVariantUpdate>(schema);
     if (!validate(variant))
-      return next(new SchemaValidationException("products array", schema, validate.errors));
+      return next(
+        new SchemaValidationException("products array", schema, validate.errors)
+      );
 
     return next();
   }

@@ -19,4 +19,7 @@ const OptionsSchema = new Schema<IOptions>(
   }
 );
 
-export const OptionsModel: Model<IOptions> = model<IOptions>(collectionName, OptionsSchema);
+export const OptionsModel: Model<IOptions> = model<IOptions>(
+  collectionName,
+  OptionsSchema
+);

@@ -35,4 +35,7 @@ const cartsSchema = new Schema<ICart>(
   }
 );
 
-export const CategoriesModel: Model<ICart> = model<ICart>(collectionName, cartsSchema);
+export const CategoriesModel: Model<ICart> = model<ICart>(
+  collectionName,
+  cartsSchema
+);

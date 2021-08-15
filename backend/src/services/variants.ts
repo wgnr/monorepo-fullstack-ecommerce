@@ -32,7 +32,12 @@ class VariantsService {
 
   // async directCreate(productId: string,)
 
-  async create(productId: string, validate: boolean, stock: number = 0, optionsIds: string[] = []) {
+  async create(
+    productId: string,
+    validate: boolean,
+    stock: number = 0,
+    optionsIds: string[] = []
+  ) {
     // Check that combination doesnt exists for product
     if (validate) {
       await OptionsService.validateOptionsUsedAreUnique(optionsIds);
@@ -55,12 +60,16 @@ class VariantsService {
   ) {
     // optionIds combination must be unique for product
     for (const variantId of variantIds) {
-      const { options /* array option values */ } = await VariantsDAO.getOneById(variantId);
+      const { options /* array option values */ } = await VariantsDAO.getOneById(
+        variantId
+      );
       if (
         incomingOptionsValueIds.length === options.length &&
         incomingOptionsValueIds.every(opVal => options.includes(opVal))
       ) {
-        throw new ValidationException("Variant options value has already been defined.");
+        throw new ValidationException(
+          "Variant options value has already been defined."
+        );
       }
     }
   }
@@ -105,12 +114,20 @@ class VariantsService {
     this.validateStocksAfterUpdate(variant);
   }
 
-  validateStocksAfterUpdate({ id, stockInCheckout, availableStock }: IVariantsDocument) {
+  validateStocksAfterUpdate({
+    id,
+    stockInCheckout,
+    availableStock,
+  }: IVariantsDocument) {
     if (stockInCheckout < 0) {
-      throw new ValidationException(`Variant ${id} have stockInCheckout ${stockInCheckout}`);
+      throw new ValidationException(
+        `Variant ${id} have stockInCheckout ${stockInCheckout}`
+      );
     }
     if (availableStock < 0) {
-      throw new ValidationException(`Variant ${id} has available stock ${availableStock}`);
+      throw new ValidationException(
+        `Variant ${id} has available stock ${availableStock}`
+      );
     }
   }
 }

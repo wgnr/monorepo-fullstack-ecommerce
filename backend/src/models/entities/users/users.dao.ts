@@ -11,7 +11,10 @@ class UsersDAO extends CommonDAO<IUser> {
   async getOneByEmail(email: string) {
     this.mongoDebug("getOneByEmail", { email });
 
-    return await this.model.findOne({ email }).lean().orFail(this.throwNotFoundError({ email }));
+    return await this.model
+      .findOne({ email })
+      .lean()
+      .orFail(this.throwNotFoundError({ email }));
   }
 
   async getByFacebookId(id: string) {

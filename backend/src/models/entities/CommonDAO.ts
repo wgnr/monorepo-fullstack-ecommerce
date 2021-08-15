@@ -43,7 +43,10 @@ export default abstract class CommonDAO<T> {
     return this.getMany(filter);
   }
 
-  async delete(filter: FilterQuery<T> | string, payload: UpdateQuery<T>): Promise<number> {
+  async delete(
+    filter: FilterQuery<T> | string,
+    payload: UpdateQuery<T>
+  ): Promise<number> {
     this.mongoDebug("delete", { filter, payload });
 
     let result = 0;

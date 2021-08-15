@@ -14,21 +14,31 @@ const {
 (async () => {
   try {
     console.log("Populating db...");
-    const token = await getToken(SEED_SERVER_API_URL, SEED_ADMIN_EMAIL, SEED_ADMIN_PASSWORD);
+    const token = await getToken(
+      SEED_SERVER_API_URL,
+      SEED_ADMIN_EMAIL,
+      SEED_ADMIN_PASSWORD
+    );
 
     console.log("Populate Users");
     const users = await Promise.all(
-      mockUsers.map(payload => post(token, SEED_SERVER_API_URL, PATHS.USERS, payload))
+      mockUsers.map(payload =>
+        post(token, SEED_SERVER_API_URL, PATHS.USERS, payload)
+      )
     );
 
     console.log("Populate Categories");
     const categories = await Promise.all(
-      mockCategory.map(payload => post(token, SEED_SERVER_API_URL, PATHS.CATEGORIES, payload))
+      mockCategory.map(payload =>
+        post(token, SEED_SERVER_API_URL, PATHS.CATEGORIES, payload)
+      )
     );
 
     console.log("Populate Options");
     const options = await Promise.all(
-      mockOptions.map(payload => post(token, SEED_SERVER_API_URL, PATHS.OPTIONS, payload))
+      mockOptions.map(payload =>
+        post(token, SEED_SERVER_API_URL, PATHS.OPTIONS, payload)
+      )
     );
 
     console.log("Populate Products");
@@ -48,7 +58,9 @@ const {
 
     console.log("Populate Orders");
     const orders = await Promise.all(
-      mockOrders(carts).map(payload => post(token, SEED_SERVER_API_URL, PATHS.ORDERS, payload))
+      mockOrders(carts).map(payload =>
+        post(token, SEED_SERVER_API_URL, PATHS.ORDERS, payload)
+      )
     );
     const payedOrder = await post(
       token,

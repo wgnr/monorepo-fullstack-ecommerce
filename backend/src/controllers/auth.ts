@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { StrategiesController } from "@auth/index";
-import { IUserDocument, IUserNewPublic } from "@models/entities/users/users.interface";
+import {
+  IUserDocument,
+  IUserNewPublic,
+} from "@models/entities/users/users.interface";
 import AuthServices from "@services/auth";
 import UsersControllers from "@controllers/users";
 
