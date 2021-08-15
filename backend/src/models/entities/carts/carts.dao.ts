@@ -7,11 +7,12 @@ class CartsDAO extends CommonDAO<ICart> {
     super(CategoriesModel);
   }
 
-  async getPopulatedById(cartId: string) {
+  async getPopulatedById(cartId: string, useLean: boolean = true) {
     this.mongoDebug("getPopulatedById", { cartId });
 
     return await this.model
       .findById(cartId)
+      .lean(useLean)
       .populate({
         path: "variants.variant",
         populate: {

@@ -20,6 +20,7 @@ class ProductsDAO extends CommonDAO<IProduct> {
 
     return await this.model
       .findOne({ _id: id })
+      .lean()
       .populate({ path: "categories", select: "-products" })
       .populate({ path: "variants", select: "-product" })
       // .populate("variants.options") //  populate options https://stackoverflow.com/questions/24414975/mongoose-populate-sub-sub-document
@@ -31,6 +32,7 @@ class ProductsDAO extends CommonDAO<IProduct> {
 
     return await this.model
       .findOne({ "variants._id": Types.ObjectId(id) })
+      .lean()
       .orFail(this.throwNotFoundError({ id }));
   }
 
@@ -46,16 +48,18 @@ class ProductsDAO extends CommonDAO<IProduct> {
     await this.model
       .updateMany(
         { _id: Array.isArray(productIds) ? { $in: productIds } : productIds },
-        { $addToSet: { categories: categoryId } }
+        { $kaddToSet: { categories: categoryId } }
       )
+      .lean()
       .orFail(this.throwNotFoundError({ productIds }));
   }
 
   async insertImage(productId: string, fileName: string) {
     this.mongoDebug("insertImage", { productId, fileName });
 
-    await this.model
+    return await this.model
       .updateOne({ _id: productId }, { $addToSet: { photos: fileName } })
+      .lean()
       .orFail(this.throwNotFoundError({ productId }));
   }
   async removeImage(productId: string, fileName: string) {
@@ -63,6 +67,7 @@ class ProductsDAO extends CommonDAO<IProduct> {
 
     await this.model
       .updateOne({ _id: productId }, { $pull: { photos: fileName } })
+      .lean()
       .orFail(this.throwNotFoundError({ productId }));
   }
 
@@ -73,10 +78,12 @@ class ProductsDAO extends CommonDAO<IProduct> {
     if (!productId) {
       await this.model
         .updateMany({}, update)
+        .lean()
         .orFail(this.throwNotFoundError({ productId }));
     } else if (Array.isArray(productId)) {
       await this.model
         .updateMany({ _id: { $in: productId } }, update)
+        .lean()
         .orFail(this.throwNotFoundError({ productId }));
     } else {
       await this.updateOneById(productId, update);
@@ -92,6 +99,7 @@ class ProductsDAO extends CommonDAO<IProduct> {
 
     const response = await this.model
       .deleteOne({ _id: id })
+      .lean()
       .orFail(this.throwNotFoundError({ id }));
 
     return response.n;

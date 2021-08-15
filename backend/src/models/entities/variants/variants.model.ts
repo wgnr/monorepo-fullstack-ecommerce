@@ -27,6 +27,7 @@ const VariantsSchema = new Schema<IVariants>(
   }
 );
 
+// TODO check lean
 VariantsSchema.virtual("availableStock").get(function (this: IVariantsDocument) {
   return this.stock - this.stockInCheckout;
 });

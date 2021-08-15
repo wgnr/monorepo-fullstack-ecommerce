@@ -15,6 +15,7 @@ class OptionsDAO extends CommonDAO<IOptions> {
       .findOne({
         "values._id": Types.ObjectId(id),
       })
+      .lean()
       .orFail(this.throwNotFoundError({ id }));
   }
 
@@ -31,6 +32,7 @@ class OptionsDAO extends CommonDAO<IOptions> {
 
     return await this.model
       .findOne({ name })
+      .lean()
       .orFail(this.throwNotFoundError({ name }));
   }
 

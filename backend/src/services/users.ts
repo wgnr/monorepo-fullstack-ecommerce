@@ -14,8 +14,9 @@ import UsersDAO from "@models/entities/users/users.dao";
 import UsersDTO from "@models/entities/users/users.dto";
 
 class UsersService {
-  async getById(id: string) {
-    return UsersDTO.returnOne((await UsersDAO.getOneById(id)) as IUserDocument);
+  async getById(id: string, useLean: boolean = true) {
+    const user = await UsersDAO.getOneById(id, useLean);
+    return UsersDTO.returnOne(user as IUserDocument);
   }
 
   async getAll() {
@@ -91,8 +92,9 @@ class UsersService {
   }
 
   async updatePassword(id: string, payload: IUserUpdatePassword) {
-    const user = await this.getById(id);
+    const user = await this.getById(id, false);
     user.password = payload.password;
+    // TODO check if lean works properly
     await user.save();
   }
 

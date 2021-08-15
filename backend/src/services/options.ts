@@ -32,15 +32,15 @@ class OptionsService {
 
   async getOptionNameAndValueByValueId(id: string): Promise<IOptionSummary> {
     const option = (await this.getByValueId(id)) as IOptionsDocument;
-    const value = option.values.find(value => value.id === id)!;
+    const value = option.values.find(value => String(value._id) === id)!;
 
     return {
       option: {
-        id: option.id as string,
+        id: option._id as string,
         name: option.name,
       },
       value: {
-        id: value.id as string,
+        id: value._id as string,
         name: value.value,
       },
     };

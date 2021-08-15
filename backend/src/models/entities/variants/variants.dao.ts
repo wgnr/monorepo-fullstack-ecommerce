@@ -13,6 +13,7 @@ class VariantsDAO extends CommonDAO<IVariants> {
 
     return await this.model
       .findById(id)
+      .lean()
       .populate("product")
       .orFail(this.throwNotFoundError({ id }));
   }
@@ -20,10 +21,12 @@ class VariantsDAO extends CommonDAO<IVariants> {
   async getManyByOptionValueId(id: string) {
     this.mongoDebug("getManyByOptionValueId", { id });
 
-    const query = { options: Types.ObjectId(id) };
-
-    // @ts-ignore
-    return await this.model.find(query).orFail(this.throwNotFoundError({ id }));
+    // DEBT: check why complains |  check thats working
+    return await this.model
+      // .find({ options: Types.ObjectId(id) })
+      .find({ options: id })
+      .lean()
+      .orFail(this.throwNotFoundError({ id }));
   }
 
   async deleteById(variantId: string) {
@@ -31,6 +34,7 @@ class VariantsDAO extends CommonDAO<IVariants> {
 
     const response = await this.model
       .deleteOne({ _id: variantId })
+      .lean()
       .orFail(this.throwNotFoundError({ variantId }));
 
     return response.n;
@@ -46,6 +50,7 @@ class VariantsDAO extends CommonDAO<IVariants> {
     const options: QueryOptions = { session, new: true };
     return await this.model
       .findByIdAndUpdate(variantId, { $inc: { stockInCheckout: quantity } }, options)
+      .lean()
       .orFail(this.throwNotFoundError({ variantId }));
   }
 
@@ -59,6 +64,7 @@ class VariantsDAO extends CommonDAO<IVariants> {
     const options: QueryOptions = { session, new: true };
     return await this.model
       .findByIdAndUpdate(variantId, { $inc: { stock: -quantity } }, options)
+      .lean()
       .orFail(this.throwNotFoundError({ variantId }));
   }
 }

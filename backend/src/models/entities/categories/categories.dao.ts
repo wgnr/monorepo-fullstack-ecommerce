@@ -12,6 +12,7 @@ class CategoriesDAO extends CommonDAO<ICategory> {
 
     return await this.model
       .findOne({ name })
+      .lean()
       .orFail(this.throwNotFoundError({ name }));
   }
 
@@ -26,6 +27,7 @@ class CategoriesDAO extends CommonDAO<ICategory> {
 
     return await this.model
       .find({ name: { $in: names } })
+      .lean()
       .orFail(this.throwNotFoundError({ names }));
   }
 
@@ -34,6 +36,7 @@ class CategoriesDAO extends CommonDAO<ICategory> {
 
     return await this.model
       .findByIdAndDelete(id)
+      .lean()
       .orFail(this.throwNotFoundError({ id }));
   }
 

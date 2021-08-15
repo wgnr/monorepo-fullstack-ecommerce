@@ -17,11 +17,15 @@ class OrdersDAO extends CommonDAO<IOrder> {
     return await this.getMany({ status: name });
   }
 
-  async getPopulatedById(id: string): Promise<IOrderDocument> {
+  async getPopulatedById(
+    id: string,
+    useLean: boolean = true
+  ): Promise<IOrderDocument> {
     this.mongoDebug("getPopulatedById", { id });
 
     return (await this.model
       .findById(id)
+      .lean(useLean)
       .populate("cart")
       .orFail(this.throwNotFoundError({ id }))) as IOrderDocument;
   }
@@ -38,13 +42,13 @@ class OrdersDAO extends CommonDAO<IOrder> {
   async getCountByUserId(userId: string) {
     this.mongoDebug("getCountByUserId", { userId });
 
-    return await this.model.countDocuments({ user: userId });
+    return await this.model.countDocuments({ user: userId }).lean();
   }
 
   async checkOrderBelongsToUserById(orderId: string, userId: string) {
     this.mongoDebug("checkOrderBelongsToUserById", { userId });
 
-    return await this.model.countDocuments({ user: userId, _id: orderId });
+    return await this.model.countDocuments({ user: userId, _id: orderId }).lean();
   }
 }
 

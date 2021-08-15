@@ -24,7 +24,7 @@ const verify: VerifyCallback = async (decodedTokenPayload, done) => {
   try {
     const { sub: userId } = decodedTokenPayload;
     if (userId) {
-      const user = (await UsersService.getById(userId)).toJSON();
+      const user = await UsersService.getById(userId);
       return done(null, user);
     }
     return done(null, false);

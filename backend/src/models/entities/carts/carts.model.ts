@@ -8,6 +8,7 @@ const cartsSchema = new Schema<ICart>(
     status: {
       type: String,
       enum: Object.values(CartStatus),
+      // TODO check lean create
       default: CartStatus.OPEN,
     },
     variants: [

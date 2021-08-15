@@ -63,7 +63,7 @@ class ChatService {
           const { sub } = decoded;
           if (err || !sub) return next(new Error("Authentication error"));
 
-          const user = (await UsersService.getById(sub)).toJSON();
+          const user = await UsersService.getById(sub);
 
           const isAdmin = user.type === UserType.ADMIN;
           if (isAdmin && !toUser)

@@ -23,7 +23,7 @@ class VariantsService {
       )
     );
 
-    return { ...variant.toJSON(), options };
+    return { ...variant, options };
   }
 
   async getManyByOptionValueId(id: string) {

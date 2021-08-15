@@ -1,4 +1,4 @@
-import mongoose, { ClientSession } from "mongoose";
+import mongoose, { ClientSession, Document } from "mongoose";
 import { CartStatus } from "@models/entities/carts/carts.interface";
 import {
   IOrderDocument,
@@ -20,16 +20,16 @@ class OrdersService {
     return await OrdersDAO.getCountByUserId(userId);
   }
 
-  async getById(orderId: string) {
-    return await OrdersDAO.getOneById(orderId);
+  async getById(orderId: string, useLean: boolean = true) {
+    return await OrdersDAO.getOneById(orderId, useLean);
   }
 
   async getByStatus(status: OrderStatus) {
     return await OrdersDAO.getManyByStatus(status);
   }
 
-  async getPopulatedById(orderId: string) {
-    return await OrdersDAO.getPopulatedById(orderId);
+  async getPopulatedById(orderId: string, useLean: boolean = true) {
+    return await OrdersDAO.getPopulatedById(orderId, useLean);
   }
 
   async getAll() {
@@ -37,9 +37,14 @@ class OrdersService {
   }
 
   async create(cartId: string, payload: any) {
-    const cartPopulated = await CartsService.getPopulatedById(cartId);
+    const cartPopulated = await CartsService.getPopulatedById(cartId, false);
+    if (!(cartPopulated instanceof Document)) {
+      throw new Error("Internal error, expected a mongoose document");
+    }
+
     await CartsService.validateCartIsNotEmpty(cartPopulated);
     try {
+      // TODO check if transactions are available with lean documents.
       await mongoose.connection.transaction(async (session: ClientSession) => {
         await CartsService.chageStatus(
           cartPopulated,
@@ -66,7 +71,12 @@ class OrdersService {
   }
 
   async update(orderId: string, payload: IOrderPayload) {
-    const order = await this.getById(orderId);
+    const order = await this.getById(orderId, false);
+
+    if (!(order instanceof Document)) {
+      throw new Error("Internal error, expected a mongoose document");
+    }
+
     if (order.status !== OrderStatus.AWAITING_PAYMENT) {
       throw new ValidationException(`Order can't be updated. It's ${order.status}`);
     }
@@ -77,10 +87,10 @@ class OrdersService {
   }
 
   async pay(orderId: string, paymentPayload: IOrderPayment) {
-    const order = await this.getPopulatedById(orderId);
+    const order = await this.getPopulatedById(orderId, false);
 
     await this.chageStatus(order, OrderStatus.COMPLETED);
-
+    // DEBT: avoid .save method() use $set instead
     order.payment = { ...paymentPayload };
 
     await sendOrderSummary(order);

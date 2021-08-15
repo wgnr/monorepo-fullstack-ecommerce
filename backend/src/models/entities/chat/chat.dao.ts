@@ -15,12 +15,14 @@ class ChatsDAO extends CommonDAO<IChat> {
   async insertMessage(to: string, msg: ISingleMessage) {
     this.mongoDebug("getByTo", { to });
 
-    return await this.model.updateOne(
-      { to },
-      {
-        $push: { messages: msg },
-      }
-    );
+    return await this.model
+      .updateOne(
+        { to },
+        {
+          $push: { messages: msg },
+        }
+      )
+      .lean();
   }
 }
 

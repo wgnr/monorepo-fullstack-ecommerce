@@ -1,5 +1,5 @@
 import { readdir, unlink } from "fs/promises";
-import { ObjectId } from "mongoose";
+import { ObjectId, Document } from "mongoose";
 import CategoriesService from "@services/categories";
 import OptionsService from "@services/options";
 import VariantsService from "@services/variants";
@@ -21,8 +21,8 @@ class ProductService {
     return await ProductsDAO.getMany();
   }
 
-  async getById(id: string) {
-    return await ProductsDAO.getOneById(id);
+  async getById(id: string, useLean: boolean = true) {
+    return await ProductsDAO.getOneById(id, useLean);
   }
 
   async getByIds(ids: string[]) {
@@ -57,17 +57,16 @@ class ProductService {
       )
     );
 
-    const responseProduct = product.toJSON();
-    responseProduct.variants.forEach(variant => {
+    product.variants.forEach(variant => {
       // @ts-ignore
       variant.options = variant.options.map((option: ObjectId) =>
         optionsResponses.find(
-          optionResponse => optionResponse.value.id === String(option)
+          optionResponse => String(optionResponse.value.id) === String(option)
         )
       );
     });
 
-    return responseProduct;
+    return product;
   }
 
   async getFileName(productId: string) {
@@ -147,13 +146,17 @@ class ProductService {
 
   async addVariant(productId: string, variant: IVariantBase) {
     const { stock, options } = variant;
-    const product = await this.getById(productId);
+    const product = await this.getById(productId, false);
+
+    if (!(product instanceof Document)) {
+      throw new Error("Internal error, expected a mongoose document");
+    }
 
     const newVariant = await VariantsService.create(productId, true, stock, options);
 
+    // DEBT: Replace document method for $addorset method
     product.variants.push(newVariant._id);
     await product.save();
-
     return newVariant;
   }
 

@@ -32,6 +32,7 @@ class UsersDAO extends CommonDAO<IUser> {
     const options: QueryOptions = { session, new: true };
     return await this.model
       .updateOne({ _id: userId }, { currentCart: cartId }, options)
+      .lean()
       .orFail(this.throwNotFoundError({ userId }));
   }
 
@@ -40,6 +41,7 @@ class UsersDAO extends CommonDAO<IUser> {
 
     return await this.model
       .findByIdAndUpdate(userId, { $set: payload }, { new: true })
+      .lean()
       .orFail(this.throwNotFoundError({ userId }));
   }
 
@@ -50,6 +52,7 @@ class UsersDAO extends CommonDAO<IUser> {
       .findByIdAndUpdate(id, {
         deletedAt: new Date(),
       })
+      .lean()
       .orFail(this.throwNotFoundError({ id }));
   }
 }

@@ -1,4 +1,4 @@
-import { ClientSession, ObjectId } from "mongoose";
+import { ClientSession, Document, ObjectId } from "mongoose";
 import VariantsService from "@services/variants";
 import OptionsService from "@services/options";
 import ValidationException from "@exceptions/ValidationException";
@@ -26,17 +26,17 @@ class CartsService {
     return await CartsDAO.getMany();
   }
 
-  async getById(id: string) {
-    return await CartsDAO.getOneById(id);
+  async getById(id: string, useLean: boolean = true) {
+    return await CartsDAO.getOneById(id, useLean);
   }
 
-  async getPopulatedById(id: string) {
-    return await CartsDAO.getPopulatedById(id);
+  async getPopulatedById(id: string, useLean: boolean = true) {
+    return await CartsDAO.getPopulatedById(id, useLean);
   }
 
   async getFullPopulatedById(id: string) {
     const cart = await this.getPopulatedById(id);
-    return await this.populateOptions(cart.toJSON());
+    return await this.populateOptions(cart);
   }
 
   async getByStatus(statusName: string) {
@@ -96,7 +96,12 @@ class CartsService {
   }
 
   async upsertProducts(cartId: string, itemsToAdd: ICartAddItem[]) {
-    const cart = await this.getById(cartId);
+    const cart = await this.getById(cartId, false);
+    // DEBT: avoid .save()
+    if (!(cart instanceof Document)) {
+      throw new Error("Internal error, expected a mongoose document");
+    }
+
     this.validateCartCanModifyProducts(cart);
 
     const variants = await Promise.all(
@@ -197,7 +202,12 @@ class CartsService {
   }
 
   async removeVariant(cartId: string, variantId: string) {
-    const cart = await this.getById(cartId);
+    const cart = await this.getById(cartId, false);
+    // DEBT: avoid .save()
+    if (!(cart instanceof Document)) {
+      throw new Error("Internal error, expected a mongoose document");
+    }
+
     this.validateCartCanModifyProducts(cart);
 
     cart.variants = cart.variants.filter(
@@ -208,7 +218,12 @@ class CartsService {
   }
 
   async clear(cartId: string) {
-    const cart = await this.getById(cartId);
+    const cart = await this.getById(cartId, false);
+    // DEBT: avoid .save()
+    if (!(cart instanceof Document)) {
+      throw new Error("Internal error, expected a mongoose document");
+    }
+
     this.validateCartCanModifyProducts(cart);
     cart.variants = [];
     await cart.save();

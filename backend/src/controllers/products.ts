@@ -201,9 +201,10 @@ class ProductController extends JWTController {
   async addImage(req: Request, res: Response, next: NextFunction) {
     const { productId } = req.params;
     const { file } = req;
-    if (!file) throw new ValidationException("No file was provided");
     try {
-      return res.json(await ProductService.addImage(productId, file.filename));
+      if (!file) throw new ValidationException("No file was provided");
+      await ProductService.addImage(productId, file.filename);
+      return res.sendStatus(201);
     } catch (error) {
       return next(error);
     }
@@ -214,7 +215,8 @@ class ProductController extends JWTController {
     if (!imageName) throw new ValidationException("No image name was provided");
 
     try {
-      return res.json(await ProductService.removeImage(productId, imageName));
+      await ProductService.removeImage(productId, imageName);
+      return res.sendStatus(204);
     } catch (error) {
       return next(error);
     }

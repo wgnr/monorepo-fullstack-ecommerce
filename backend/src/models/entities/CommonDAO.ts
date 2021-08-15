@@ -16,16 +16,22 @@ export default abstract class CommonDAO<T> {
     return await this.model.create(entity);
   }
 
-  async getOneById(id: string | ObjectId) {
-    this.mongoDebug("getOneById", { id });
+  async getOneById(id: string | ObjectId, useLean: boolean = true) {
+    this.mongoDebug("getOneById", { id, useLean });
 
-    return await this.model.findById(id).orFail(this.throwNotFoundError({ id }));
+    return await this.model
+      .findById(id)
+      .lean(useLean)
+      .orFail(this.throwNotFoundError({ id }));
   }
 
   async getMany(filter: FilterQuery<T> = {}) {
     this.mongoDebug("getMany", { filter });
 
-    return await this.model.find(filter).orFail(this.throwNotFoundError({ filter }));
+    return await this.model
+      .find(filter)
+      .lean()
+      .orFail(this.throwNotFoundError({ filter }));
   }
 
   async updateOneById(id: string | ObjectId, payload: UpdateQuery<T>) {
@@ -33,6 +39,7 @@ export default abstract class CommonDAO<T> {
 
     return await this.model
       .findByIdAndUpdate(id, payload, { new: true })
+      .lean()
       .orFail(this.throwNotFoundError({ id }));
   }
 
