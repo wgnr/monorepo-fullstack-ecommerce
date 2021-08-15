@@ -1,7 +1,18 @@
 export const collectionName = "user";
 import { hash, compare } from "bcryptjs";
-import { model, Schema, Model, SchemaOptions, HookNextFunction, Date } from "mongoose";
-import { IUser, IUserDocument, UserType } from "@models/entities/users/users.interface";
+import {
+  model,
+  Schema,
+  Model,
+  SchemaOptions,
+  HookNextFunction,
+  Date,
+} from "mongoose";
+import {
+  IUser,
+  IUserDocument,
+  UserType,
+} from "@models/entities/users/users.interface";
 
 const UsersSchemaOptions: SchemaOptions = {
   versionKey: false,
@@ -45,16 +56,22 @@ const UsersSchema = new Schema<IUser>(
   UsersSchemaOptions
 );
 
-UsersSchema.pre("save", async function (this: IUserDocument, next: HookNextFunction) {
-  if (!this.isModified("password")) return next();
+UsersSchema.pre(
+  "save",
+  async function (this: IUserDocument, next: HookNextFunction) {
+    if (!this.isModified("password")) return next();
 
-  const passwordHashed = await hash(this.password!, 10);
-  this.password = passwordHashed;
+    const passwordHashed = await hash(this.password!, 10);
+    this.password = passwordHashed;
 
-  return next();
-});
+    return next();
+  }
+);
 
-UsersSchema.methods.isValidPassword = async function (this: IUserDocument, password: string) {
+UsersSchema.methods.isValidPassword = async function (
+  this: IUserDocument,
+  password: string
+) {
   return await compare(password, this.password!).catch(e => false);
 };
 

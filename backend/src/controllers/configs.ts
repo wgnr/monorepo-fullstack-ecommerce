@@ -9,7 +9,9 @@ export const configController = (req: Request, res: Response) => {
 
 const recursiveRemoveKey = (object: { [k: string]: any }, deleteKeys: string[]) => {
   Object.entries(object).forEach(([k, v]) => {
-    if (deleteKeys.some(deleteKey => k.toLowerCase().includes(deleteKey.toLowerCase()))) {
+    if (
+      deleteKeys.some(deleteKey => k.toLowerCase().includes(deleteKey.toLowerCase()))
+    ) {
       delete object[k];
       return;
     }

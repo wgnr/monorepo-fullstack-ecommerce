@@ -71,7 +71,9 @@ class ProductsDAO extends CommonDAO<IProduct> {
 
     const update = { $pull: { categories: categoryId } };
     if (!productId) {
-      await this.model.updateMany({}, update).orFail(this.throwNotFoundError({ productId }));
+      await this.model
+        .updateMany({}, update)
+        .orFail(this.throwNotFoundError({ productId }));
     } else if (Array.isArray(productId)) {
       await this.model
         .updateMany({ _id: { $in: productId } }, update)

@@ -67,7 +67,9 @@ class CategoriesControllers extends JWTController {
 
     const validate = new Ajv().compile<ICategoryNew>(schema);
     if (!validate(req.body))
-      return next(new SchemaValidationException("Category", schema, validate.errors));
+      return next(
+        new SchemaValidationException("Category", schema, validate.errors)
+      );
 
     const { products } = req.body;
     if (products) {
@@ -101,7 +103,9 @@ class CategoriesControllers extends JWTController {
 
     const validate = new Ajv().compile<ICategoryAddProduct>(schema);
     if (!validate(req.body))
-      return next(new SchemaValidationException("Category", schema, validate.errors));
+      return next(
+        new SchemaValidationException("Category", schema, validate.errors)
+      );
 
     const { products } = req.body;
     if (products) {

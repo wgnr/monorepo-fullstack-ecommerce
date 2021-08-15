@@ -1,5 +1,10 @@
 import passport from "passport";
-import { Strategy as JWTStrategy, StrategyOptions, VerifyCallback, ExtractJwt } from "passport-jwt";
+import {
+  Strategy as JWTStrategy,
+  StrategyOptions,
+  VerifyCallback,
+  ExtractJwt,
+} from "passport-jwt";
 import { GlobalVars } from "@config/globalVars";
 import UsersService from "@services/users";
 

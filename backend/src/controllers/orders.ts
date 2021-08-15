@@ -1,14 +1,22 @@
 import Ajv, { JTDSchemaType } from "ajv/dist/jtd";
 import { Request, Response, NextFunction } from "express";
 import { JWTController } from "@auth/index";
-import { IOrderNew, IOrderPayment, OrderStatus } from "@models/entities/orders/orders.interface";
+import {
+  IOrderNew,
+  IOrderPayment,
+  OrderStatus,
+} from "@models/entities/orders/orders.interface";
 import { isValidMongoId } from "@models/index";
 import { IUser, IUserDocument } from "@models/entities/users/users.interface";
 import { SchemaValidationException } from "@exceptions/index";
 import OrdersService from "@services/orders";
 
 class OrdersController extends JWTController {
-  async selfResource(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async selfResource(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     const user = req.user as IUser;
     const {
       params: { orderId },
@@ -24,7 +32,10 @@ class OrdersController extends JWTController {
     const { _id } = req.user as IUserDocument;
 
     if (orderId) {
-      const ordersFromUser = await OrdersService.verifyOrderBelongsToUser(orderId, _id);
+      const ordersFromUser = await OrdersService.verifyOrderBelongsToUser(
+        orderId,
+        _id
+      );
       if (ordersFromUser === 0) {
         return next("Nothing to show.");
       }
@@ -93,7 +104,9 @@ class OrdersController extends JWTController {
 
     const validate = new Ajv().compile<IOrderNew>(schema);
     if (!validate(req.body))
-      return next(new SchemaValidationException("Category", schema, validate.errors));
+      return next(
+        new SchemaValidationException("Category", schema, validate.errors)
+      );
 
     const { cartId } = req.body as IOrderNew;
     if (cartId) {
@@ -124,7 +137,9 @@ class OrdersController extends JWTController {
 
     const validate = new Ajv().compile<IOrderPayment>(schema);
     if (!validate(req.body))
-      return next(new SchemaValidationException("Category", schema, validate.errors));
+      return next(
+        new SchemaValidationException("Category", schema, validate.errors)
+      );
 
     return next();
   }
@@ -164,7 +179,9 @@ class OrdersController extends JWTController {
 
     const validate = new Ajv().compile<Omit<IOrderNew, "cartId">>(schema);
     if (!validate(req.body))
-      return next(new SchemaValidationException("Category", schema, validate.errors));
+      return next(
+        new SchemaValidationException("Category", schema, validate.errors)
+      );
 
     return next();
   }

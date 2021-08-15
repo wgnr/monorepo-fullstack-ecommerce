@@ -85,7 +85,9 @@ class UsersService {
   }
 
   async update(id: string, payload: IUserUpdate) {
-    return UsersDTO.returnOne((await UsersDAO.updateInfoById(id, payload)) as IUserDocument);
+    return UsersDTO.returnOne(
+      (await UsersDAO.updateInfoById(id, payload)) as IUserDocument
+    );
   }
 
   async updatePassword(id: string, payload: IUserUpdatePassword) {

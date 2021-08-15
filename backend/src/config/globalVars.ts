@@ -7,7 +7,10 @@ export const getEnvValueTruthy = (value: string): boolean =>
 
 /* LOAD CONFIGURATION */
 const IS_PROD = process.env.NODE_ENV === "production";
-const envPath = resolve(process.cwd(), `.env.${IS_PROD ? "production" : "development"}`);
+const envPath = resolve(
+  process.cwd(),
+  `.env.${IS_PROD ? "production" : "development"}`
+);
 // if .env.development | .env.production isn't available, load regular .env
 config(existsSync(envPath) ? { path: envPath } : {});
 
@@ -40,7 +43,8 @@ export const GlobalVars = {
   auth: {
     jwt: {
       JWT_TOKEN_SECRET:
-        process.env.JWT_TOKEN_SECRET ?? "MAKE_SURE_TO_CHANGE_THIS_SECRET_AFTER_!@##$%^&*",
+        process.env.JWT_TOKEN_SECRET ??
+        "MAKE_SURE_TO_CHANGE_THIS_SECRET_AFTER_!@##$%^&*",
       // https://github.com/vercel/ms
       JWT_EXPIRATION_TIME: process.env.JWT_EXPIRATION_TIME ?? "1d",
     },
@@ -55,7 +59,9 @@ export const GlobalVars = {
     SEED_MONGODB_USER: process.env.SEED_MONGODB_USER ?? "",
     SEED_MONGODB_PASSWORD: process.env.SEED_MONGODB_PASSWORD ?? "",
     SEED_ADMIN_EMAIL:
-      process.env.SEED_ADMIN_EMAIL ?? process.env.BCC_DEBUG_EMAIL ?? "juanswagner@gmail.com",
+      process.env.SEED_ADMIN_EMAIL ??
+      process.env.BCC_DEBUG_EMAIL ??
+      "juanswagner@gmail.com",
     SEED_ADMIN_PASSWORD: process.env.SEED_ADMIN_PASSWORD ?? "generic_password",
     SEED_SERVER_API_URL: process.env.SEED_SERVER_API_URL || defaultServerUrl,
   },

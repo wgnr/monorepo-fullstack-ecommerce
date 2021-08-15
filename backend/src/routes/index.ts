@@ -21,4 +21,9 @@ router.use("/orders", JWTController.authenticate(), ordersRouter);
 router.use("/products", JWTController.authenticate(), productsRouter);
 router.use("/users", JWTController.authenticate(), usersRouter);
 
-router.get("/configs", JWTController.authenticate(), JWTController.adminOnly, configController);
+router.get(
+  "/configs",
+  JWTController.authenticate(),
+  JWTController.adminOnly,
+  configController
+);

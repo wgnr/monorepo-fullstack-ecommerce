@@ -57,7 +57,9 @@ class OptionsControllers extends JWTController {
 
     const validate = new Ajv().compile<IOptionNew>(schema);
     if (!validate(body))
-      return next(new SchemaValidationException("Option object", schema, validate.errors));
+      return next(
+        new SchemaValidationException("Option object", schema, validate.errors)
+      );
 
     return next();
   }
@@ -88,7 +90,9 @@ class OptionsControllers extends JWTController {
 
     const validate = new Ajv().compile<IUpdateOption>(schema);
     if (!validate(body))
-      return next(new SchemaValidationException("Option object", schema, validate.errors));
+      return next(
+        new SchemaValidationException("Option object", schema, validate.errors)
+      );
 
     return next();
   }
@@ -117,7 +121,9 @@ class OptionsControllers extends JWTController {
 
     const validate = new Ajv().compile<IDeleteOption>(schema);
     if (!validate(body))
-      return next(new SchemaValidationException("Option object", schema, validate.errors));
+      return next(
+        new SchemaValidationException("Option object", schema, validate.errors)
+      );
 
     const { values } = req.body;
     if (values) {

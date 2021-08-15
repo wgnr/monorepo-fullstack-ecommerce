@@ -3,9 +3,17 @@ import AuthControllers from "@controllers/auth";
 
 export const router = express.Router();
 
-router.post("/login", AuthControllers.authenticateLocalLogin(), AuthControllers.login);
+router.post(
+  "/login",
+  AuthControllers.authenticateLocalLogin(),
+  AuthControllers.login
+);
 
-router.post("/signup", AuthControllers.validatePublicSignup, AuthControllers.publicSignup);
+router.post(
+  "/signup",
+  AuthControllers.validatePublicSignup,
+  AuthControllers.publicSignup
+);
 
 router.get("/facebook", AuthControllers.authenticateFacebookLogin());
 

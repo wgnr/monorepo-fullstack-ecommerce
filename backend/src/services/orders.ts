@@ -41,7 +41,11 @@ class OrdersService {
     await CartsService.validateCartIsNotEmpty(cartPopulated);
     try {
       await mongoose.connection.transaction(async (session: ClientSession) => {
-        await CartsService.chageStatus(cartPopulated, CartStatus.IN_CHECKOUT, session);
+        await CartsService.chageStatus(
+          cartPopulated,
+          CartStatus.IN_CHECKOUT,
+          session
+        );
       });
     } catch (error) {
       throw new ValidationException(`Order wasn't created. ${error.message}`);
@@ -97,7 +101,10 @@ class OrdersService {
     await mongoose.connection.transaction(async (session: ClientSession) => {
       const { cart, user } = order;
 
-      if (newStatus === OrderStatus.COMPLETED && order.status === OrderStatus.AWAITING_PAYMENT) {
+      if (
+        newStatus === OrderStatus.COMPLETED &&
+        order.status === OrderStatus.AWAITING_PAYMENT
+      ) {
         await CartsService.chageStatus(cart, CartStatus.PURCHASED, session);
         await UsersService.assignNewCart(user, session);
       } else if (

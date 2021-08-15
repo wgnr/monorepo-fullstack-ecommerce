@@ -28,7 +28,8 @@ export interface IUserNewPublic extends Omit<IUserBase, "type"> {}
 
 export interface IUserNew extends IUserBase {}
 
-export interface IUserNewFacebook extends Omit<Omit<IUserBase, "password">, "email"> {
+export interface IUserNewFacebook
+  extends Omit<Omit<IUserBase, "password">, "email"> {
   email?: string;
   // firstName?: string;
   type: UserType.USER;

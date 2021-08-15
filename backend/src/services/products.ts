@@ -11,7 +11,10 @@ import {
 } from "@models/entities/products/products.interfaces";
 import NotFoundException from "@exceptions/NotFoundException";
 import { ValidationException } from "@exceptions/index";
-import { IVariantBase, IVariantUpdate } from "@models/entities/variants/variants.interfaces";
+import {
+  IVariantBase,
+  IVariantUpdate,
+} from "@models/entities/variants/variants.interfaces";
 
 class ProductService {
   async getAll() {
@@ -36,7 +39,9 @@ class ProductService {
   }
 
   async getPopulatedByProductId(productId: string) {
-    const product = (await ProductsDAO.getPopulatedById(productId)) as IProductDocument;
+    const product = (await ProductsDAO.getPopulatedById(
+      productId
+    )) as IProductDocument;
 
     const optionValuesIds = [
       ...new Set(
@@ -47,14 +52,18 @@ class ProductService {
     ];
 
     const optionsResponses = await Promise.all(
-      optionValuesIds.map(valueId => OptionsService.getOptionNameAndValueByValueId(valueId))
+      optionValuesIds.map(valueId =>
+        OptionsService.getOptionNameAndValueByValueId(valueId)
+      )
     );
 
     const responseProduct = product.toJSON();
     responseProduct.variants.forEach(variant => {
       // @ts-ignore
       variant.options = variant.options.map((option: ObjectId) =>
-        optionsResponses.find(optionResponse => optionResponse.value.id === String(option))
+        optionsResponses.find(
+          optionResponse => optionResponse.value.id === String(option)
+        )
       );
     });
 
@@ -64,7 +73,9 @@ class ProductService {
   async getFileName(productId: string) {
     try {
       const files = await readdir("./public/images/products");
-      const nextNumber = String(files.filter(f => f.startsWith(productId)).length).padStart(3, "0");
+      const nextNumber = String(
+        files.filter(f => f.startsWith(productId)).length
+      ).padStart(3, "0");
       return `${productId}-${nextNumber}`;
     } catch (err) {
       return `${productId}-000`;
@@ -93,9 +104,13 @@ class ProductService {
     if (variants.length > 0) {
       // Validate each combiantion isn't repeated in the variant options
       // They are an array of ids.
-      const sortedOptions = variants.map(variant => variant.options?.sort().join(","));
+      const sortedOptions = variants.map(variant =>
+        variant.options?.sort().join(",")
+      );
       if (new Set(sortedOptions).size !== sortedOptions.length) {
-        throw new ValidationException("Repeated option values combination in variants.");
+        throw new ValidationException(
+          "Repeated option values combination in variants."
+        );
       }
 
       await Promise.all(

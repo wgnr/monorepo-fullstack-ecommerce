@@ -23,4 +23,7 @@ const categoriesSchema = new Schema<ICategory>(
   }
 );
 
-export const categoriesModel: Model<ICategory> = model<ICategory>(collectionName, categoriesSchema);
+export const categoriesModel: Model<ICategory> = model<ICategory>(
+  collectionName,
+  categoriesSchema
+);

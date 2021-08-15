@@ -89,9 +89,16 @@ const optionsPOST = (body: {}, token?: string) => ({
   },
 });
 
-export const getToken = async (base_url: string, email: string, password: string) => {
+export const getToken = async (
+  base_url: string,
+  email: string,
+  password: string
+) => {
   try {
-    const res = await fetch(`${base_url}/api/auth/login`, optionsPOST({ email, password }));
+    const res = await fetch(
+      `${base_url}/api/auth/login`,
+      optionsPOST({ email, password })
+    );
     const { token } = await res.json();
     return token;
   } catch (err) {
@@ -102,7 +109,12 @@ export const getToken = async (base_url: string, email: string, password: string
     "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjgzMDA2NTMsImV4cCI6MTYyODMwNjY1Mywic3ViIjoiNjEwOTMzMDdlZWE2OWYwNGQwNGEwNmE2In0.AkurrEscXCiiA_V2C8p-4zeSTVk9cf5BnnX6UiZ04RkFpKkdCvQeePdLfzxehtyav3KbzvmYXFyjjOY4VSj5PQ"
 } */
 
-export const post = async (token: string, base_url: string, path: string, payload: any) => {
+export const post = async (
+  token: string,
+  base_url: string,
+  path: string,
+  payload: any
+) => {
   try {
     const res = await fetch(`${base_url}${path}`, optionsPOST(payload, token));
     return await res.json();

@@ -3,7 +3,11 @@ import ProductsControllers from "@controllers/products";
 
 export const router = express.Router();
 
-router.get("/:productId?", ProductsControllers.validateMongoId, ProductsControllers.getAllOrById);
+router.get(
+  "/:productId?",
+  ProductsControllers.validateMongoId,
+  ProductsControllers.getAllOrById
+);
 
 // Get variant populated.
 router.get(

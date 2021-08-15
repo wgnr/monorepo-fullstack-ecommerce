@@ -22,7 +22,9 @@ const orderEmailBody = (order: IOrderDocument) => {
 export const sendOrderSummary = async (order: IOrderDocument) => {
   const { email } = order.payload!;
   if (!email) {
-    console.error(`No email address was provided for the order ${order.orderNumber}`);
+    console.error(
+      `No email address was provided for the order ${order.orderNumber}`
+    );
     return;
   }
 
@@ -36,6 +38,8 @@ export const sendOrderSummary = async (order: IOrderDocument) => {
     await sendMail(emailOptions);
     console.log(`Order ${order.orderNumber} sent to ${email} successfully.`);
   } catch (err) {
-    console.error(`There was an error sending the order ${order.orderNumber} to ${email}`);
+    console.error(
+      `There was an error sending the order ${order.orderNumber} to ${email}`
+    );
   }
 };

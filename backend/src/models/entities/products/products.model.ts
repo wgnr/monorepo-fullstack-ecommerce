@@ -30,4 +30,7 @@ const ProductsSchema = new Schema<IProduct>(
   }
 );
 
-export const ProductsModel: Model<IProduct> = model<IProduct>(collectionName, ProductsSchema);
+export const ProductsModel: Model<IProduct> = model<IProduct>(
+  collectionName,
+  ProductsSchema
+);
