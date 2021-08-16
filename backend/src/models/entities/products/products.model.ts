@@ -15,7 +15,6 @@ const ProductsSchema = new Schema<IProduct>(
     description: String,
     photos: [String],
     name: { type: String, require: true },
-    // TODO check lean
     price: { type: Number, default: 0 },
     slug: String,
     variants: [

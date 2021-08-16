@@ -22,5 +22,5 @@ export interface IVariants {
 export interface IVariantsDocument extends Omit<IVariants, "options">, Document {
   product: PopulatedDoc<IProduct & Document>;
   options: (string | IOptionSummary)[];
-  availableStock: number; // Virtual
+  // availableStock: number; // Virtual
 }

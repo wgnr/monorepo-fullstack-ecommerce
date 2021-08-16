@@ -94,7 +94,6 @@ class UsersService {
   async updatePassword(id: string, payload: IUserUpdatePassword) {
     const user = await this.getById(id, false);
     user.password = payload.password;
-    // TODO check if lean works properly
     await user.save();
   }
 

@@ -101,7 +101,10 @@ class OptionsService {
   }
 
   async remove(optionId: string) {
-    const option = (await OptionsDAO.getOneById(optionId)) as IOptionsDocument;
+    const option = (await OptionsDAO.getOneById(
+      optionId,
+      false
+    )) as IOptionsDocument;
     const valuesIds = option.values.map(v => v.id);
     await this.validateIfOptionsValuesAreUsed(valuesIds);
     await option.delete();

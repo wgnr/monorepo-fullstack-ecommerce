@@ -1,5 +1,5 @@
 import mongoose, { ClientSession, Document } from "mongoose";
-import { CartStatus } from "@models/entities/carts/carts.interface";
+import { CartStatus, ICartDocument } from "@models/entities/carts/carts.interface";
 import {
   IOrderDocument,
   IOrderPayload,
@@ -37,43 +37,46 @@ class OrdersService {
   }
 
   async create(cartId: string, payload: any) {
+    let newOrder;
     const cartPopulated = await CartsService.getPopulatedById(cartId, false);
-    if (!(cartPopulated instanceof Document)) {
+    if (!(cartPopulated instanceof mongoose.Document)) {
       throw new Error("Internal error, expected a mongoose document");
     }
-
     await CartsService.validateCartIsNotEmpty(cartPopulated);
+
     try {
-      // TODO check if transactions are available with lean documents.
       await mongoose.connection.transaction(async (session: ClientSession) => {
         await CartsService.chageStatus(
           cartPopulated,
           CartStatus.IN_CHECKOUT,
           session
         );
+        const total = CartsService.getTotalPrice(cartPopulated);
+
+        const details = await CartsService.getProductsSummary(
+          cartPopulated.toJSON()
+        );
+
+        newOrder = await OrdersDAO.create({
+          cart: cartPopulated._id,
+          details,
+          payload,
+          status: OrderStatus.AWAITING_PAYMENT,
+          total,
+          user: cartPopulated.user,
+        });
       });
     } catch (error) {
       throw new ValidationException(`Order wasn't created. ${error.message}`);
     }
 
-    const total = CartsService.getTotalPrice(cartPopulated);
-
-    const details = await CartsService.getProductsSummary(cartPopulated.toJSON());
-
-    return await OrdersDAO.create({
-      cart: cartPopulated._id,
-      details,
-      payload,
-      status: OrderStatus.AWAITING_PAYMENT,
-      total,
-      user: cartPopulated.user,
-    });
+    return newOrder;
   }
 
   async update(orderId: string, payload: IOrderPayload) {
     const order = await this.getById(orderId, false);
 
-    if (!(order instanceof Document)) {
+    if (!(order instanceof mongoose.Document)) {
       throw new Error("Internal error, expected a mongoose document");
     }
 
@@ -90,7 +93,7 @@ class OrdersService {
     const order = await this.getPopulatedById(orderId, false);
 
     await this.chageStatus(order, OrderStatus.COMPLETED);
-    // DEBT: avoid .save method() use $set instead
+
     order.payment = { ...paymentPayload };
 
     await sendOrderSummary(order);
@@ -100,7 +103,7 @@ class OrdersService {
   }
 
   async cancell(orderId: string) {
-    const order = await this.getPopulatedById(orderId);
+    const order = await this.getPopulatedById(orderId, false);
     return await this.chageStatus(order, OrderStatus.CANCELLED);
   }
 

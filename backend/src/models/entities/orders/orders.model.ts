@@ -12,7 +12,6 @@ const ordersSchema = new Schema<IOrder>(
     details: [String],
     orderNumber: {
       type: String,
-      // TODO check lean
       default: () => `${new Date().toISOString().slice(2, 10)}-${nanoid(10)}`,
     },
     payload: {},
@@ -20,7 +19,6 @@ const ordersSchema = new Schema<IOrder>(
     status: {
       type: String,
       enum: Object.values(OrderStatus),
-      // TODO check lean
       default: OrderStatus.AWAITING_PAYMENT,
     },
     total: Number,

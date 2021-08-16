@@ -21,9 +21,7 @@ class VariantsDAO extends CommonDAO<IVariants> {
   async getManyByOptionValueId(id: string) {
     this.mongoDebug("getManyByOptionValueId", { id });
 
-    // DEBT: check why complains |  check thats working
     return await this.model
-      // .find({ options: Types.ObjectId(id) })
       .find({ options: id })
       .lean()
       .orFail(this.throwNotFoundError({ id }));

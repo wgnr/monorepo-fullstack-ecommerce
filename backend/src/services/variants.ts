@@ -9,6 +9,7 @@ import {
 import OptionsService from "@services/options";
 import { ValidationException } from "@exceptions/index";
 import { ICartItem } from "@models/entities/carts/carts.interface";
+import { IProduct } from "@models/entities/products/products.interfaces";
 
 class VariantsService {
   async getById(id: string) {
@@ -30,8 +31,6 @@ class VariantsService {
     return await VariantsDAO.getManyByOptionValueId(id);
   }
 
-  // async directCreate(productId: string,)
-
   async create(
     productId: string,
     validate: boolean,
@@ -41,7 +40,7 @@ class VariantsService {
     // Check that combination doesnt exists for product
     if (validate) {
       await OptionsService.validateOptionsUsedAreUnique(optionsIds);
-      const product = await ProductsService.getById(productId);
+      const product = (await ProductsService.getById(productId)) as IProduct;
       await this.validateOptionsCombinationUniqueness(product.variants, optionsIds);
     }
 
@@ -114,16 +113,15 @@ class VariantsService {
     this.validateStocksAfterUpdate(variant);
   }
 
-  validateStocksAfterUpdate({
-    id,
-    stockInCheckout,
-    availableStock,
-  }: IVariantsDocument) {
+  validateStocksAfterUpdate({ id, stockInCheckout, stock }: IVariantsDocument) {
+    const availableStock = stock - stockInCheckout;
+
     if (stockInCheckout < 0) {
       throw new ValidationException(
         `Variant ${id} have stockInCheckout ${stockInCheckout}`
       );
     }
+
     if (availableStock < 0) {
       throw new ValidationException(
         `Variant ${id} has available stock ${availableStock}`

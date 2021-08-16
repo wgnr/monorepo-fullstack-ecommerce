@@ -1,5 +1,6 @@
 export const collectionName = "variant";
 import { model, Schema, Model } from "mongoose";
+// import mongooseLeanVirtuals from "mongoose-lean-virtuals";
 import {
   IVariants,
   IVariantsDocument,
@@ -27,10 +28,11 @@ const VariantsSchema = new Schema<IVariants>(
   }
 );
 
-// TODO check lean
-VariantsSchema.virtual("availableStock").get(function (this: IVariantsDocument) {
-  return this.stock - this.stockInCheckout;
-});
+// There is a small caveat using virtuals and leans. I decided not to implement them
+// VariantsSchema.virtual("availableStock").get(function (this: IVariantsDocument) {
+//   return this.stock - this.stockInCheckout;
+// });
 
-// export const VariantsModel: Model<IVariants> = model<IVariants>(
+// VariantsSchema.plugin(mongooseLeanVirtuals);
+
 export const VariantsModel = model<IVariants>(collectionName, VariantsSchema);

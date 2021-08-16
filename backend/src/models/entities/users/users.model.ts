@@ -50,15 +50,12 @@ const UsersSchema = new Schema<IUser>(
     type: {
       type: String,
       enum: Object.values(UserType),
-      // TODO check lean
-
       default: UserType.USER,
     },
   },
   UsersSchemaOptions
 );
 
-// TODO check lean
 UsersSchema.pre(
   "save",
   async function (this: IUserDocument, next: HookNextFunction) {
@@ -71,7 +68,6 @@ UsersSchema.pre(
   }
 );
 
-// TODO check lean
 UsersSchema.methods.isValidPassword = async function (
   this: IUserDocument,
   password: string

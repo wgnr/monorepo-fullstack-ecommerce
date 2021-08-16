@@ -48,7 +48,7 @@ class ProductsDAO extends CommonDAO<IProduct> {
     await this.model
       .updateMany(
         { _id: Array.isArray(productIds) ? { $in: productIds } : productIds },
-        { $kaddToSet: { categories: categoryId } }
+        { $addToSet: { categories: categoryId } }
       )
       .lean()
       .orFail(this.throwNotFoundError({ productIds }));
@@ -62,6 +62,16 @@ class ProductsDAO extends CommonDAO<IProduct> {
       .lean()
       .orFail(this.throwNotFoundError({ productId }));
   }
+
+  async insertVariant(productId: string, variantId: string) {
+    this.mongoDebug("insertVariant", { productId, variantId });
+
+    return await this.model
+      .updateOne({ _id: productId }, { $addToSet: { variants: variantId } })
+      .lean()
+      .orFail(this.throwNotFoundError({ productId }));
+  }
+
   async removeImage(productId: string, fileName: string) {
     this.mongoDebug("removeImage", { productId, fileName });
 

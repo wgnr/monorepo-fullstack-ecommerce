@@ -146,17 +146,8 @@ class ProductService {
 
   async addVariant(productId: string, variant: IVariantBase) {
     const { stock, options } = variant;
-    const product = await this.getById(productId, false);
-
-    if (!(product instanceof Document)) {
-      throw new Error("Internal error, expected a mongoose document");
-    }
-
     const newVariant = await VariantsService.create(productId, true, stock, options);
-
-    // DEBT: Replace document method for $addorset method
-    product.variants.push(newVariant._id);
-    await product.save();
+    await ProductsDAO.insertVariant(productId, newVariant._id);
     return newVariant;
   }
 

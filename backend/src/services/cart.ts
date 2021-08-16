@@ -1,4 +1,4 @@
-import { ClientSession, Document, ObjectId } from "mongoose";
+import mongoose, { ClientSession, Document, ObjectId } from "mongoose";
 import VariantsService from "@services/variants";
 import OptionsService from "@services/options";
 import ValidationException from "@exceptions/ValidationException";
@@ -73,7 +73,7 @@ class CartsService {
       variant.variant.options = variant.variant.options.map((optionId: ObjectId) =>
         optionsByNameAndValue.find(
           optionWithNameAndValue =>
-            optionWithNameAndValue.value.id === String(optionId)
+            String(optionWithNameAndValue.value.id) === String(optionId)
         )
       );
     });
@@ -97,8 +97,7 @@ class CartsService {
 
   async upsertProducts(cartId: string, itemsToAdd: ICartAddItem[]) {
     const cart = await this.getById(cartId, false);
-    // DEBT: avoid .save()
-    if (!(cart instanceof Document)) {
+    if (!(cart instanceof mongoose.Document)) {
       throw new Error("Internal error, expected a mongoose document");
     }
 
@@ -111,9 +110,11 @@ class CartsService {
     // Validate if stock is enough
     itemsToAdd.forEach(item => {
       const { quantity, variantId } = item;
-      const { availableStock } = variants.filter(
-        variant => variant.id === variantId
+      const { stock, stockInCheckout } = variants.filter(
+        variant => String(variant._id) === variantId
       )[0] as IVariantsDocument;
+
+      const availableStock = stock - stockInCheckout;
 
       if (availableStock < quantity) {
         throw new ValidationException(
@@ -202,32 +203,15 @@ class CartsService {
   }
 
   async removeVariant(cartId: string, variantId: string) {
-    const cart = await this.getById(cartId, false);
-    // DEBT: avoid .save()
-    if (!(cart instanceof Document)) {
-      throw new Error("Internal error, expected a mongoose document");
-    }
-
+    const cart = await this.getById(cartId);
     this.validateCartCanModifyProducts(cart);
-
-    cart.variants = cart.variants.filter(
-      variant => String(variant.variant) !== variantId
-    );
-    await cart.save();
-    return cart;
+    return await CartsDAO.removeVariants(cartId, variantId);
   }
 
   async clear(cartId: string) {
-    const cart = await this.getById(cartId, false);
-    // DEBT: avoid .save()
-    if (!(cart instanceof Document)) {
-      throw new Error("Internal error, expected a mongoose document");
-    }
-
+    const cart = await this.getById(cartId);
     this.validateCartCanModifyProducts(cart);
-    cart.variants = [];
-    await cart.save();
-    return cart;
+    return await CartsDAO.removeVariants(cartId);
   }
 }
 
