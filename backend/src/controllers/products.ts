@@ -1,4 +1,4 @@
-import multer from "multer";
+import multer, { MulterError } from "multer";
 import { Request, Response, NextFunction } from "express";
 import Ajv, { JTDSchemaType } from "ajv/dist/jtd";
 import { JWTController } from "@auth/index";
@@ -195,7 +195,14 @@ class ProductController extends JWTController {
         }
       },
       storage,
-    }).single("file")(req, res, next);
+    }).single("file")(req, res, err => {
+      if (!err) return next();
+      return next(
+        err instanceof MulterError
+          ? new ValidationException("form-data must contain a key named 'file'")
+          : err
+      );
+    });
   }
 
   async addImage(req: Request, res: Response, next: NextFunction) {
@@ -204,7 +211,13 @@ class ProductController extends JWTController {
     try {
       if (!file) throw new ValidationException("No file was provided");
       await ProductService.addImage(productId, file.filename);
-      return res.sendStatus(201);
+      return res.status(201).json({
+        destination: file.destination,
+        filename: file.filename,
+        mimetype: file.mimetype,
+        path: file.path,
+        size: file.size,
+      });
     } catch (error) {
       return next(error);
     }
