@@ -1,4 +1,5 @@
 import express from "express";
+import { JWTController } from "@auth/jwt/jwt.controller";
 import OptionsControllers from "@controllers/options";
 
 export const router = express.Router();
@@ -10,7 +11,8 @@ router.get(
 );
 
 router.post(
-  "",
+  "",  
+  JWTController.authenticate(),
   OptionsControllers.adminOnly,
   OptionsControllers.validateCreate,
   OptionsControllers.create
@@ -18,6 +20,7 @@ router.post(
 
 router.put(
   "/:optionId",
+  JWTController.authenticate(),
   OptionsControllers.adminOnly,
   OptionsControllers.validateMongoId,
   OptionsControllers.validateUpdate,
@@ -26,6 +29,7 @@ router.put(
 
 router.delete(
   "/:optionId",
+  JWTController.authenticate(),
   OptionsControllers.adminOnly,
   OptionsControllers.validateMongoId,
   OptionsControllers.validateRemove,

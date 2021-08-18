@@ -14,11 +14,11 @@ export const router = express.Router();
 
 router.use("/auth", authRouter);
 router.use("/cart", JWTController.authenticate(), cartsRouter);
-router.use("/categories", JWTController.authenticate(), categoriesRouter);
+router.use("/categories", categoriesRouter);
 router.use("/chat", JWTController.authenticate(), chatRouter);
-router.use("/options", JWTController.authenticate(), optionsRouter);
+router.use("/options", optionsRouter);
 router.use("/orders", JWTController.authenticate(), ordersRouter);
-router.use("/products", JWTController.authenticate(), productsRouter);
+router.use("/products", productsRouter);
 router.use("/users", JWTController.authenticate(), usersRouter);
 
 router.get(

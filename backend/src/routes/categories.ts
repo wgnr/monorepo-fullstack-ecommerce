@@ -1,4 +1,5 @@
 import express from "express";
+import { JWTController } from "@auth/jwt/jwt.controller";
 import CategoriesControllers from "@controllers/categories";
 
 export const router = express.Router();
@@ -12,6 +13,7 @@ router.get(
 // Create new cateogry
 router.post(
   "",
+  JWTController.authenticate(),
   CategoriesControllers.adminOnly,
   CategoriesControllers.validateCreate,
   CategoriesControllers.create
@@ -20,6 +22,7 @@ router.post(
 // Delete category
 router.delete(
   "/:categoryId",
+  JWTController.authenticate(),
   CategoriesControllers.adminOnly,
   CategoriesControllers.validateMongoId,
   CategoriesControllers.delete
@@ -28,6 +31,7 @@ router.delete(
 // Add products to category
 router.post(
   "/:categoryId/products",
+  JWTController.authenticate(),
   CategoriesControllers.adminOnly,
   CategoriesControllers.validateMongoId,
   CategoriesControllers.validateAddOrRemoveProduct,
@@ -37,6 +41,7 @@ router.post(
 // Remove products from category
 router.delete(
   "/:categoryId/products",
+  JWTController.authenticate(),
   CategoriesControllers.adminOnly,
   CategoriesControllers.validateMongoId,
   CategoriesControllers.validateAddOrRemoveProduct,

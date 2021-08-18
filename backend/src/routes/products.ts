@@ -1,4 +1,5 @@
 import express from "express";
+import { JWTController } from "@auth/jwt/jwt.controller";
 import ProductsControllers from "@controllers/products";
 
 export const router = express.Router();
@@ -25,6 +26,7 @@ router.get(
 // Create new product
 router.post(
   "",
+  JWTController.authenticate(),
   ProductsControllers.adminOnly,
   ProductsControllers.validateCreateProducts,
   ProductsControllers.create
@@ -33,6 +35,7 @@ router.post(
 // Add new variant
 router.post(
   "/:productId/variant",
+  JWTController.authenticate(),
   ProductsControllers.adminOnly,
   ProductsControllers.validateAddVariant,
   ProductsControllers.addVariant
@@ -41,6 +44,7 @@ router.post(
 // Add image to produc
 router.post(
   "/:productId/image",
+  JWTController.authenticate(),
   ProductsControllers.adminOnly,
   ProductsControllers.saveImage,
   ProductsControllers.addImage
@@ -49,6 +53,7 @@ router.post(
 // Update name, descriptcion, price
 router.put(
   "/:productId",
+  JWTController.authenticate(),
   ProductsControllers.adminOnly,
   ProductsControllers.validateMongoId,
   ProductsControllers.validateUpdateProducts,
@@ -58,6 +63,7 @@ router.put(
 // Actualizar la info de un variant (stock)
 router.put(
   "/variant/:variantId",
+  JWTController.authenticate(),
   ProductsControllers.adminOnly,
   ProductsControllers.validateMongoId,
   ProductsControllers.validateUpdateVariant,
@@ -67,6 +73,7 @@ router.put(
 // Delete product
 router.delete(
   "/:productId",
+  JWTController.authenticate(),
   ProductsControllers.adminOnly,
   ProductsControllers.validateMongoId,
   ProductsControllers.delete
@@ -75,6 +82,7 @@ router.delete(
 // Delete variant
 router.delete(
   "/variant/:variantId",
+  JWTController.authenticate(),
   ProductsControllers.adminOnly,
   ProductsControllers.validateMongoId,
   ProductsControllers.deleteVariant
@@ -83,6 +91,7 @@ router.delete(
 // Delete image from produc
 router.delete(
   "/:productId/image/:imageName",
+  JWTController.authenticate(),
   ProductsControllers.adminOnly,
   ProductsControllers.validateMongoId,
   ProductsControllers.removeImage
