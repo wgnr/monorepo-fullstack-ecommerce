@@ -1,4 +1,3 @@
-import { GlobalVars } from "@config/index";
 import { ValidationException } from "@exceptions/index";
 import mongoose, { ConnectOptions, Types } from "mongoose";
 // Use mongoose with promises
@@ -57,3 +56,11 @@ export const isValidMongoId = (id: string | number | Types.ObjectId) => {
     ? null
     : new ValidationException(`Invalid mongo id: '${id}'`);
 };
+
+export const closeMongoConnection = () =>
+  new Promise((res, rej) => {
+    mongoose.connection
+      .close()
+      .then(r => res("Disconnected from monogo"))
+      .catch(e => rej("error" + e));
+  });

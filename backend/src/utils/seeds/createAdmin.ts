@@ -1,7 +1,7 @@
 import { GlobalVars } from "@config/globalVars";
-import { connectToMongo } from "@models/index";
 import { UserType } from "@models/entities/users/users.interface";
 import UsersService from "@services/users";
+import { connectServices, closeServices } from "@root/appServices";
 
 const {
   seed: {
@@ -12,25 +12,23 @@ const {
     SEED_ADMIN_EMAIL,
     SEED_ADMIN_PASSWORD,
   },
+  db: MongoDBConfig,
+  IS_TEST,
 } = GlobalVars;
 
 (async () => {
   try {
     // Connect to services
-    await Promise.all([
-      connectToMongo({
-        URL: SEED_MONGODB_URL,
-        DB: SEED_MONGODB_DB,
-        USER: SEED_MONGODB_USER,
-        PASSWORD: SEED_MONGODB_PASSWORD,
-      }),
-    ])
-      .then(console.log)
-      .catch(e => {
-        console.error(e);
-        console.log("Exiting...");
-        process.exit(1);
-      });
+    await connectServices(
+      IS_TEST
+        ? MongoDBConfig
+        : {
+            URL: SEED_MONGODB_URL,
+            DB: SEED_MONGODB_DB,
+            USER: SEED_MONGODB_USER,
+            PASSWORD: SEED_MONGODB_PASSWORD,
+          }
+    );
 
     const admin = await UsersService.create({
       email: SEED_ADMIN_EMAIL,
@@ -44,6 +42,7 @@ const {
   } catch (e) {
     console.error(e);
   } finally {
+    await closeServices();
     process.exit();
   }
 })();

@@ -195,7 +195,7 @@ class ProductController extends JWTController {
         }
       },
       storage,
-    }).single("file")(req, res, err => {
+    }).single("file")(req, res, (err: any) => {
       if (!err) return next();
       return next(
         err instanceof MulterError

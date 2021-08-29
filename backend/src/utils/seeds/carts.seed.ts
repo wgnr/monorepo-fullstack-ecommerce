@@ -9,7 +9,7 @@ export const mockCarts = (users: any, products: any) => {
           products[Math.random() > 0.5 ? 0 : 1].variants[
             Math.random() > 0.5 ? 0 : 1
           ],
-        quantity: ~~(Math.random() * 10),
+        quantity: ~~(Math.random() * 10)+1,
         comment: `Optional coment ${user.firstName}`,
       },
       {
@@ -17,7 +17,7 @@ export const mockCarts = (users: any, products: any) => {
           products[Math.random() > 0.5 ? 0 : 1].variants[
             Math.random() > 0.5 ? 2 : 3
           ],
-        quantity: ~~(Math.random() * 8),
+        quantity: ~~(Math.random() * 8)+1,
       },
     ];
 

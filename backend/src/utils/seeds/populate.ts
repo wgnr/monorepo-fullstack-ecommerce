@@ -6,12 +6,14 @@ import { mockOptions } from "@db/seeds/options.seed";
 import { mockProduct } from "@db/seeds/products.seed";
 import { mockCarts } from "@db/seeds/carts.seed";
 import { mockOrders, mockPay } from "@db/seeds/orders.seed";
+import { startServer, shutDownServer } from "@root/server";
 
 const {
+  IS_TEST,
   seed: { SEED_ADMIN_EMAIL, SEED_ADMIN_PASSWORD, SEED_SERVER_API_URL },
 } = GlobalVars;
 
-(async () => {
+const populateData = async () => {
   try {
     console.log("Populating db...");
     const token = await getToken(
@@ -87,7 +89,13 @@ const {
     );
   } catch (e) {
     console.error(e);
-  } finally {
-    process.exit();
   }
+};
+
+(async () => {
+  if (IS_TEST) await startServer();
+
+  await populateData();
+
+  if (IS_TEST) await shutDownServer();
 })();

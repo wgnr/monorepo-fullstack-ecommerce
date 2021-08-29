@@ -7,6 +7,7 @@ export const getEnvValueTruthy = (value: string): boolean =>
 
 /* LOAD CONFIGURATION */
 const IS_PROD = process.env.NODE_ENV === "production";
+const IS_TEST = process.env.NODE_ENV === "test";
 const envPath = resolve(
   process.cwd(),
   `.env.${IS_PROD ? "production" : "development"}`
@@ -19,13 +20,14 @@ const defaultServerUrl = `http://localhost:${PORT}`;
 
 export const GlobalVars = {
   IS_PROD,
+  IS_TEST,
   PORT: parseInt(process.env.PORT as string) || 3000,
   SERVER_URL: IS_PROD ? process.env.PROD_URL ?? defaultServerUrl : defaultServerUrl,
   db: {
     URL: process.env.MONGODB_URI ?? "",
     USER: process.env.MONGODB_USER ?? "",
     PASSWORD: process.env.MONGODB_PASSWORD ?? "",
-    DB: process.env.MONGODB_DB ?? "",
+    DB: IS_TEST ? "test" : process.env.MONGODB_DB ?? "",
   },
   email: {
     GMAIL_USERNAME: process.env.GMAIL_USERNAME ?? "",
@@ -63,6 +65,8 @@ export const GlobalVars = {
       process.env.BCC_DEBUG_EMAIL ??
       "juanswagner@gmail.com",
     SEED_ADMIN_PASSWORD: process.env.SEED_ADMIN_PASSWORD ?? "generic_password",
-    SEED_SERVER_API_URL: process.env.SEED_SERVER_API_URL || defaultServerUrl,
+    SEED_SERVER_API_URL: IS_TEST
+      ? defaultServerUrl
+      : process.env.SEED_SERVER_API_URL || defaultServerUrl,
   },
 };
