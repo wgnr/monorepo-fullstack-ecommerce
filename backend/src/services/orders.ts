@@ -96,9 +96,10 @@ class OrdersService {
 
     order.payment = { ...paymentPayload };
 
-    await sendOrderSummary(order);
-
     await order.save();
+
+    sendOrderSummary(order);
+
     return order;
   }
 

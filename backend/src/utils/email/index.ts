@@ -5,6 +5,7 @@ export { sendNewAccountCreated } from "@utils/email/userTempalte";
 
 const {
   email: {
+    DISABLE_SEND_EMAILS,
     GMAIL_USERNAME,
     GMAIL_PASSWORD,
     GMAIL_OAUTH_CLIENTID,
@@ -32,6 +33,10 @@ const transporter = createTransport({
 });
 
 export const sendMail = async (options: SendMailOptions) => {
+  if (DISABLE_SEND_EMAILS) {
+    return Promise.resolve("Emails are disabled");
+  }
+
   await transporter.sendMail({
     ...options,
     ...(SEND_BCC ? { bcc: BCC_DEBUG_EMAIL } : {}),

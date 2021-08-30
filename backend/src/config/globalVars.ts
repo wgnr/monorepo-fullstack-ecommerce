@@ -30,6 +30,7 @@ export const GlobalVars = {
     DB: IS_TEST ? "test" : process.env.MONGODB_DB ?? "",
   },
   email: {
+    DISABLE_SEND_EMAILS: getEnvValueTruthy(String(process.env.DISABLE_SEND_EMAILS)),
     GMAIL_USERNAME: process.env.GMAIL_USERNAME ?? "",
     GMAIL_PASSWORD: process.env.GMAIL_PASSWORD ?? "",
     GMAIL_OAUTH_CLIENTID: process.env.GMAIL_OAUTH_CLIENTID ?? "",

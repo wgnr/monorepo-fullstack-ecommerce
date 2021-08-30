@@ -45,7 +45,7 @@ class UsersService {
       currentCart: newCartId,
     });
 
-    await sendNewAccountCreated(newUser as IUserDocument);
+    sendNewAccountCreated(newUser as IUserDocument);
 
     return newUser;
   }
@@ -74,7 +74,7 @@ class UsersService {
     });
 
     if (user.email) {
-      await sendNewAccountCreated(newUser as IUserDocument);
+      sendNewAccountCreated(newUser as IUserDocument);
     }
 
     return newUser;
