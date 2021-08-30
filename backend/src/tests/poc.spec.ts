@@ -1,5 +1,5 @@
-describe('POC', () => {
-  it('should pass', () => {
+describe("POC", () => {
+  it("should pass", () => {
     expect(true).toBeTruthy();
   });
 });

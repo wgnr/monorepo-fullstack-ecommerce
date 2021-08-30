@@ -18,6 +18,7 @@
     "build": "tsc --project tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "test": "jest --silent --runInBand",
     "test:v": "npm run test -- --verbose",
+    "test:w": "npm run test:v -- --watchAll",
     "test:cov": "npm run test:v -- --coverage"
   },
   "keywords": [

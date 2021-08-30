@@ -1,9 +1,31 @@
+import type { Config } from "@jest/types";
+
+const pathsResolved: Config.InitialOptions["moduleNameMapper"] = {};
+
+Object.entries({
+  "@auth/*": ["./auth/*"],
+  "@chat/*": ["./chat/*"],
+  "@config/*": ["./config/*"],
+  "@controllers/*": ["./controllers/*"],
+  "@db/seeds/*": ["./utils/seeds/*"],
+  "@exceptions/*": ["./exceptions/*"],
+  "@models/*": ["./models/*"],
+  "@routes/*": ["./routes/*"],
+  "@services/*": ["./services/*"],
+  "@utils/*": ["./utils/*"],
+  "@root/*": ["./*"],
+}).forEach(([k, v]) => {
+  const key = k.replace("/*", "/(.*)$");
+  const value = `<rootDir>${v[0].slice(1, -1)}$1`;
+  pathsResolved[key] = value;
+});
+
 /*
  * For a detailed explanation regarding each configuration property and type check, visit:
  * https://jestjs.io/docs/configuration
  */
 
-export default {
+const config: Config.InitialOptions = {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -26,11 +48,7 @@ export default {
   coverageDirectory: "coverage",
 
   // An array of regexp pattern strings used to skip coverage collection
-  coveragePathIgnorePatterns: [
-    "/node_modules/",
-    "/dist/",
-    ".spec.ts"
-  ],
+  coveragePathIgnorePatterns: ["/node_modules/", "/dist/", ".spec.ts"],
 
   // Indicates which provider should be used to instrument code for coverage
   coverageProvider: "v8",
@@ -83,7 +101,7 @@ export default {
   ],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-  // moduleNameMapper: {},
+  moduleNameMapper: { ...pathsResolved },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],
@@ -95,7 +113,7 @@ export default {
   // notifyMode: "failure-change",
 
   // A preset that is used as a base for Jest's configuration
-  preset: 'ts-jest',
+  preset: "ts-jest",
 
   // Run tests from one or more projects
   // projects: undefined,
@@ -194,3 +212,5 @@ export default {
   // Whether to use watchman for file crawling
   // watchman: true,
 };
+
+export default config;

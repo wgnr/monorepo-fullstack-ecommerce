@@ -21,6 +21,11 @@ class CartsControllers extends JWTController {
       return next();
     }
 
+    if (!cartId) {
+      req.params.cartId = String(user.currentCart);
+      return next();
+    }
+
     if (String(user.currentCart) !== cartId) return next("That's not yours.");
 
     return next();

@@ -36,6 +36,11 @@ class UsersController extends JWTController {
 
     const { _id } = req.user as IUserDocument;
 
+    if (!userId) {
+      req.params.userId = String(_id);
+      return next();
+    }
+
     if (String(_id) !== userId) {
       return next("Unauthorise");
     }
