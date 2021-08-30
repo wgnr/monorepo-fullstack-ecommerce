@@ -11,7 +11,7 @@ router.get(
 );
 
 router.post(
-  "",  
+  "",
   JWTController.authenticate(),
   OptionsControllers.adminOnly,
   OptionsControllers.validateCreate,
