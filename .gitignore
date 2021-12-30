@@ -1,6 +1,6 @@
-**/.env*
-!**/env.example
-**/node_modules/
-**/dist/
-*/public/images/products/**
-**/coverage/
+.env*
+!env.example
+node_modules/
+dist/
+public/images/products/**
+coverage/
