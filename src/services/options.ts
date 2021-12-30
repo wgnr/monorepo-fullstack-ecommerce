@@ -149,7 +149,7 @@ class OptionsService {
     const uniqueOptionsIds = [...new Set(options.map(o => o._id))];
     if (
       uniqueOptionsIds.some(
-        uId => options.filter(option => option.id === uId).length > 1
+        uId => options.filter(option => option._id === uId).length > 1
       )
     ) {
       throw new ValidationException(

@@ -1,13 +1,14 @@
 import CommonDAO from "@models/entities/CommonDAO";
 import { ICategory } from "@models/entities/categories/categories.interfaces";
 import { categoriesModel } from "@models/entities/categories/categories.model";
+import { LeanDocument } from "mongoose";
 
 class CategoriesDAO extends CommonDAO<ICategory> {
   constructor() {
     super(categoriesModel);
   }
 
-  async getByName(name: string) {
+  async getByName(name: string): Promise<LeanDocument<ICategory & { _id?: string }>> {
     this.mongoDebug("getByName", { name });
 
     return await this.model

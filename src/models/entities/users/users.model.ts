@@ -68,6 +68,7 @@ UsersSchema.pre(
   }
 );
 
+// @ts-ignore
 UsersSchema.methods.isValidPassword = async function (
   this: IUserDocument,
   password: string

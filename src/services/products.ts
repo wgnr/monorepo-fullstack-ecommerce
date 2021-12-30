@@ -31,7 +31,7 @@ class ProductService {
 
   async getByCategoryName(name: string) {
     const { _id } = await CategoriesService.getOneByName(name);
-    return await ProductsDAO.getManyByCategoryId(_id);
+    return await ProductsDAO.getManyByCategoryId(_id!);
   }
 
   async getVariantPopulatedByVariantId(variantId: string) {
@@ -178,8 +178,8 @@ class ProductService {
   }
 
   async validateProductIdsExist(productIds: string[]) {
-    const products = await this.getByIds(productIds);
-    const idsNotFound = productIds.filter(id => !products.find(p => p.id === id));
+    const products = await this.getByIds(productIds) as IProductDocument[];
+    const idsNotFound = productIds.filter(id => !products.find(p => p._id === id));
     if (idsNotFound.length > 0) {
       throw new NotFoundException("products", idsNotFound);
     }

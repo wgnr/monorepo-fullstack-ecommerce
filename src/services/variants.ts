@@ -1,4 +1,4 @@
-import { ClientSession } from "mongoose";
+import { ClientSession, LeanDocument } from "mongoose";
 import ProductsService from "@services/products";
 import VariantsDAO from "@models/entities/variants/variants.dao";
 import {
@@ -13,7 +13,9 @@ import { IProduct } from "@models/entities/products/products.interfaces";
 
 class VariantsService {
   async getById(id: string) {
-    return await VariantsDAO.getOneById(id);
+    return (await VariantsDAO.getOneById(id)) as LeanDocument<
+      IVariants & { _id: string }
+    >;
   }
 
   async getPopulatedById(id: string) {

@@ -102,7 +102,7 @@ export const getToken = async (
     const { token } = await res.json();
     return token;
   } catch (err) {
-    console.log(err.message);
+    if (err instanceof Error) console.log(err.message);
   }
 };
 /* {
@@ -119,6 +119,6 @@ export const post = async (
     const res = await fetch(`${base_url}${path}`, optionsPOST(payload, token));
     return await res.json();
   } catch (err) {
-    console.log(err.message);
+    if (err instanceof Error) console.log(err.message);
   }
 };

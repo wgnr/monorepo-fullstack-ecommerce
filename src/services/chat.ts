@@ -77,12 +77,14 @@ class ChatService {
           socket.data = data;
           return next();
         } catch (err) {
-          return next(err);
+          return next(
+            err instanceof Error ? err : new Error("Unexpected error in chat")
+          );
         }
       });
     }).on("connection", async function (socket) {
       // Connection now authenticated to receive further events
-      const { user, isAdmin, toUser }: SocketData = socket.data;
+      const { user, isAdmin, toUser } = socket.data as SocketData;
 
       const room = toUser;
       socket.join(room);

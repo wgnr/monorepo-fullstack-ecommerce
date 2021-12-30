@@ -1,5 +1,8 @@
 import CategoriesDAO from "@models/entities/categories/categories.dao";
-import { ICategoryNew } from "@models/entities/categories/categories.interfaces";
+import {
+  ICategory,
+  ICategoryNew,
+} from "@models/entities/categories/categories.interfaces";
 import { IProductDocument } from "@models/entities/products/products.interfaces";
 import ProductsService from "@services/products";
 
@@ -27,7 +30,9 @@ class CategoriesService {
   async getIdsFromNames(names: string[] | undefined) {
     if (!names || names?.length === 0) return [];
 
-    return (await CategoriesDAO.getManyByNames(names)).map(c => c._id!);
+    return (await CategoriesDAO.getManyByNames(names)).map(
+      (c: ICategory & { _id?: string }) => c._id!
+    );
   }
 
   async create(category: ICategoryNew) {

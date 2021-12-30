@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { LeanDocument, Types } from "mongoose";
 import CommonDAO from "@models/entities/CommonDAO";
 import { IOptions } from "@models/entities/options/options.interface";
 import { OptionsModel } from "@models/entities/options/options.model";
@@ -8,7 +8,9 @@ class OptionsDAO extends CommonDAO<IOptions> {
     super(OptionsModel);
   }
 
-  async getOneByValueId(id: string) {
+  async getOneByValueId(
+    id: string
+  ): Promise<LeanDocument<IOptions & { _id?: string }>> {
     this.mongoDebug("getOneByValueId", { id });
 
     return await this.model

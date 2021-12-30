@@ -67,7 +67,9 @@ class OrdersService {
         });
       });
     } catch (error) {
-      throw new ValidationException(`Order wasn't created. ${error.message}`);
+      throw new ValidationException(
+        `Order wasn't created. ${error instanceof Error && error.message}`
+      );
     }
 
     return newOrder;
