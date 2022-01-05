@@ -6,13 +6,13 @@ Complete functional E-Commerce API.
 
 Swagger documentation:
 
-- [Live](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/wgnr/monorepo-fullstack-ecommerce/main/monorepo-swagger.yaml)
-- [Local](/home/juancis/repos/monorepo-fullstack-ecommerce/API-swagger.yaml)
+- [Live](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/wgnr/nodejs-express-ecommerce/main/API-swagger.yaml)
+- [Local](./API-swagger.yaml)
 
 Postman collection:
 
 - [Live](https://documenter.getpostman.com/view/15950009/TzskENv9)
-- [Local](API_E-commerce.postman_collection.json)
+- [Local](./API_E-commerce.postman_collection.json)
 
 ## Try it
 
@@ -20,7 +20,7 @@ You can try it [locally](#locally) or [remotely](#remotely).
 
 ### Remotely
 
-There is an instance deployed in [heroku](https://monorepo-api.herokuapp.com). You
+There is an instance deployed in [heroku](https://wgnr-ecommerce.herokuapp.com/). You
 can test it with this
 [live Postman API](https://documenter.getpostman.com/view/15950009/TzskENv9#intro).
 
@@ -34,8 +34,8 @@ can test it with this
 First you should complete the following env vars
 
 ```bash
-git clone https://github.com/wgnr/monorepo-fullstack-ecommerce
-cd monorepo-fullstack-ecommerce
+git clone https://github.com/wgnr/nodejs-express-ecommerce
+cd nodejs-express-ecommerce
 ```
 
 If you are using nvm run the following commmand. if not, make sure you are using node

@@ -7,7 +7,7 @@ info:
     email: juanswagner@gmail.com
   version: '1.0'
 servers:
-- url: https://monorepo-api.herokuapp.com
+- url: https://wgnr-ecommerce.herokuapp.com/api
   variables: {}
 - url: localhost:3000
   description: ''
