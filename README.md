@@ -1,6 +1,26 @@
 # Nodejs Express E-Commerce API
 
-Complete functional E-Commerce API.
+Complete functional E-Commerce API. This is the final project of the Node JS backend
+development program taught by
+[CODERHOUSE](https://www.coderhouse.com/online/programacion-backend). It's a nodejs
+Express backend that uses MongoDB.
+
+Features:
+
+- A product can have multiple options which means you can have any combination of
+  attributes that characterize the product. Ex. The same kind of cloth can have a
+  variety of sizes and colors.
+- CRUD for entities management:
+  - Categories
+  - Products
+  - Options
+  - Carts
+  - Orders
+  - Users
+- Passport + JWT Auth
+- Inventory reservations and discounting are handled by Mongo transactions.
+- Small chat implemented with Socket.io
+- Email notification on successful purchase (sent with nodemailer)
 
 ## Documentation
 
